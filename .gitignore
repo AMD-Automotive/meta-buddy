@@ -1,0 +1,11 @@
+# Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+# SPDX-License-Identifier: MIT
+# Contributors: KC
+# Maintainer: KC
+
+# Running the rave-menu tests imports descriptor_tool.py, which leaves these behind.
+__pycache__/
+*.pyc
+
+# Local planning docs, not checked in.
+/docs/

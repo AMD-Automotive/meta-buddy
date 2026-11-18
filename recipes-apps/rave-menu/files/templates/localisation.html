@@ -1,0 +1,106 @@
+{#
+Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+SPDX-License-Identifier: MIT
+Contributors: KC
+Maintainer: KC
+#}
+{% extends "base.html" %}
+
+{% block title %}{{ _('Localisation') }}{% endblock %}
+{% block body_class %}main-menu-page loc-page-body{% endblock %}
+{% block head %}
+  <link rel="stylesheet" href="/static/localization.css" />
+{% endblock %}
+{% block topbar %}{% endblock %}
+
+{% block content %}
+    <div class="panel loc-panel">
+      <div class="loc-head">
+        <a href="/" class="net-btn net-btn-secondary loc-back">&larr; {{ _('Back') }}</a>
+        <h1 class="loc-title">{{ _('Localisation') }}</h1>
+      </div>
+
+      {# Shown after a keyboard change until the user confirms. The timer is
+         authoritative on the device; this is only the prompt. #}
+      <div id="confirmBar" class="loc-confirm" hidden>
+        <div class="loc-confirm-text">
+          <strong>{{ _('Keep these keyboard settings?') }}</strong>
+          <span id="confirmCountdown"></span>
+        </div>
+        <div class="loc-confirm-actions">
+          <button class="net-btn" id="confirmKeep">{{ _('Keep') }}</button>
+          <button class="net-btn net-btn-secondary" id="confirmRevert">{{ _('Undo now') }}</button>
+        </div>
+      </div>
+
+      <div id="locError" class="loc-error" hidden></div>
+
+      <section class="loc-section">
+        <h2 class="loc-section-title">{{ _('Keyboard') }}</h2>
+        <p class="loc-section-help">
+          {{ _('Sets the keyboard layout for the screen and keyboard attached to this unit.') }}
+          <span class="loc-warn">
+            {{ _('Applying restarts the display on the appliance for a few seconds. If you are connected over the network, your own keyboard and this browser are unaffected.') }}
+          </span>
+        </p>
+
+        <div class="loc-grid">
+          <label class="loc-field">
+            <span class="loc-label">{{ _('Layout') }}</span>
+            <select id="layoutSelect" class="loc-input"></select>
+          </label>
+
+          <label class="loc-field">
+            <span class="loc-label">{{ _('Variant') }}</span>
+            <select id="variantSelect" class="loc-input"></select>
+          </label>
+        </div>
+
+        <div class="loc-allwrap">
+          <button type="button" id="showAll" class="loc-link">{{ _('Show all layouts') }}</button>
+          <div id="allWrap" hidden>
+            <input type="search" id="layoutSearch" class="loc-input loc-search"
+                   placeholder="{{ _('Search layouts…') }}" autocomplete="off" />
+            <div id="layoutResults" class="loc-results"></div>
+          </div>
+        </div>
+
+        <div class="loc-active">
+          <span class="loc-label">{{ _('Currently active') }}</span>
+          <span id="activeLayout" class="loc-active-value">{{ current.keyboard.layout }}</span>
+        </div>
+
+        <label class="loc-field loc-testwrap">
+          <span class="loc-label">{{ _('Test the layout') }}</span>
+          <input type="text" id="layoutTest" class="loc-input loc-test"
+                 autocomplete="off" spellcheck="false"
+                 placeholder="{{ _('Type here after applying — try @ and # and the key left of Enter') }}" />
+        </label>
+
+        <button class="net-btn loc-apply" id="applyKeyboard">{{ _('Apply keyboard layout') }}</button>
+      </section>
+
+      <section class="loc-section">
+        <h2 class="loc-section-title">{{ _('Language') }}</h2>
+        <p class="loc-section-help">
+          {{ _('Sets the system language and regional formats. The display does not restart.') }}
+        </p>
+
+        <div class="loc-grid">
+          <label class="loc-field">
+            <span class="loc-label">{{ _('Language') }}</span>
+            <select id="languageSelect" class="loc-input"></select>
+          </label>
+        </div>
+
+        <button class="net-btn loc-apply" id="applyLanguage">{{ _('Apply language') }}</button>
+      </section>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    window.RAVE_LOC_VERIFY = {{ 'true' if request.args.get('verify') else 'false' }};
+  </script>
+  <script src="/static/localization.js"></script>
+{% endblock %}

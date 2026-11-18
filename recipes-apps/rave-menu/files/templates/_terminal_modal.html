@@ -1,0 +1,23 @@
+<!--
+Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+SPDX-License-Identifier: MIT
+Contributors: KC
+Maintainer: KC
+-->
+
+<!-- Shared multi-tab terminal modal (driven by static/terminal.js::runAction).
+     Included by index.html and app_store.html. The installer/programming
+     scripts emit `=-=-=-=` stage markers that render as the tab strip. -->
+<div id="termModal" class="modal hidden" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div id="termTitle" class="modal-title">{{ _('Terminal') }}</div>
+      <button id="termClose" class="modal-close">X</button>
+    </div>
+    <div id="termTabs" class="term-tabs" role="tablist" aria-label="Terminal tabs"></div>
+    <pre id="terminal" class="terminal"></pre>
+    <div class="modal-foot">
+      <span id="termStatus" class="status">{{ _('idle') }}</span>
+    </div>
+  </div>
+</div>

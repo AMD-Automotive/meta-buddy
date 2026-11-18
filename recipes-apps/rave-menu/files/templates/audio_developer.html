@@ -1,0 +1,218 @@
+{#
+Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+SPDX-License-Identifier: MIT
+Contributors: KC
+Maintainer: KC
+#}
+{% extends "base.html" %}
+
+{% block title %}Audio Developer Tools{% endblock %}
+{% block body_class %}main-menu-page audio-page-body{% endblock %}
+{% block head %}
+  <link rel="stylesheet" href="/static/audio.css" />
+  <link rel="stylesheet" href="/static/adau1860.css" />
+{% endblock %}
+
+{% block content %}
+
+    <div class="panel audio-panel codec-panel">
+      <div class="audio-head">
+        <a href="/audio" class="net-btn net-btn-secondary audio-back">&larr; Back to Audio</a>
+        <h1 class="audio-title">{{ _('Audio Developer Tools') }}</h1>
+        <div class="audio-head-actions">
+          <span id="codecStatus" class="status">{{ _('loading…') }}</span>
+          <button id="codecRefresh" type="button" class="net-btn net-btn-secondary">{{ _('Refresh') }}</button>
+        </div>
+      </div>
+
+      <!-- Status Panel -->
+      <section class="audio-section codec-status-section">
+        <h2 class="audio-section-title">{{ _('Codec Status') }}</h2>
+        <div class="codec-status-grid">
+          <div class="status-card" id="cardPll">
+            <div class="status-icon">🔒</div>
+            <div class="status-label">PLL</div>
+            <div class="status-value" id="pllStatus">--</div>
+          </div>
+          <div class="status-card" id="cardVendor">
+            <div class="status-icon">🏭</div>
+            <div class="status-label">Vendor ID</div>
+            <div class="status-value" id="vendorId">--</div>
+          </div>
+          <div class="status-card" id="cardChip">
+            <div class="status-icon">💾</div>
+            <div class="status-label">Chip ID</div>
+            <div class="status-value" id="chipId">--</div>
+          </div>
+          <div class="status-card" id="cardStatus2">
+            <div class="status-icon">📊</div>
+            <div class="status-label">STATUS2</div>
+            <div class="status-value" id="status2">--</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DAC Volume Control -->
+      <section class="audio-section">
+        <h2 class="audio-section-title">{{ _('DAC Hardware Volume') }}</h2>
+        <p class="audio-section-help">{{ _('Direct hardware volume control on the codec. Independent of system (PulseAudio) volume. Range: -71.25 dB to +24 dB. 0 dB is unity gain.') }}</p>
+        <div class="codec-volume-control">
+          <div class="volume-slider-row">
+            <span class="vol-label-min">-71 dB</span>
+            <input type="range" id="dacVolSlider" min="0" max="100" step="1" value="50">
+            <span class="vol-label-max">0 dB</span>
+          </div>
+          <div class="volume-readout">
+            <span id="dacVolDb">0.0 dB</span>
+            <span class="vol-raw" id="dacVolRaw">(0x40)</span>
+          </div>
+          <div class="volume-actions">
+            <button type="button" id="dacMuteBtn" class="net-btn">{{ _('Mute') }}</button>
+            <button type="button" id="dacBoostBtn" class="net-btn net-btn-secondary">{{ _('+24 dB Boost') }}</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Output Mode -->
+      <section class="audio-section">
+        <h2 class="audio-section-title">{{ _('Output Mode') }}</h2>
+        <p class="audio-section-help">{{ _('Headphone mode optimizes for low-impedance headphones. Line-out mode provides higher output for amplified systems.') }}</p>
+        <div class="output-mode-toggle">
+          <button type="button" id="modeHeadphone" class="mode-btn">{{ _('🎧 Headphone') }}</button>
+          <button type="button" id="modeLineout" class="mode-btn">{{ _('🔊 Line Out') }}</button>
+        </div>
+      </section>
+
+      <!-- ASRC Control -->
+      <section class="audio-section">
+        <h2 class="audio-section-title">{{ _('Sample Rate Converter') }}</h2>
+        <p class="audio-section-help">{{ _('ASRC (Asynchronous Sample Rate Converter) can resample audio between different clock domains. Bypass mode routes audio directly to the DAC with no resampling (lower latency, bit-perfect).') }}</p>
+        <div class="asrc-toggle">
+          <button type="button" id="asrcBypass" class="mode-btn">{{ _('Direct (Bypass)') }}</button>
+          <button type="button" id="asrcEnable" class="mode-btn">{{ _('ASRC Enabled') }}</button>
+        </div>
+        <div class="asrc-status">
+          <span>Current: </span><span id="asrcStatus">--</span>
+        </div>
+      </section>
+
+      <!-- DMIC Array Status -->
+      <section class="audio-section">
+        <h2 class="audio-section-title">{{ _('4-Channel DMIC Array') }}</h2>
+        <p class="audio-section-help">{{ _('Quad digital microphone array for capture. Live audio levels shown below.') }}</p>
+        <div class="dmic-status" id="dmicStatus">
+          <div class="dmic-controls">
+            <div class="dmic-enabled">
+              <span class="dmic-label">DMIC Clock:</span>
+              <span id="dmicEnabled" class="dmic-value">--</span>
+            </div>
+            <label class="dmic-meter-toggle">
+              <input type="checkbox" id="dmicMeterEnabled">
+              <span>Live Meters</span>
+            </label>
+          </div>
+
+          <!-- Level Meters -->
+          <div class="dmic-meters" id="dmicMeters">
+            <div class="meter-channel">
+              <div class="meter-header">
+                <span class="meter-ch">Left</span>
+                <span class="meter-source" id="dmicSlot0">DMIC0</span>
+              </div>
+              <div class="meter-bar-container">
+                <div class="meter-bar" id="meterBar0"></div>
+                <div class="meter-peak" id="meterPeak0"></div>
+              </div>
+              <div class="meter-values">
+                <span class="meter-db" id="meterDb0">-- dB</span>
+                <span class="meter-peak-db" id="meterPeakDb0">pk --</span>
+              </div>
+            </div>
+            <div class="meter-channel">
+              <div class="meter-header">
+                <span class="meter-ch">Right</span>
+                <span class="meter-source" id="dmicSlot1">DMIC1</span>
+              </div>
+              <div class="meter-bar-container">
+                <div class="meter-bar" id="meterBar1"></div>
+                <div class="meter-peak" id="meterPeak1"></div>
+              </div>
+              <div class="meter-values">
+                <span class="meter-db" id="meterDb1">-- dB</span>
+                <span class="meter-peak-db" id="meterPeakDb1">pk --</span>
+              </div>
+            </div>
+          </div>
+          <div class="meter-error" id="meterError"></div>
+        </div>
+      </section>
+
+      <!-- Power States -->
+      <section class="audio-section codec-power-section">
+        <h2 class="audio-section-title">{{ _('Power States') }}</h2>
+        <div class="power-grid">
+          <div class="power-item">
+            <span class="power-label">CHIP_PWR</span>
+            <span class="power-value" id="pwrChip">--</span>
+          </div>
+          <div class="power-item">
+            <span class="power-label">DAC_PWR</span>
+            <span class="power-value" id="pwrDac">--</span>
+          </div>
+          <div class="power-item">
+            <span class="power-label">HP_LDO</span>
+            <span class="power-value" id="pwrHp">--</span>
+          </div>
+          <div class="power-item">
+            <span class="power-label">DSP_PWR</span>
+            <span class="power-value" id="pwrDsp">--</span>
+          </div>
+          <div class="power-item">
+            <span class="power-label">ASRC_PWR</span>
+            <span class="power-value" id="pwrAsrc">--</span>
+          </div>
+          <div class="power-item">
+            <span class="power-label">CLK_CTRL1</span>
+            <span class="power-value" id="clkCtrl1">--</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Register Access (Advanced) -->
+      <section class="audio-section codec-advanced-section">
+        <details>
+          <summary class="audio-section-title">{{ _('Advanced: Raw Register Access') }}</summary>
+          <p class="audio-section-help">{{ _('Direct read/write to codec registers. Use with caution.') }}</p>
+          <div class="reg-access-form">
+            <div class="reg-input-group">
+              <label for="regAddr">{{ _('Address (hex)') }}</label>
+              <input type="text" id="regAddr" placeholder="0x4000C052" value="0x4000C052">
+            </div>
+            <div class="reg-input-group">
+              <label for="regValue">{{ _('Value (hex)') }}</label>
+              <input type="text" id="regValue" placeholder="0x40">
+            </div>
+            <div class="reg-actions">
+              <button type="button" id="regReadBtn" class="net-btn net-btn-secondary">{{ _('Read') }}</button>
+              <button type="button" id="regWriteBtn" class="net-btn">{{ _('Write') }}</button>
+            </div>
+            <div class="reg-result" id="regResult"></div>
+          </div>
+        </details>
+      </section>
+
+      <!-- Codec Actions -->
+      <section class="audio-section codec-actions-section">
+        <h2 class="audio-section-title">{{ _('Codec Actions') }}</h2>
+        <div class="codec-action-buttons">
+          <button type="button" id="reinitBtn" class="net-btn net-btn-primary">{{ _('🔄 Reinitialize Codec') }}</button>
+          <p class="action-help">{{ _('Reapplies the full initialization sequence. Use if PLL loses lock or audio stops working.') }}</p>
+        </div>
+      </section>
+
+    </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="/static/adau1860.js"></script>
+{% endblock %}

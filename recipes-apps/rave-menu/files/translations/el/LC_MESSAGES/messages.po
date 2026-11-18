@@ -1,0 +1,935 @@
+# Greek translations for rave-menu.
+# Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+# DRAFT - machine-assisted, NOT yet reviewed by a native speaker.
+# Review before release: terse UI labels are where formality, gender and
+# technical vocabulary most often go wrong.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: rave-menu 0.1\n"
+"POT-Creation-Date: 2026-10-02 15:11+0000\n"
+"PO-Revision-Date: 2026-10-02 15:11+0000\n"
+"Last-Translator: DRAFT - needs native review\n"
+"Language: el\n"
+"Language-Team: Greek\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Generated-By: meta-buddy docs/make_catalogues.py\n"
+
+#: templates/_serial_console.html:12
+msgid "Serial Console"
+msgstr "Σειριακή κονσόλα"
+
+#: templates/_serial_console.html:13
+msgid "disconnected"
+msgstr "αποσυνδέθηκε"
+
+#: templates/_serial_console.html:17
+msgid "Keep alive"
+msgstr "Διατήρηση σύνδεσης"
+
+#: templates/_serial_console.html:33
+msgid "Clear"
+msgstr "Εκκαθάριση"
+
+#: templates/_serial_console.html:34
+msgid "Save console log"
+msgstr "Αποθήκευση αρχείου καταγραφής κονσόλας"
+
+#: templates/_serial_console.html:35 templates/index.html:88
+msgid "Reboot Versal"
+msgstr "Επανεκκίνηση Versal"
+
+#: templates/_serial_console.html:36
+msgid "Exit"
+msgstr "Έξοδος"
+
+#: templates/_terminal_modal.html:14
+msgid "Terminal"
+msgstr "Τερματικό"
+
+#: templates/_terminal_modal.html:20 templates/index.html:289
+msgid "idle"
+msgstr "αδρανής"
+
+#: templates/_versal_lab.html:12 templates/index.html:77
+msgid "Versal&trade; AI Edge Series Gen 2 Lab"
+msgstr "Εργαστήριο Versal&trade; AI Edge Series Gen 2"
+
+#: templates/_versal_lab.html:19
+msgid "Vivado&trade; Hardware &amp; ChipScope&trade; Servers"
+msgstr "Διακομιστές Vivado&trade; Hardware και ChipScope&trade;"
+
+#: templates/_versal_lab.html:27
+msgid "Status: stopped"
+msgstr "Κατάσταση: σταματημένο"
+
+
+#: templates/_versal_lab.html:50
+msgid "Flash Program"
+msgstr "Προγραμματισμός flash"
+
+#: templates/_versal_lab.html:52
+msgid "Jtag Program"
+msgstr "Προγραμματισμός μέσω JTAG"
+
+#: templates/_versal_lab.html:60
+msgid "OSPI Image"
+msgstr "Εικόνα OSPI"
+
+#: templates/_versal_lab.html:65 templates/_versal_lab.html:81 templates/_versal_lab.html:97 templates/_versal_lab.html:138
+msgid "URL, Dropbox share or local path"
+msgstr "URL, κοινόχρηστο Dropbox ή τοπική διαδρομή"
+
+#: templates/_versal_lab.html:76
+msgid "Rootfs WIC"
+msgstr "WIC rootfs"
+
+
+#: templates/_versal_lab.html:112
+msgid "Detect layout"
+msgstr "Ανίχνευση διάταξης"
+
+#: templates/_versal_lab.html:113
+msgid "Select all"
+msgstr "Επιλογή όλων"
+
+#: templates/_versal_lab.html:124
+msgid "Program"
+msgstr "Προγραμματισμός"
+
+#: templates/_versal_lab.html:133
+msgid "boot.bin / pdi"
+msgstr "boot.bin / pdi"
+
+#: templates/_versal_lab.html:148
+msgid "Configure"
+msgstr "Διαμόρφωση"
+
+#: templates/_versal_lab.html:169
+msgid "Programming tools"
+msgstr "Εργαλεία προγραμματισμού"
+
+#: templates/_versal_lab.html:191
+msgid "x86 Console"
+msgstr "Κονσόλα x86"
+
+#: templates/_versal_lab.html:201
+msgid "Serial 1"
+msgstr "Σειριακή 1"
+
+#: templates/_versal_lab.html:211
+msgid "Serial 2"
+msgstr "Σειριακή 2"
+
+#: templates/_versal_lab.html:222 templates/power_off.html:22
+msgid "Reboot"
+msgstr "Επανεκκίνηση"
+
+#: templates/_versal_lab.html:233 templates/app_store.html:167 templates/system_update.html:659
+msgid "Previously uploaded files"
+msgstr "Αρχεία που μεταφορτώθηκαν προηγουμένως"
+
+#: templates/_versal_lab.html:242 templates/app_store.html:176 templates/system_update.html:668
+msgid "Delete All"
+msgstr "Διαγραφή όλων"
+
+#: templates/app_store.html:28
+msgid "Reprogram Versal"
+msgstr "Επαναπρογραμματισμός Versal"
+
+#: templates/app_store.html:35
+msgid "Manage app stores"
+msgstr "Διαχείριση app store"
+
+#: templates/app_store.html:49
+msgid "Add store"
+msgstr "Προσθήκη store"
+
+#: templates/app_store.html:55
+msgid "Loading apps&hellip;"
+msgstr "Φόρτωση εφαρμογών&hellip;"
+
+#: templates/app_store.html:64 templates/ubuntu_install.html:14 templates/ubuntu_install.html:101
+msgid "Install Ubuntu"
+msgstr "Εγκατάσταση Ubuntu"
+
+#: templates/app_store.html:65
+msgid "Install Ubuntu&reg; Desktop into the free NVMe space, alongside the RAVE2 menu"
+msgstr "Εγκατάσταση του Ubuntu&reg; Desktop στον ελεύθερο χώρο NVMe, παράλληλα με το μενού RAVE2"
+
+#: templates/app_store.html:68
+msgid "NVMe Install"
+msgstr "Εγκατάσταση NVMe"
+
+#: templates/app_store.html:70 templates/ubuntu_install.html:19 templates/ubuntu_uninstall.html:14 templates/ubuntu_uninstall.html:41
+msgid "Uninstall Ubuntu"
+msgstr "Κατάργηση εγκατάστασης Ubuntu"
+
+#: templates/app_store.html:77
+msgid "Manual install"
+msgstr "Μη αυτόματη εγκατάσταση"
+
+#: templates/app_store.html:79
+msgid "Bundle source"
+msgstr "Προέλευση πακέτου"
+
+#: templates/app_store.html:85
+msgid "URL, Dropbox share or local path to .rave2app"
+msgstr "URL, κοινόχρηστο Dropbox ή τοπική διαδρομή σε .rave2app"
+
+#: templates/app_store.html:94
+msgid "Install bundle"
+msgstr "Εγκατάσταση πακέτου"
+
+#: templates/app_store.html:101
+msgid "RAVE2 Introduction"
+msgstr "Εισαγωγή στο RAVE2"
+
+#: templates/app_store.html:122 templates/system_update.html:283 templates/vivado_install.html:185
+msgid "Back to Main Menu"
+msgstr "Επιστροφή στο κύριο μενού"
+
+#: templates/app_store.html:132 templates/index.html:252 templates/system_update.html:647 templates/ubuntu_install.html:113 templates/ubuntu_uninstall.html:53
+msgid "Please confirm"
+msgstr "Επιβεβαίωση"
+
+#: templates/app_store.html:135 templates/app_store.html:158 templates/index.html:255 templates/install_nvme.html:22 templates/power_off.html:23 templates/system_update.html:650 templates/ubuntu_install.html:116 templates/ubuntu_uninstall.html:56 templates/vivado_install.html:146
+msgid "Cancel"
+msgstr "Άκυρο"
+
+#: templates/app_store.html:136 templates/index.html:256 templates/system_update.html:651 templates/ubuntu_install.html:117 templates/ubuntu_uninstall.html:57
+msgid "Continue"
+msgstr "Συνέχεια"
+
+#: templates/app_store.html:144
+msgid "Jumbo Bundle Storage Allocation"
+msgstr "Εκχώρηση αποθηκευτικού χώρου για jumbo bundle"
+
+#: templates/app_store.html:147
+msgid "Storage for this application"
+msgstr "Αποθηκευτικός χώρος για αυτήν την εφαρμογή"
+
+#: templates/app_store.html:159 templates/install_nvme.html:21 templates/system_update.html:199 templates/vivado_install.html:102
+msgid "Install"
+msgstr "Εγκατάσταση"
+
+#: templates/app_store.html:184 templates/index.html:368 templates/system_update.html:676
+msgid "Browse Files"
+msgstr "Περιήγηση αρχείων"
+
+#: templates/audio.html:20
+msgid "Audio"
+msgstr "Ήχος"
+
+#: templates/audio.html:28
+msgid "Outputs"
+msgstr "Έξοδοι"
+
+#: templates/audio.html:34
+msgid "Inputs"
+msgstr "Είσοδοι"
+
+#: templates/audio.html:36
+msgid "Loading…"
+msgstr "Φόρτωση…"
+
+#: templates/audio_developer.html:21
+msgid "Audio Developer Tools"
+msgstr "Εργαλεία προγραμματιστή ήχου"
+
+#: templates/audio_developer.html:23
+msgid "loading…"
+msgstr "φόρτωση…"
+
+#: templates/audio_developer.html:24
+msgid "Refresh"
+msgstr "Ανανέωση"
+
+#: templates/audio_developer.html:30
+msgid "Codec Status"
+msgstr "Κατάσταση codec"
+
+#: templates/audio_developer.html:57
+msgid "DAC Hardware Volume"
+msgstr "Ένταση υλικού DAC"
+
+#: templates/audio_developer.html:58
+msgid "Direct hardware volume control on the codec. Independent of system (PulseAudio) volume. Range: -71.25 dB to +24 dB. 0 dB is unity gain."
+msgstr "Άμεσος έλεγχος έντασης από το υλικό του codec. Ανεξάρτητος από την ένταση του συστήματος (PulseAudio). Εύρος: -71,25 dB έως +24 dB. Τα 0 dB αντιστοιχούν σε μοναδιαία απολαβή."
+
+#: templates/audio_developer.html:70
+msgid "Mute"
+msgstr "Σίγαση"
+
+#: templates/audio_developer.html:71
+msgid "+24 dB Boost"
+msgstr "Ενίσχυση +24 dB"
+
+#: templates/audio_developer.html:78
+msgid "Output Mode"
+msgstr "Λειτουργία εξόδου"
+
+#: templates/audio_developer.html:79
+msgid "Headphone mode optimizes for low-impedance headphones. Line-out mode provides higher output for amplified systems."
+msgstr "Η λειτουργία ακουστικών είναι βελτιστοποιημένη για ακουστικά χαμηλής σύνθετης αντίστασης. Η λειτουργία line-out παρέχει υψηλότερη έξοδο για ενισχυμένα συστήματα."
+
+#: templates/audio_developer.html:81
+msgid "🎧 Headphone"
+msgstr "🎧 Ακουστικά"
+
+#: templates/audio_developer.html:82
+msgid "🔊 Line Out"
+msgstr "🔊 Έξοδος γραμμής"
+
+#: templates/audio_developer.html:88
+msgid "Sample Rate Converter"
+msgstr "Μετατροπέας ρυθμού δειγματοληψίας"
+
+#: templates/audio_developer.html:89
+msgid "ASRC (Asynchronous Sample Rate Converter) can resample audio between different clock domains. Bypass mode routes audio directly to the DAC with no resampling (lower latency, bit-perfect)."
+msgstr "Ο ASRC (Asynchronous Sample Rate Converter) μπορεί να επαναδειγματοληπτεί τον ήχο μεταξύ διαφορετικών περιοχών χρονισμού. Η λειτουργία παράκαμψης δρομολογεί τον ήχο απευθείας στον DAC χωρίς επαναδειγματοληψία (χαμηλότερη καθυστέρηση, bit-perfect)."
+
+#: templates/audio_developer.html:91
+msgid "Direct (Bypass)"
+msgstr "Άμεση (παράκαμψη)"
+
+#: templates/audio_developer.html:92
+msgid "ASRC Enabled"
+msgstr "ASRC ενεργό"
+
+#: templates/audio_developer.html:101
+msgid "4-Channel DMIC Array"
+msgstr "Συστοιχία DMIC 4 καναλιών"
+
+#: templates/audio_developer.html:102
+msgid "Quad digital microphone array for capture. Live audio levels shown below."
+msgstr "Συστοιχία τεσσάρων ψηφιακών μικροφώνων για εγγραφή. Τα ζωντανά επίπεδα ήχου εμφανίζονται παρακάτω."
+
+#: templates/audio_developer.html:152
+msgid "Power States"
+msgstr "Καταστάσεις ενέργειας"
+
+#: templates/audio_developer.html:184
+msgid "Advanced: Raw Register Access"
+msgstr "Για προχωρημένους: άμεση πρόσβαση σε καταχωρητές"
+
+#: templates/audio_developer.html:185
+msgid "Direct read/write to codec registers. Use with caution."
+msgstr "Άμεση ανάγνωση/εγγραφή στους καταχωρητές του codec. Χρησιμοποιήστε το με προσοχή."
+
+#: templates/audio_developer.html:188
+msgid "Address (hex)"
+msgstr "Διεύθυνση (hex)"
+
+#: templates/audio_developer.html:192
+msgid "Value (hex)"
+msgstr "Τιμή (hex)"
+
+#: templates/audio_developer.html:196
+msgid "Read"
+msgstr "Ανάγνωση"
+
+#: templates/audio_developer.html:197
+msgid "Write"
+msgstr "Εγγραφή"
+
+#: templates/audio_developer.html:206
+msgid "Codec Actions"
+msgstr "Ενέργειες codec"
+
+#: templates/audio_developer.html:208
+msgid "🔄 Reinitialize Codec"
+msgstr "🔄 Επαναρχικοποίηση codec"
+
+#: templates/audio_developer.html:209
+msgid "Reapplies the full initialization sequence. Use if PLL loses lock or audio stops working."
+msgstr "Εφαρμόζει ξανά την πλήρη ακολουθία αρχικοποίησης. Χρησιμοποιήστε το αν ο PLL χάσει το κλείδωμα ή αν σταματήσει να λειτουργεί ο ήχος."
+
+#: templates/board_test.html:28
+msgid "Run all tests"
+msgstr "Εκτέλεση όλων των ελέγχων"
+
+#: templates/board_test.html:29 templates/localisation.html:19 templates/ubuntu_install.html:103 templates/ubuntu_uninstall.html:43
+msgid "Back"
+msgstr "Πίσω"
+
+#: templates/index.html:17
+msgid "Bulk storage unavailable. Uploads and installers are using limited menu storage."
+msgstr "Ο μαζικός αποθηκευτικός χώρος δεν είναι διαθέσιμος. Οι μεταφορτώσεις και τα προγράμματα εγκατάστασης χρησιμοποιούν τον περιορισμένο χώρο του μενού."
+
+#: templates/index.html:29
+msgid "About RAVE2"
+msgstr "Σχετικά με το RAVE2"
+
+#: templates/index.html:38
+msgid "App Store"
+msgstr "Κατάστημα εφαρμογών"
+
+#: templates/index.html:56
+msgid "Program board test"
+msgstr "Προγραμματισμός ελέγχου πλακέτας"
+
+#: templates/index.html:65
+msgid "Run board test"
+msgstr "Εκτέλεση ελέγχου πλακέτας"
+
+#: templates/index.html:105
+msgid "Setup WiFi/Networking"
+msgstr "Ρύθμιση Wi-Fi/δικτύου"
+
+#: templates/index.html:115
+msgid "Setup Audio"
+msgstr "Ρύθμιση ήχου"
+
+#: templates/index.html:128 templates/localisation.html:9 templates/localisation.html:20
+msgid "Localisation"
+msgstr "Τοπική προσαρμογή"
+
+#: templates/index.html:140 templates/install_nvme.html:14
+msgid "Install to NVMe"
+msgstr "Εγκατάσταση σε NVMe"
+
+#: templates/index.html:153 templates/system_update.html:157
+msgid "System Update"
+msgstr "Ενημέρωση συστήματος"
+
+#: templates/index.html:169
+msgid "Boot settings"
+msgstr "Ρυθμίσεις εκκίνησης"
+
+#: templates/index.html:181 templates/power_off.html:15
+msgid "Power Off Board"
+msgstr "Απενεργοποίηση πλακέτας"
+
+#: templates/index.html:191
+msgid "About"
+msgstr "Σχετικά"
+
+#: templates/index.html:223
+msgid "Full hardware report"
+msgstr "Πλήρης αναφορά υλικού"
+
+#: templates/index.html:228
+msgid "Full video report"
+msgstr "Πλήρης αναφορά βίντεο"
+
+#: templates/index.html:237
+msgid "Close"
+msgstr "Κλείσιμο"
+
+#: templates/index.html:268
+msgid "Default boot"
+msgstr "Προεπιλεγμένη εκκίνηση"
+
+#: templates/index.html:273
+msgid "Menu countdown"
+msgstr "Αντίστροφη μέτρηση μενού"
+
+#: templates/index.html:277
+msgid "Applies on next boot."
+msgstr "Εφαρμόζεται στην επόμενη εκκίνηση."
+
+#: templates/index.html:285
+msgid "Network Settings"
+msgstr "Ρυθμίσεις δικτύου"
+
+#: templates/index.html:296
+msgid "Interface"
+msgstr "Διεπαφή"
+
+#: templates/index.html:326
+msgid "Apply"
+msgstr "Εφαρμογή"
+
+#: templates/index.html:332
+msgid "Network"
+msgstr "Δίκτυο"
+
+#: templates/index.html:334
+msgid "Scan WiFi"
+msgstr "Σάρωση Wi-Fi"
+
+#: templates/index.html:349
+msgid "username"
+msgstr "όνομα χρήστη"
+
+#: templates/index.html:353
+msgid "password"
+msgstr "κωδικός πρόσβασης"
+
+#: templates/index.html:357
+msgid "Connect WiFi"
+msgstr "Σύνδεση Wi-Fi"
+
+#: templates/localisation.html:27
+msgid "Keep these keyboard settings?"
+msgstr "Διατήρηση αυτών των ρυθμίσεων πληκτρολογίου;"
+
+#: templates/localisation.html:31
+msgid "Keep"
+msgstr "Διατήρηση"
+
+#: templates/localisation.html:32
+msgid "Undo now"
+msgstr "Αναίρεση τώρα"
+
+#: templates/localisation.html:39
+msgid "Keyboard"
+msgstr "Πληκτρολόγιο"
+
+#: templates/localisation.html:41
+msgid "Sets the keyboard layout for the screen and keyboard attached to this unit."
+msgstr "Ορίζει τη διάταξη πληκτρολογίου για την οθόνη και το πληκτρολόγιο που είναι συνδεδεμένα σε αυτήν τη μονάδα."
+
+#: templates/localisation.html:43
+msgid "Applying restarts the display on the appliance for a few seconds. If you are connected over the network, your own keyboard and this browser are unaffected."
+msgstr "Η εφαρμογή επανεκκινεί την οθόνη της συσκευής για λίγα δευτερόλεπτα. Αν είστε συνδεδεμένοι μέσω δικτύου, το δικό σας πληκτρολόγιο και αυτό το πρόγραμμα περιήγησης δεν επηρεάζονται."
+
+#: templates/localisation.html:49
+msgid "Layout"
+msgstr "Διάταξη"
+
+#: templates/localisation.html:54
+msgid "Variant"
+msgstr "Παραλλαγή"
+
+#: templates/localisation.html:60
+msgid "Show all layouts"
+msgstr "Εμφάνιση όλων των διατάξεων"
+
+#: templates/localisation.html:63
+msgid "Search layouts…"
+msgstr "Αναζήτηση διατάξεων…"
+
+#: templates/localisation.html:69
+msgid "Currently active"
+msgstr "Ενεργή αυτήν τη στιγμή"
+
+#: templates/localisation.html:74
+msgid "Test the layout"
+msgstr "Δοκιμή της διάταξης"
+
+#: templates/localisation.html:77
+msgid "Type here after applying — try @ and # and the key left of Enter"
+msgstr "Πληκτρολογήστε εδώ μετά την εφαρμογή — δοκιμάστε @ και # και το πλήκτρο αριστερά από το Enter"
+
+#: templates/localisation.html:80
+msgid "Apply keyboard layout"
+msgstr "Εφαρμογή διάταξης πληκτρολογίου"
+
+#: templates/localisation.html:84 templates/localisation.html:91
+msgid "Language"
+msgstr "Γλώσσα"
+
+#: templates/localisation.html:86
+msgid "Sets the system language and regional formats. The display does not restart."
+msgstr "Ορίζει τη γλώσσα του συστήματος και τις τοπικές μορφές. Η οθόνη δεν επανεκκινείται."
+
+#: templates/localisation.html:96
+msgid "Apply language"
+msgstr "Εφαρμογή γλώσσας"
+
+#: templates/power_off.html:21
+msgid "Power off"
+msgstr "Απενεργοποίηση"
+
+#: templates/power_off.html:36
+msgid "Reboot once"
+msgstr "Επανεκκίνηση μία φορά"
+
+#: templates/system_update.html:158
+msgid "OS Update (RAUC)"
+msgstr "Ενημέρωση λειτουργικού (RAUC)"
+
+#: templates/system_update.html:177
+msgid "Reboot Now"
+msgstr "Επανεκκίνηση τώρα"
+
+#: templates/system_update.html:183
+msgid "Available Updates"
+msgstr "Διαθέσιμες ενημερώσεις"
+
+#: templates/system_update.html:218
+msgid "Install from USB"
+msgstr "Εγκατάσταση από USB"
+
+#: templates/system_update.html:220
+msgid "Scan USB"
+msgstr "Σάρωση USB"
+
+#: templates/system_update.html:229
+msgid "Install from URL"
+msgstr "Εγκατάσταση από URL"
+
+#: templates/system_update.html:249
+msgid "BIOS Update"
+msgstr "Ενημέρωση BIOS"
+
+#: templates/system_update.html:255
+msgid "BIOS image (.zip)"
+msgstr "Εικόνα BIOS (.zip)"
+
+#: templates/system_update.html:261
+msgid "URL, Dropbox share or local path to a BIOS update .zip"
+msgstr "URL, κοινόχρηστο Dropbox ή τοπική διαδρομή σε .zip ενημέρωσης BIOS"
+
+#: templates/system_update.html:270
+msgid "Update BIOS"
+msgstr "Ενημέρωση BIOS"
+
+#: templates/ubuntu_install.html:35
+msgid "This system appears to be running from the recovery USB. Ubuntu can only be installed when running from the NVMe system."
+msgstr "Το σύστημα φαίνεται να εκτελείται από το USB αποκατάστασης. Το Ubuntu μπορεί να εγκατασταθεί μόνο όταν εκτελείται από το σύστημα NVMe."
+
+#: templates/ubuntu_install.html:102 templates/ubuntu_uninstall.html:42
+msgid "Reboot now"
+msgstr "Επανεκκίνηση τώρα"
+
+#: templates/ubuntu_uninstall.html:28
+msgid "This system appears to be running from the recovery USB. Ubuntu can only be uninstalled when running from the NVMe system."
+msgstr "Το σύστημα φαίνεται να εκτελείται από το USB αποκατάστασης. Το Ubuntu μπορεί να απεγκατασταθεί μόνο όταν εκτελείται από το σύστημα NVMe."
+
+#: templates/ubuntu_uninstall.html:30
+msgid "Ubuntu is not currently installed on this device."
+msgstr "Το Ubuntu δεν είναι εγκατεστημένο αυτήν τη στιγμή σε αυτήν τη συσκευή."
+
+#: templates/vivado_install.html:18
+msgid "Install Vivado&trade; Lab Tools"
+msgstr "Εγκατάσταση Vivado&trade; Lab Tools"
+
+#: templates/vivado_install.html:22
+msgid "Release"
+msgstr "Έκδοση"
+
+#: templates/vivado_install.html:34
+msgid "Download the installer from AMD"
+msgstr "Λήψη του προγράμματος εγκατάστασης από την AMD"
+
+#: templates/vivado_install.html:36 templates/vivado_install.html:67
+msgid "Show"
+msgstr "Εμφάνιση"
+
+#: templates/vivado_install.html:39
+msgid "The Vivado Hardware Server installer must be downloaded from AMD after accepting the license terms. Use the QR code on a phone, or the link below in any browser."
+msgstr "Το πρόγραμμα εγκατάστασης του Vivado Hardware Server πρέπει να ληφθεί από την AMD μετά την αποδοχή των όρων άδειας χρήσης. Χρησιμοποιήστε τον κωδικό QR σε ένα τηλέφωνο ή τον παρακάτω σύνδεσμο σε οποιοδήποτε πρόγραμμα περιήγησης."
+
+#: templates/vivado_install.html:53
+msgid "Copy"
+msgstr "Αντιγραφή"
+
+#: templates/vivado_install.html:54
+msgid "Open here"
+msgstr "Άνοιγμα εδώ"
+
+#: templates/vivado_install.html:56
+msgid "Copied!"
+msgstr "Αντιγράφηκε!"
+
+#: templates/vivado_install.html:65
+msgid "Select installer"
+msgstr "Επιλογή προγράμματος εγκατάστασης"
+
+#: templates/vivado_install.html:71
+msgid "Found on this device"
+msgstr "Βρέθηκε σε αυτήν τη συσκευή"
+
+#: templates/vivado_install.html:72
+msgid "Upload from browser"
+msgstr "Μεταφόρτωση από το πρόγραμμα περιήγησης"
+
+#: templates/vivado_install.html:91
+msgid "Click to choose a .tar file..."
+msgstr "Κάντε κλικ για να επιλέξετε αρχείο .tar…"
+
+#: templates/vivado_install.html:97
+msgid "Selected:"
+msgstr "Επιλέχθηκε:"
+
+#: templates/vivado_install.html:103
+msgid "Rescan"
+msgstr "Νέα σάρωση"
+
+#: templates/vivado_install.html:104
+msgid "Install anyway (not recommended)"
+msgstr "Εγκατάσταση ούτως ή άλλως (δεν συνιστάται)"
+
+#: templates/vivado_install.html:110
+msgid "The downloaded file may have been corrupted, or this is a different release."
+msgstr "Το αρχείο που λήφθηκε ενδέχεται να είναι κατεστραμμένο ή πρόκειται για διαφορετική έκδοση."
+
+#: templates/vivado_install.html:127
+msgid "Before You Continue"
+msgstr "Πριν συνεχίσετε"
+
+#: templates/vivado_install.html:147
+msgid "Continue to AMD"
+msgstr "Συνέχεια στην AMD"
+
+#: templates/vivado_install.html:156
+msgid "License Agreements"
+msgstr "Άδειες χρήσης"
+
+#: templates/vivado_install.html:170
+msgid "Decline"
+msgstr "Απόρριψη"
+
+#: templates/vivado_install.html:171
+msgid "Accept and Install"
+msgstr "Αποδοχή και εγκατάσταση"
+
+#: i18n_strings.py
+msgid "Default"
+msgstr "Προεπιλογή"
+
+#: i18n_strings.py
+msgid "(not installed)"
+msgstr "(δεν έχει εγκατασταθεί)"
+
+#: i18n_strings.py
+msgid "No matching layouts"
+msgstr "Δεν βρέθηκαν διατάξεις"
+
+#: i18n_strings.py
+msgid "Reverting automatically in {n}s."
+msgstr "Αυτόματη επαναφορά σε {n} δευτ."
+
+#: i18n_strings.py
+msgid "Reverting…"
+msgstr "Επαναφορά…"
+
+#: i18n_strings.py
+msgid "Apply the {layout} keyboard layout?"
+msgstr "Εφαρμογή της διάταξης πληκτρολογίου «{layout}»;"
+
+#: i18n_strings.py
+msgid "The display on the appliance will go blank for a few seconds. If the new layout is unusable it reverts automatically after {n} seconds."
+msgstr "Η οθόνη της συσκευής θα σβήσει για λίγα δευτερόλεπτα. Αν η νέα διάταξη δεν είναι χρησιμοποιήσιμη, επαναφέρεται αυτόματα μετά από {n} δευτερόλεπτα."
+
+#: i18n_strings.py
+msgid "request failed"
+msgstr "το αίτημα απέτυχε"
+
+#: i18n_strings.py
+msgid "Reboot the Versal device?"
+msgstr "Επανεκκίνηση της συσκευής Versal;"
+
+#: i18n_strings.py
+msgid "Reprogramming the Versal OSPI/UFS will erase current contents. Are you sure?"
+msgstr "Ο επαναπρογραμματισμός του OSPI/UFS του Versal θα διαγράψει το τρέχον περιεχόμενο. Είστε βέβαιοι;"
+
+#: i18n_strings.py
+msgid "Program Versal and Flash Devices"
+msgstr "Προγραμματισμός Versal και συσκευών Flash"
+
+#: i18n_strings.py
+msgid "Modify Layout"
+msgstr "Τροποποίηση διάταξης"
+
+#: i18n_strings.py
+msgid "Read layout from target"
+msgstr "Ανάγνωση διάταξης από τη συσκευή"
+
+#: i18n_strings.py
+msgid "Restore Factory Default"
+msgstr "Επαναφορά εργοστασιακών ρυθμίσεων"
+
+#: i18n_strings.py
+msgid "UFS Layout"
+msgstr "Διάταξη UFS"
+
+#: i18n_strings.py
+msgid "The UFS device is divided into logical units. LUN 0 holds the Versal root filesystem and is what Flash Program writes. Boot LUNs are optional: the Versal boots from OSPI and does not use them."
+msgstr "Η συσκευή UFS χωρίζεται σε λογικές μονάδες. Το LUN 0 περιέχει το ριζικό σύστημα αρχείων του Versal και είναι αυτό που εγγράφει το «Flash Program». Τα LUN εκκίνησης είναι προαιρετικά: το Versal εκκινεί από OSPI και δεν τα χρησιμοποιεί."
+
+#: i18n_strings.py
+msgid "Could not read the LUN layout."
+msgstr "Δεν ήταν δυνατή η ανάγνωση της διάταξης LUN."
+
+#: i18n_strings.py
+msgid "Erase and re-provision"
+msgstr "Διαγραφή και αναδιαμόρφωση"
+
+#: i18n_strings.py
+msgid "LUN scan failed: "
+msgstr "Η σάρωση LUN απέτυχε: "
+
+#: i18n_strings.py
+msgid "PROVISIONING LOCKED: this device's layout can never be changed"
+msgstr "Η ΔΙΑΜΟΡΦΩΣΗ ΕΙΝΑΙ ΚΛΕΙΔΩΜΕΝΗ: η διάταξη αυτής της συσκευής δεν μπορεί να αλλάξει ποτέ"
+
+#: i18n_strings.py
+msgid "Re-provisioning failed."
+msgstr "Η αναδιαμόρφωση απέτυχε."
+
+#: i18n_strings.py
+msgid "Re-provisioning failed: "
+msgstr "Η αναδιαμόρφωση απέτυχε: "
+
+#: i18n_strings.py
+msgid "Re-provisioning the UFS device…"
+msgstr "Αναδιαμόρφωση της συσκευής UFS…"
+
+#: i18n_strings.py
+msgid "Reading the LUN layout from the target…"
+msgstr "Ανάγνωση της διάταξης LUN από τη συσκευή…"
+
+#: i18n_strings.py
+msgid "Target read. Nothing has been changed."
+msgstr "Η συσκευή διαβάστηκε. Δεν άλλαξε τίποτα."
+
+#: i18n_strings.py
+msgid "This re-provisions the Versal's UFS device. All data on it, including the root filesystem, becomes unrecoverable. The board will not boot afterwards until you program an image."
+msgstr "Αυτό αναδιαμορφώνει τη συσκευή UFS του Versal. Όλα τα δεδομένα σε αυτήν, μαζί με το ριζικό σύστημα αρχείων, καθίστανται μη ανακτήσιμα. Η πλακέτα δεν θα εκκινήσει μέχρι να προγραμματίσετε μια εικόνα."
+
+#: i18n_strings.py
+msgid "This restores the factory LUN layout for this device. All data on the UFS device becomes unrecoverable. The board will not boot afterwards until you program an image."
+msgstr "Αυτό επαναφέρει την εργοστασιακή διάταξη LUN αυτής της συσκευής. Όλα τα δεδομένα στη συσκευή UFS καθίστανται μη ανακτήσιμα. Η πλακέτα δεν θα εκκινήσει μέχρι να προγραμματίσετε μια εικόνα."
+
+#: i18n_strings.py
+msgid "UFS re-provisioned. The Versal will not boot until an image is programmed from the Flash Program tab."
+msgstr "Το UFS αναδιαμορφώθηκε. Το Versal δεν θα εκκινήσει μέχρι να προγραμματιστεί μια εικόνα από την καρτέλα «Flash Program»."
+
+#: i18n_strings.py
+msgid "allocatable"
+msgstr "διαθέσιμα προς εκχώρηση"
+
+#: i18n_strings.py
+msgid "allocation unit"
+msgstr "μονάδα εκχώρησης"
+
+#: i18n_strings.py
+msgid "boot LUN"
+msgstr "LUN εκκίνησης"
+
+#: i18n_strings.py
+msgid "boot"
+msgstr "εκκίν."
+
+#: i18n_strings.py
+msgid "Mark this LUN as a UFS boot LUN. Optional: the Versal boots from OSPI and does not use them."
+msgstr "Σήμανση αυτού του LUN ως LUN εκκίνησης UFS. Προαιρετικό: το Versal εκκινεί από OSPI και δεν τα χρησιμοποιεί."
+
+#: i18n_strings.py
+msgid "Overwrite UFS Layout"
+msgstr "Αντικατάσταση διάταξης UFS"
+
+#: i18n_strings.py
+msgid "Reset"
+msgstr "Επαναφορά"
+
+#: i18n_strings.py
+msgid "BOOT"
+msgstr "ΕΚΚΙΝ."
+
+#: i18n_strings.py
+msgid "remainder"
+msgstr "υπόλοιπο"
+
+#: i18n_strings.py
+msgid "remainder assigned"
+msgstr "το υπόλοιπο εκχωρήθηκε"
+
+#: i18n_strings.py
+msgid "unallocated"
+msgstr "μη εκχωρημένα"
+
+#: i18n_strings.py
+msgid "nothing left for the remainder LUN"
+msgstr "δεν απομένει τίποτα για το LUN υπολοίπου"
+
+#: i18n_strings.py
+msgid "over capacity by "
+msgstr "υπέρβαση χωρητικότητας κατά "
+
+#: i18n_strings.py
+msgid "used"
+msgstr "σε χρήση"
+
+#: i18n_strings.py
+msgid "Tick \"used\" to bring the next LUN into service. Sizes snap to whole allocation units; mark one LUN as \"remainder\" to give it whatever capacity is left. \"boot\" marks a UFS boot LUN: at most two exist, and they are optional because the Versal boots from OSPI."
+msgstr "Επιλέξτε «σε χρήση» για να θέσετε σε λειτουργία το επόμενο LUN. Τα μεγέθη στρογγυλοποιούνται σε ακέραιες μονάδες εκχώρησης· σημάνετε ένα LUN ως «υπόλοιπο» για να του δοθεί η χωρητικότητα που περισσεύει. Το «εκκίν.» ορίζει LUN εκκίνησης UFS: υπάρχουν το πολύ δύο και είναι προαιρετικά, καθώς το Versal εκκινεί από OSPI."
+
+#: i18n_strings.py
+msgid "New layout:"
+msgstr "Νέα διάταξη:"
+
+#: i18n_strings.py
+msgid "Current Layout"
+msgstr "Τρέχουσα διάταξη"
+
+#: templates/_versal_lab.html
+msgid "Erase before programming (recommended when changing image)"
+msgstr "Διαγραφή πριν τον προγραμματισμό (συνιστάται όταν αλλάζει η εικόνα)"
+
+#: templates/_versal_lab.html
+msgid "Erases only the region being programmed, then writes the image over it. Takes a few seconds on UFS."
+msgstr "Διαγράφει μόνο την περιοχή που προγραμματίζεται και έπειτα γράφει την εικόνα πάνω της. Διαρκεί λίγα δευτερόλεπτα στο UFS."
+
+#: templates/_versal_lab.html
+msgid "Advanced"
+msgstr "Για προχωρημένους"
+
+#: templates/_versal_lab.html
+msgid "Program Individual Partitions"
+msgstr "Προγραμματισμός μεμονωμένων κατατμήσεων"
+
+#: templates/system_update.html
+msgid "Support Logs"
+msgstr "Αρχεία καταγραφής υποστήριξης"
+
+#: templates/system_update.html
+msgid "A record of what has been programmed, installed and changed on this board. Logs are kept on this machine only. They are never uploaded or shared unless you download them and send them yourself."
+msgstr "Μια καταγραφή όσων έχουν προγραμματιστεί, εγκατασταθεί και αλλάξει σε αυτήν την πλακέτα. Τα αρχεία καταγραφής παραμένουν μόνο σε αυτό το μηχάνημα. Δεν αποστέλλονται ούτε κοινοποιούνται ποτέ, εκτός αν τα κατεβάσετε και τα στείλετε εσείς."
+
+#: templates/system_update.html
+msgid "Record support logs"
+msgstr "Καταγραφή αρχείων υποστήριξης"
+
+#: templates/system_update.html
+msgid "Download support archive"
+msgstr "Λήψη αρχείου υποστήριξης"
+
+#: i18n_strings.py
+msgid "No entries yet."
+msgstr "Δεν υπάρχουν ακόμη καταχωρίσεις."
+
+#: i18n_strings.py
+msgid "{n} entries"
+msgstr "{n} καταχωρίσεις"
+
+#: i18n_strings.py
+msgid "last entry"
+msgstr "τελευταία καταχώριση"
+
+#: i18n_strings.py
+msgid "Could not read the support log status."
+msgstr "Δεν ήταν δυνατή η ανάγνωση της κατάστασης των αρχείων καταγραφής."
+
+#: i18n_strings.py
+msgid "Could not change the setting."
+msgstr "Δεν ήταν δυνατή η αλλαγή της ρύθμισης."
+
+#: i18n_strings.py
+msgid "Recording is off."
+msgstr "Η καταγραφή είναι απενεργοποιημένη."
+
+#: i18n_strings.py
+msgid "Logging stopped: "
+msgstr "Η καταγραφή σταμάτησε: "
+
+#: i18n_strings.py
+msgid "Persistent storage is unavailable, so these logs will not survive a system update."
+msgstr "Ο μόνιμος αποθηκευτικός χώρος δεν είναι διαθέσιμος, επομένως αυτά τα αρχεία καταγραφής δεν θα διατηρηθούν μετά από ενημέρωση συστήματος."
+
+#: templates/index.html
+msgid "System / Updates / Logs"
+msgstr "Σύστημα / Ενημερώσεις / Αρχεία καταγραφής"
+
+#: templates/_versal_lab.html
+msgid "Warning: these options are experimental and may cause data loss. Ensure logging is enabled and use at your own risk."
+msgstr "Προειδοποίηση: αυτές οι επιλογές είναι πειραματικές και ενδέχεται να προκαλέσουν απώλεια δεδομένων. Βεβαιωθείτε ότι η καταγραφή είναι ενεργοποιημένη και χρησιμοποιήστε τις με δική σας ευθύνη."

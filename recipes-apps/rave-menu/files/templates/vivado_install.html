@@ -1,0 +1,199 @@
+{#
+Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+SPDX-License-Identifier: MIT
+Contributors: KC
+Maintainer: KC
+#}
+{% extends "base.html" %}
+
+{% block title %}Install Vivado Lab Tools{% endblock %}
+{% block body_class %}main-menu-page vivado-page-body{% endblock %}
+{% block head %}
+  <link rel="stylesheet" href="/static/vivado_install.css" />
+{% endblock %}
+
+{% block content %}
+
+    <div class="panel vivado-panel">
+      <div class="modal-title" style="font-size:28px; margin-bottom:6px;">{{ _('Install Vivado&trade; Lab Tools') }}</div>
+      <div id="vivadoCurrentState" class="vi-current-state">Checking install state...</div>
+
+      <div class="vi-version-row">
+        <label class="vi-version-label" for="vivadoVersion">{{ _('Release') }}</label>
+        <select id="vivadoVersion" class="eth-input vi-version-select">
+          <option value="">Loading...</option>
+        </select>
+        <span id="vivadoVersionBadge" class="vi-badge"></span>
+        <span id="vivadoVersionNote" class="vi-hint"></span>
+      </div>
+
+      <ol class="vi-steps">
+        <li id="vivadoStep1" class="vi-step">
+          <div class="vi-step-head">
+            <span class="vi-step-num">1</span>
+            <span class="vi-step-title">{{ _('Download the installer from AMD') }}</span>
+            <span class="vi-step-check" aria-hidden="true">&#10003;</span>
+            <button id="step1Toggle" type="button" class="vi-step-toggle" aria-label="Toggle step">{{ _('Show') }}</button>
+          </div>
+          <div class="vi-step-body">
+            <p>{{ _('The Vivado Hardware Server installer must be downloaded from AMD after accepting the license terms. Use the QR code on a phone, or the link below in any browser.') }}</p>
+            <div class="vi-download-row">
+              <img id="qrImg" src="/vivado-installer-url.png" alt="QR code for installer URL"
+                   class="vi-qr"
+                   title="Click to open the AMD download page"
+                   onerror="this.style.display='none';">
+              <div class="vi-download-meta">
+                <div class="vi-label">Filename</div>
+                <div id="expFilename" class="vi-mono">...</div>
+                <div class="vi-label" style="margin-top:8px;">SHA-256</div>
+                <div id="expSha" class="vi-mono vi-mono-sha">...</div>
+                <div class="vi-label" style="margin-top:8px;">URL</div>
+                <div class="vi-url-row">
+                  <a id="expUrl" class="vi-url" href="#" rel="noopener noreferrer">...</a>
+                  <button id="copyUrlBtn" type="button" class="vi-btn-small">{{ _('Copy') }}</button>
+                  <button id="openUrlBtn" type="button" class="vi-btn-small">{{ _('Open here') }}</button>
+                </div>
+                <div id="copyHint" class="vi-hint" style="display:none;">{{ _('Copied!') }}</div>
+              </div>
+            </div>
+          </div>
+        </li>
+
+        <li id="vivadoStep2" class="vi-step">
+          <div class="vi-step-head">
+            <span class="vi-step-num">2</span>
+            <span class="vi-step-title">{{ _('Select installer') }}</span>
+            <span class="vi-step-check" aria-hidden="true">&#10003;</span>
+            <button id="step2Toggle" type="button" class="vi-step-toggle" aria-label="Toggle step">{{ _('Show') }}</button>
+          </div>
+          <div class="vi-step-body">
+            <div class="vi-tabs" role="tablist">
+              <button class="vi-tab is-active" data-tab="found" role="tab">{{ _('Found on this device') }}</button>
+              <button class="vi-tab" data-tab="upload" role="tab">{{ _('Upload from browser') }}</button>
+            </div>
+
+            <div id="tabFound" class="vi-tab-panel is-active" role="tabpanel">
+              <div class="vi-tab-help">
+                Files we found on USB media or in the on-target Downloads folder.
+                Files renamed by your browser (<code>(1).tar</code>,
+                <code>.crdownload</code>, etc.) are listed too.
+              </div>
+              <ul id="sourceList" class="vi-source-list">
+                <li class="vi-source-empty">Searching...</li>
+              </ul>
+            </div>
+
+            <div id="tabUpload" class="vi-tab-panel" role="tabpanel">
+              <div class="vi-tab-help">Drag &amp; drop the <code>.tar</code> file or click to choose. The file is
+                uploaded to <code>/var/lib/rave-menu/vivado/uploads/</code> on the target.</div>
+              <label class="vi-drop">
+                <input id="uploadFile" type="file" accept=".tar" hidden>
+                <span class="vi-drop-label">{{ _('Click to choose a .tar file...') }}</span>
+              </label>
+              <div id="uploadStatus" class="vi-upload-status"></div>
+            </div>
+
+            <div id="installSelected" class="vi-installed-row">
+              <span class="vi-label">{{ _('Selected:') }}</span>
+              <span id="selectedPath" class="vi-mono">(none)</span>
+              <span id="selectedBadge" class="vi-badge"></span>
+            </div>
+            <div class="vi-actions">
+              <button id="installBtn" type="button" class="vi-btn-primary" disabled>{{ _('Install') }}</button>
+              <button id="rescanBtn" type="button" class="vi-btn-secondary">{{ _('Rescan') }}</button>
+              <button id="forceBtn" type="button" class="vi-btn-danger" style="display:none;">{{ _('Install anyway (not recommended)') }}</button>
+            </div>
+            <div id="shaWarning" class="vi-sha-warning" style="display:none;">
+              <strong id="warnTitle">Checksum mismatch.</strong>
+              <div id="warnExpectedRow">Expected: <span id="warnExpected" class="vi-mono"></span></div>
+              <div>Computed: <span id="warnComputed" class="vi-mono"></span></div>
+              <div id="warnHint" class="vi-hint">{{ _('The downloaded file may have been corrupted, or this is a different release.') }}</div>
+            </div>
+          </div>
+        </li>
+      </ol>
+
+      <div id="progressWrap" class="vi-progress" style="display:none;">
+        <div class="vi-progress-head">
+          <span id="progressLabel">Installing...</span>
+        </div>
+        <pre id="progressLog" class="vi-progress-log"></pre>
+      </div>
+
+      <!-- Browser navigation tips modal (shown only on the on-target browser) -->
+      <div id="browserTipsModal" class="vi-eula-modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="browserTipsTitle">
+        <div class="vi-eula-card">
+          <div class="vi-eula-head">
+            <div id="browserTipsTitle" class="vi-eula-title">{{ _('Before You Continue') }}</div>
+            <button id="browserTipsClose" type="button" class="vi-eula-close" aria-label="Close">X</button>
+          </div>
+          <div class="vi-eula-intro vi-tips-intro">
+            The AMD download page will open in a new browser tab. Before
+            continuing, press the key below to exit fullscreen mode &mdash;
+            this reveals the browser tabs and download bar so you can switch
+            back to this installer once the download has started.
+          </div>
+          <div class="vi-tips-body">
+            <div class="vi-tips-shortcut">
+              <kbd>F11</kbd>
+            </div>
+            <div class="vi-tips-note">
+              Exits fullscreen so you can see the tabs and download progress.
+              Press <kbd>F11</kbd> again later to return to fullscreen.
+            </div>
+          </div>
+          <div class="vi-eula-foot vi-tips-foot">
+            <button id="browserTipsCancel"   type="button" class="vi-btn-secondary">{{ _('Cancel') }}</button>
+            <button id="browserTipsContinue" type="button" class="vi-btn-primary">{{ _('Continue to AMD') }}</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- EULA modal -->
+      <div id="eulaModal" class="vi-eula-modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="eulaModalTitle">
+        <div class="vi-eula-card">
+          <div class="vi-eula-head">
+            <div id="eulaModalTitle" class="vi-eula-title">{{ _('License Agreements') }}</div>
+            <button id="eulaClose" type="button" class="vi-eula-close" aria-label="Close">X</button>
+          </div>
+          <div class="vi-eula-intro">
+            Please review the following AMD license agreements. You must accept
+            both to install Vivado&trade; Hardware Server.
+          </div>
+          <div id="eulaSections" class="vi-eula-sections"></div>
+          <div class="vi-eula-foot">
+            <label class="vi-eula-check">
+              <input id="eulaAccept" type="checkbox">
+              <span>I have read and accept the agreements above.</span>
+            </label>
+            <div class="vi-eula-buttons">
+              <button id="eulaDecline" type="button" class="vi-btn-secondary">{{ _('Decline') }}</button>
+              <button id="eulaAgree"   type="button" class="vi-btn-primary" disabled>{{ _('Accept and Install') }}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:18px;">
+        <button id="vivadoBackBtn" class="menu-btn" type="button" style="max-width:280px;">
+          <span class="ico svg-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="m13.6 6.2-6 5.8 6 5.8" />
+              <path d="M8 12h8.5" />
+            </svg>
+          </span>
+          <span class="txt">{{ _('Back to Main Menu') }}</span>
+        </button>
+      </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    (function () {
+      var b = document.getElementById("vivadoBackBtn");
+      if (b) b.addEventListener("click", function () { window.location.assign("/"); });
+    })();
+  </script>
+  <script src="/static/vivado_install.js"></script>
+{% endblock %}

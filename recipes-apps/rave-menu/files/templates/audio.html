@@ -1,0 +1,51 @@
+{#
+Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+SPDX-License-Identifier: MIT
+Contributors: KC
+Maintainer: KC
+#}
+{% extends "base.html" %}
+
+{% block title %}Audio{% endblock %}
+{% block body_class %}main-menu-page audio-page-body{% endblock %}
+{% block head %}
+  <link rel="stylesheet" href="/static/audio.css" />
+{% endblock %}
+
+{% block content %}
+
+    <div class="panel audio-panel">
+      <div class="audio-head">
+        <a href="/" class="net-btn net-btn-secondary audio-back">&larr; Back</a>
+        <h1 class="audio-title">{{ _('Audio') }}</h1>
+        <div class="audio-head-actions">
+          <span id="audioBackend" class="audio-backend-badge"></span>
+        </div>
+      </div>
+
+      <!-- OUTPUTS -->
+      <section class="audio-section">
+        <h2 class="audio-section-title">{{ _('Outputs') }}</h2>
+        <div id="sinkList" class="sink-cards"></div>
+      </section>
+
+      <!-- INPUTS / DMIC -->
+      <section class="audio-section">
+        <h2 class="audio-section-title">{{ _('Inputs') }}</h2>
+        <div id="inputSection" class="input-section">
+          <div class="audio-empty">{{ _('Loading…') }}</div>
+        </div>
+      </section>
+
+      <!-- Developer link (hidden unless ADAU1860 loaded) -->
+      <section class="audio-section audio-section-dev" id="adau1860DevSection" style="display:none;">
+        <a href="/audio/developer" class="net-btn net-btn-secondary codec-link-btn">
+          ADAU1860 Developer Panel &rarr;
+        </a>
+      </section>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="/static/audio.js"></script>
+{% endblock %}

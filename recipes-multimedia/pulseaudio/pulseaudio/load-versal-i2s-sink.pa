@@ -1,0 +1,29 @@
+# Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+# SPDX-License-Identifier: MIT
+# Contributors: KC
+# Maintainer: KC
+
+# Expose the ADAU1860 codec on the ACP card as a separate PulseAudio sink.
+#
+# Card 1 has two PCM playback devices:
+#   hw:1,0 -> NAU8822 codec (analog speakers/headphones)
+#   hw:1,1 -> ADAU1860 codec (I2S link via Versal mux to I2S_BT)
+#
+# PulseAudio's auto-detected ALSA card profile only binds the first codec PCM,
+# so without this the ADAU1860 link is invisible to applications. Loading it
+# explicitly gives the user a second selectable sink in the rave-menu
+# Setup Audio screen and to Chromium.
+#
+# Pin the sink to 48 kHz s16le stereo. The downstream EVAL-ADAU1860 codec
+# is clocked from a 24.576 MHz crystal whose only integer relationship is
+# to the 48 kHz family (24.576 MHz / 512 = 48 kHz). Letting PulseAudio
+# auto-pick 44.1 kHz feeds the codec a non-integer-related BCLK and the
+# internal datapath - configured for 48 kHz by the Lark Studio project -
+# resamples with the wrong ratio, producing audible pitch/speed drift and
+# tinny/robotic artefacts. Resample inside PA (cheap, high quality with
+# default speex-float-1) rather than fighting the codec's clock tree.
+#
+# NOTE: load-module statements must live on a single line - default.pa
+# does not honour backslash continuations.
+
+load-module module-alsa-sink device=hw:1,1 rate=48000 format=s16le channels=2 sink_name=acp_versal_i2s sink_properties=device.description="ADAU1860\ (Versal\ I2S)"

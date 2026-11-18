@@ -1,0 +1,445 @@
+/*
+ * Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+ * SPDX-License-Identifier: MIT
+ * Contributors: KC
+ * Maintainer: KC
+ */
+
+/* Audio page – mixer UI styles */
+
+/* Page scrollability override (shared .bg uses flex + overflow:hidden) */
+html, body.audio-page-body {
+  height: auto;
+  min-height: 100%;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+}
+body.audio-page-body .bg {
+  display: block !important;
+  height: auto !important;
+  min-height: 100vh;
+  overflow: visible !important;
+  padding: 0 0 calc(24px + env(safe-area-inset-bottom)) 0;
+}
+body.audio-page-body .topbar {
+  position: relative;
+  margin: 0 auto;
+}
+
+/* Panel */
+.audio-panel {
+  max-width: 900px;
+  width: min(900px, 96vw);
+  padding: 18px 22px 22px;
+  margin: 18px auto;
+}
+.audio-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.audio-back { white-space: nowrap; }
+.audio-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  flex: 1;
+  margin: 0;
+}
+.audio-head-actions { margin-left: auto; }
+
+/* Backend badge */
+.audio-backend-badge {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 10px;
+  background: var(--btn2);
+  color: var(--muted);
+}
+.badge-pipewire { background: #1a3a2a; color: #6fcf97; }
+.badge-pulseaudio { background: #3a2a1a; color: #f2994a; }
+
+/* Section */
+.audio-section {
+  margin-bottom: 22px;
+}
+.audio-section-title {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  margin: 0 0 10px 4px;
+  font-weight: 600;
+}
+.audio-section-dev {
+  text-align: center;
+  margin-top: 30px;
+}
+.audio-empty {
+  color: var(--muted);
+  font-size: 0.9rem;
+  padding: 12px 8px;
+}
+
+/* --- Sink cards --- */
+.sink-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.sink-card {
+  background: var(--btn);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 14px 16px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.sink-card.is-default {
+  border-color: var(--accent);
+  background: rgba(255,45,45,0.06);
+}
+.sink-card.is-unavailable {
+  opacity: 0.45;
+  pointer-events: none;
+}
+.sink-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.sink-card-name {
+  flex: 1;
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Default dot button */
+.sink-default-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--muted);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: border-color 0.2s;
+}
+.sink-default-btn.active {
+  border-color: var(--accent);
+}
+.sink-default-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: transparent;
+  transition: background 0.2s;
+}
+.sink-default-btn.active .sink-default-dot {
+  background: var(--accent);
+}
+
+/* Mute button */
+.sink-mute-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  background: var(--btn2);
+  color: var(--txt);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background 0.15s, color 0.15s;
+}
+.sink-mute-btn:hover { background: #3f4550; }
+.sink-mute-btn.is-muted {
+  background: rgba(255,45,45,0.15);
+  color: var(--accent);
+}
+
+/* Volume slider row */
+.sink-card-slider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.vol-slider {
+  flex: 1;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--btn2);
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+.vol-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  cursor: pointer;
+}
+.vol-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: none;
+  cursor: pointer;
+}
+.vol-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  min-width: 40px;
+  text-align: right;
+}
+
+/* --- Input cards --- */
+.input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.input-card {
+  background: var(--btn);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.input-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.input-card-name {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+.input-card-detail {
+  font-size: 0.75rem;
+  color: var(--muted);
+  background: var(--btn2);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.input-card-slider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+.input-card-slider label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  min-width: 70px;
+}
+.input-card-toggle {
+  margin-top: 8px;
+}
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.toggle-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+}
+.input-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+.btn-sm {
+  font-size: 0.75rem;
+  padding: 5px 12px;
+}
+
+/* --- DMIC meters --- */
+.dmic-meters {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 8px 0;
+}
+.dmic-meters.hidden { display: none; }
+.dmic-channel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dmic-ch-label {
+  font-size: 0.7rem;
+  color: var(--muted);
+  min-width: 34px;
+}
+.dmic-bar-bg {
+  flex: 1;
+  height: 8px;
+  background: var(--bg1);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+.dmic-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #27ae60, #f2c94c, #eb5757);
+  border-radius: 4px;
+  transition: width 0.15s;
+}
+.dmic-peak {
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: #fff;
+  transition: left 0.15s;
+}
+.dmic-db {
+  font-size: 0.7rem;
+  color: var(--muted);
+  min-width: 40px;
+  text-align: right;
+}
+.dmic-test-status {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* Loopback status area */
+.loopback-status-area {
+  width: 100%;
+  min-height: 0;
+}
+
+/* Unified debug section */
+.input-debug-section {
+  margin-top: 12px;
+  padding: 14px 16px;
+  background: var(--btn);
+  border-radius: 10px;
+}
+.input-debug-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 10px;
+}
+.input-debug-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  font-weight: 600;
+}
+.debug-select {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--border, #444);
+  background: var(--bg-alt, #2a2d35);
+  color: var(--text, #e0e0e0);
+  font-size: 0.8rem;
+  margin-left: auto;
+}
+.debug-meter-section {
+  margin-bottom: 0.75rem;
+}
+.debug-btn-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.debug-pair-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.debug-pair-group.hidden {
+  display: none;
+}
+.debug-pair-label {
+  font-size: 0.8rem;
+  color: var(--text-muted, #9aa0aa);
+}
+.debug-pair-select {
+  margin-left: 0;
+}
+.debug-meter-group {
+  margin-top: 0.5rem;
+}
+.debug-meter-group.hidden {
+  display: none;
+}
+.input-debug-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+.input-meter-area {
+  margin-bottom: 0.5rem;
+}
+.input-meter-area.hidden {
+  display: none;
+}
+
+/* Loopback progress bar */
+.loopback-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.4rem 0;
+}
+.loopback-phase {
+  font-size: 0.8rem;
+  color: var(--muted);
+  white-space: nowrap;
+  min-width: 120px;
+}
+.loopback-bar-bg {
+  flex: 1;
+  height: 8px;
+  background: var(--bg-alt, #2a2d35);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.loopback-bar {
+  height: 100%;
+  background: var(--primary, #4dabf7);
+  border-radius: 4px;
+  transition: width 0.2s linear;
+}
+.loopback-bar.playback {
+  background: var(--success, #51cf66);
+}
+.loopback-error {
+  font-size: 0.8rem;
+  color: var(--danger, #ff6b6b);
+}
+
+/* Codec link */
+.codec-link-btn {
+  display: inline-block;
+}

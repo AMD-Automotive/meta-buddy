@@ -1,0 +1,36 @@
+{#
+Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+SPDX-License-Identifier: MIT
+Contributors: KC
+Maintainer: KC
+#}
+{% extends "base.html" %}
+
+{% block title %}RAVE2 Buddy{% endblock %}
+{% block head %}
+  <link rel="stylesheet" href="/static/board_test.css" />
+{% endblock %}
+
+{% block content %}
+
+    <div class="board-test-shell">
+      <div class="board-test-banner">Board System Test</div>
+      <div id="boardTestAlert" class="board-test-alert hidden"></div>
+
+      <div id="boardTestGrid" class="board-test-grid"></div>
+
+      <div class="board-test-output-wrap">
+        <div id="boardTestOutputHead" class="board-test-output-head">Output</div>
+        <pre id="boardTestOutput" class="board-test-output"></pre>
+      </div>
+
+      <div class="board-test-actions">
+        <button id="boardTestRunAll" class="net-btn" type="button">{{ _('Run all tests') }}</button>
+        <button id="boardTestBack" class="net-btn board-test-back" type="button">{{ _('Back') }}</button>
+      </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="/static/board_test.js"></script>
+{% endblock %}

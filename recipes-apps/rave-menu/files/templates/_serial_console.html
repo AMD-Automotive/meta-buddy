@@ -1,0 +1,39 @@
+<!--
+Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+SPDX-License-Identifier: MIT
+Contributors: KC
+Maintainer: KC
+-->
+
+{# Full-screen interactive serial console (xterm.js). Included from index.html. #}
+<div id="serialConsoleModal" class="modal hidden serial-console-modal" role="dialog" aria-modal="true" aria-labelledby="serialConsoleTitle">
+  <div class="serial-console-card">
+    <div class="modal-head">
+      <div id="serialConsoleTitle" class="modal-title">{{ _('Serial Console') }}</div>
+      <div id="serialConsoleStatus" class="status" style="opacity:0.8;">{{ _('disconnected') }}</div>
+      <label class="serial-keepalive-toggle" for="serialKeepAliveChk" title="Keep the session alive after Exit so you can return and see what happened while away.">
+        <input type="checkbox" id="serialKeepAliveChk" />
+        <span class="serial-keepalive-track"><span class="serial-keepalive-thumb"></span></span>
+        <span class="serial-keepalive-label">{{ _('Keep alive') }}</span>
+      </label>
+    </div>
+    <div id="serialConsoleTerm" class="serial-console-term"></div>
+    <div class="modal-foot serial-console-foot">
+      <div class="serial-fontsize">
+        <span class="serial-fontsize-ico" aria-hidden="true">A</span>
+        <input id="serialFontSize" type="range" min="8" max="64" step="1" value="14"
+               aria-label="Terminal font size" />
+        <span id="serialFontSizeVal" class="serial-fontsize-val" aria-live="polite">14</span>
+        <label id="serialTimestampOption" class="serial-timestamp-toggle" for="serialTimestampChk">
+          <input type="checkbox" id="serialTimestampChk" />
+          <span class="serial-timestamp-box" aria-hidden="true"></span>
+          <span>Timestamp</span>
+        </label>
+      </div>
+      <button id="serialClearBtn" class="net-btn serial-foot-btn serial-foot-btn-secondary" type="button">{{ _('Clear') }}</button>
+      <button id="serialSaveLogBtn" class="net-btn serial-foot-btn serial-foot-btn-secondary" type="button">{{ _('Save console log') }}</button>
+      <button id="serialRebootBtn" class="net-btn serial-foot-btn" type="button">{{ _('Reboot Versal') }}</button>
+      <button id="serialExitBtn" class="net-btn serial-foot-btn serial-foot-btn-secondary" type="button">{{ _('Exit') }}</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,72 @@
+<!doctype html>
+{#
+Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+SPDX-License-Identifier: MIT
+Contributors: KC
+Maintainer: KC
+
+Shared page layout. Pages supply:
+  {% block title %}      page title
+  {% block head %}       extra <link>/<style>
+  {% block body_class %} classes on <body>
+  {% block topbar %}     extra topbar content (defaults to the version tag)
+  {% block content %}    page body, inside .bg
+  {% block scripts %}    page scripts
+
+The lang/dir attributes are set here rather than per page so every page
+reports the active locale. Beyond being correct for screen readers and
+hyphenation, fontconfig selects a regional face from lang, which is how
+Japanese and Simplified Chinese get the right Han glyph forms when those
+locales are added -- a per-page <html lang="en"> would silently give one
+language the other's glyphs.
+#}
+<html lang="{{ (active_locale|default('en_GB'))|replace('_','-') }}" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{% block title %}RAVE2 Buddy{% endblock %}</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/static/favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="/static/apple-touch-icon.png" />
+  {# Automated client? Start at /llms.txt for a docs index, /AGENTS.md for
+     orientation and safety notes, /api.md for the full HTTP API reference. #}
+  <link rel="describedby" href="/llms.txt" type="text/plain" title="Buddy docs index for agents" />
+  <link rel="alternate" href="/api.md" type="text/markdown" title="Buddy HTTP API reference" />
+  <link rel="stylesheet" href="/static/style.css" />
+  {% block head %}{% endblock %}
+</head>
+<body class="{% block body_class %}main-menu-page{% endblock %}">
+  {# Client-side strings, served as data rather than executable JS. A
+     translated string containing </script> would terminate an inline script
+     block, and catalogues are externally contributed, so this is a real
+     injection path rather than a theoretical one. Emitted before any page
+     script so window.t is always defined by the time one runs. #}
+  <script type="application/json" id="rave-i18n">{{ js_strings|default({})|tojson }}</script>
+  <script>
+    window.RAVE_I18N = (function () {
+      try { return JSON.parse(document.getElementById("rave-i18n").textContent); }
+      catch (e) { return {}; }
+    })();
+    window.t = function (key) {
+      return Object.prototype.hasOwnProperty.call(window.RAVE_I18N, key)
+        ? window.RAVE_I18N[key] : key;
+    };
+  </script>
+  <div class="bg">
+    <div class="topbar">
+      <a href="/" class="brand" style="text-decoration:none;">
+        <img class="logo" src="/static/title_logo.png" alt="RAVE2 BUDDY"
+             onerror="this.style.display='none';var fb=document.getElementById('fallbackBrand');if(fb){fb.style.display='block';}">
+        <div id="fallbackBrand" class="fallback-brand">AMD <span class="sep">|</span> SAPPHIRE</div>
+      </a>
+      <div class="glow"></div>
+      {% block topbar %}{% if menu_version %}<span class="version-tag">{{ menu_version }}</span>{% endif %}{% endblock %}
+    </div>
+{% block content %}{% endblock %}
+  </div>
+
+  {# Modals and full-screen overlays live outside .bg so they can cover it. #}
+{% block overlays %}{% endblock %}
+{% block scripts %}{% endblock %}
+</body>
+</html>

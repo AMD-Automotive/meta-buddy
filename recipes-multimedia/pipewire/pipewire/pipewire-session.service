@@ -1,0 +1,28 @@
+# Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+# SPDX-License-Identifier: MIT
+# Contributors: KC
+# Maintainer: KC
+
+# Systemd service to start PipeWire + WirePlumber for the weston kiosk user.
+#
+# PulseAudio uses autospawn (client connects → daemon starts). PipeWire
+# doesn't support autospawn; it needs socket activation or explicit start.
+# In our kiosk setup, weston doesn't have a full systemd --user session,
+# so we run PipeWire as a system service impersonating the weston user.
+
+[Unit]
+Description=PipeWire Audio Session (weston)
+After=weston.service
+Wants=wireplumber-session.service
+
+[Service]
+Type=simple
+User=weston
+SupplementaryGroups=audio
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+ExecStart=/usr/bin/pipewire
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

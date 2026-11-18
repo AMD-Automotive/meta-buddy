@@ -1,0 +1,23 @@
+# Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+# SPDX-License-Identifier: MIT
+# Contributors: KC
+# Maintainer: KC
+
+# WirePlumber session manager — runs alongside pipewire-session.service
+
+[Unit]
+Description=WirePlumber Session Manager (weston)
+After=pipewire-session.service
+BindsTo=pipewire-session.service
+
+[Service]
+Type=simple
+User=weston
+SupplementaryGroups=audio
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+ExecStart=/usr/bin/wireplumber
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

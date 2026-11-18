@@ -1,0 +1,412 @@
+{#
+Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+SPDX-License-Identifier: MIT
+Contributors: KC
+Maintainer: KC
+#}
+{% extends "base.html" %}
+
+{% block title %}Install Ubuntu{% endblock %}
+
+{% block content %}
+
+    <div class="panel" style="max-width:860px;">
+      <div class="modal-title" style="font-size:28px; margin-bottom:14px;">{{ _('Install Ubuntu') }}</div>
+
+      {% if ubuntu_installed %}
+      <div id="installedBanner" style="font-size:16px; color:var(--txt); background:rgba(255,255,255,0.06); border-radius:10px; padding:12px 16px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+        <span>Ubuntu is currently installed on this device.</span>
+        <button id="uninstallOk" class="net-btn" type="button" style="min-height:48px; min-width:180px; font-size:16px; background:rgba(220,60,60,0.85); border-color:rgba(255,120,120,0.5);"{% if not on_nvme %} disabled{% endif %}>{{ _('Uninstall Ubuntu') }}</button>
+      </div>
+      {% endif %}
+
+      <div id="introBlock" style="font-size:19px; line-height:1.5; color:var(--txt); margin-bottom:20px;">
+        This installs <strong>Ubuntu&reg; Desktop {{ "26.04 LTS" }}</strong> into the unused space on
+        the NVMe drive, downloading everything from Canonical&reg; over the network.
+        <ul style="margin:14px 0; padding-left:22px;">
+          <li>The RAVE2 application images and menu system are <strong>kept</strong>.</li>
+          <li>Any existing partitions in the <strong>free NVMe space</strong> (a previous Ubuntu
+              install) <strong>will be destroyed and recreated</strong>.</li>
+          <li>A sudo user <strong>amd</strong> (password <strong>amd</strong>) is created with automatic login.</li>
+          <li>Ubuntu becomes the default boot option; the RAVE2 menu stays available from the boot menu.</li>
+          <li><strong>Docker</strong> and <strong>amdgpu_top</strong> (AMD GPU monitoring) are installed.</li>
+        </ul>
+        {% if not on_nvme %}
+        <div class="status" style="display:block; color:#ffb4b4; margin-top:10px;">{{ _('This system appears to be running from the recovery USB. Ubuntu can only be installed when running from the NVMe system.') }}</div>
+        {% endif %}
+      </div>
+
+      <div id="logBlock" style="display:none; margin-bottom:16px;">
+        <pre id="installLog" class="terminal" style="height:46vh; overflow:auto;"></pre>
+      </div>
+
+      <div id="optionsBlock"{% if not on_nvme %} style="display:none;"{% endif %}>
+        <div style="display:flex; align-items:center; gap:12px; font-size:17px; color:var(--txt); margin-bottom:6px;">
+          <label class="power-switch">
+            <input id="ubuntuDefault" type="checkbox" checked>
+            <span class="power-slider"></span>
+          </label>
+          <span id="defaultBootLabel">Ubuntu is the default boot option</span>
+        </div>
+        <div style="font-size:14px; color:#9aa3af; margin-bottom:18px;">
+          Turn this off to keep the RAVE2 Buddy menu as the default boot option.
+          Either way, both remain selectable from the GRUB boot menu.
+        </div>
+
+        <div style="display:flex; align-items:center; gap:12px; font-size:17px; color:var(--txt); margin-bottom:6px;">
+          <label class="power-switch">
+            <input id="jumboEnabled" type="checkbox" checked>
+            <span class="power-slider"></span>
+          </label>
+          <span id="jumboToggleLabel">Reserve space for future <strong>Jumbo applications</strong></span>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px;">
+          <input id="jumboReserve" type="number" min="0" step="10" value="150"
+                 style="width:110px; font-size:17px; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.25); background:rgba(255,255,255,0.06); color:var(--txt);">
+          <span style="font-size:14px; color:#9aa3af;">GiB</span>
+        </div>
+        <div id="jumboNote" style="font-size:14px; color:#9aa3af; margin-bottom:14px;">
+          This much space is set aside logically before the Ubuntu partition and left
+          unformatted, for a future Jumbo application to use. Uncheck this to give
+          Ubuntu all of the free NVMe space instead.
+        </div>
+
+        <div id="capacityBar" style="height:26px; border-radius:6px; overflow:hidden; display:flex; border:1px solid rgba(255,255,255,0.2); margin-bottom:8px;">
+          <div id="capacityInstalled" style="background:linear-gradient(180deg, #4fb96a, #2b7a43); display:flex; align-items:center; justify-content:center; font-size:12px; color:#fff; white-space:nowrap; overflow:hidden;"></div>
+          <div id="capacityJumbo" style="background:linear-gradient(180deg, #5a7dbd, #2f4d80); display:flex; align-items:center; justify-content:center; font-size:12px; color:#fff; white-space:nowrap; overflow:hidden;"></div>
+          <div id="capacityUbuntu" style="background:linear-gradient(180deg, #e9723d, #a4451e); display:flex; align-items:center; justify-content:center; font-size:12px; color:#fff; white-space:nowrap; overflow:hidden;"></div>
+        </div>
+        <div id="capacityLegend" style="font-size:14px; color:#9aa3af; margin-bottom:8px; display:flex; gap:18px; flex-wrap:wrap;">
+          <span id="capacityInstalledItem" style="display:none;"><span style="display:inline-block; width:10px; height:10px; border-radius:2px; background:#4fb96a; margin-right:6px;"></span>Jumbo application installed: <span id="capacityInstalledLabel">—</span></span>
+          <span><span style="display:inline-block; width:10px; height:10px; border-radius:2px; background:#5a7dbd; margin-right:6px;"></span>Jumbo reservation: <span id="capacityJumboLabel">—</span></span>
+          <span><span style="display:inline-block; width:10px; height:10px; border-radius:2px; background:#e9723d; margin-right:6px;"></span>Ubuntu (+ swap): <span id="capacityUbuntuLabel">—</span></span>
+        </div>
+        <div id="capacityTotal" style="font-size:14px; color:var(--txt); margin-bottom:8px;"></div>
+        <div id="capacityWarning" style="display:none; color:#ffb4b4; font-size:14px; margin-bottom:18px;"></div>
+
+        <label style="display:flex; align-items:flex-start; gap:12px; font-size:16px; line-height:1.45; color:var(--txt); margin:18px 0 0; padding-top:16px; border-top:1px solid rgba(255,255,255,0.12);">
+          <input id="licenseAccept" type="checkbox" style="width:22px; height:22px; margin-top:2px; flex:0 0 auto;">
+          <span>
+            Ubuntu is provided by Canonical&nbsp;Ltd. under its own licence terms and is
+            installed from Canonical's servers. By continuing you agree to install and use
+            Ubuntu under those terms. See
+            <a href="https://ubuntu.com/legal" target="_blank" rel="noopener" style="color:#9ecbff;">ubuntu.com/legal</a>.
+          </span>
+        </label>
+      </div>
+
+      <div id="installStatus" class="status" style="display:block; margin-bottom:14px;"></div>
+
+      <div class="board-test-actions" style="display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+        <button id="installOk" class="net-btn" type="button" style="min-height:64px; min-width:200px; font-size:20px;"{% if not on_nvme %} disabled{% endif %}>{{ _('Install Ubuntu') }}</button>
+        <button id="rebootBtn" class="net-btn" type="button" style="min-height:64px; min-width:200px; font-size:20px; display:none; align-items:center; justify-content:center;">{{ _('Reboot now') }}</button>
+        <button id="installCancel" class="net-btn" type="button" style="min-height:64px; min-width:180px; font-size:20px;">{{ _('Back') }}</button>
+      </div>
+    </div>
+{% endblock %}
+
+{% block overlays %}
+
+  <!-- Confirm modal (in-page; no browser popups) -->
+  <div id="confirmModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="modal-card" style="width:min(640px,94vw); height:auto; padding:32px 32px 28px;">
+      <div id="confirmTitle" class="modal-title" style="font-size:22px; margin-bottom:16px;">{{ _('Please confirm') }}</div>
+      <div id="confirmMessage" style="color:var(--txt); font-size:17px; line-height:1.5; margin-bottom:28px;"></div>
+      <div style="display:flex; gap:16px; justify-content:flex-end; flex-wrap:wrap;">
+        <button id="confirmCancel" class="modal-close" style="min-width:160px; min-height:64px; padding:18px 32px; font-size:18px; font-weight:600; border-radius:14px;">{{ _('Cancel') }}</button>
+        <button id="confirmOk" class="modal-close" style="min-width:160px; min-height:64px; padding:18px 32px; font-size:18px; font-weight:700; border-radius:14px; background:rgba(220,60,60,0.85); border-color:rgba(255,120,120,0.5); color:#fff;">{{ _('Continue') }}</button>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    (function () {
+      const okBtn = document.getElementById("installOk");
+      const cancelBtn = document.getElementById("installCancel");
+      const rebootBtn = document.getElementById("rebootBtn");
+      const status = document.getElementById("installStatus");
+      const logBlock = document.getElementById("logBlock");
+      const logEl = document.getElementById("installLog");
+      const introBlock = document.getElementById("introBlock");
+      const optionsBlock = document.getElementById("optionsBlock");
+      const licenseAccept = document.getElementById("licenseAccept");
+      const ubuntuDefault = document.getElementById("ubuntuDefault");
+      const defaultBootLabel = document.getElementById("defaultBootLabel");
+      const jumboReserve = document.getElementById("jumboReserve");
+      const jumboEnabled = document.getElementById("jumboEnabled");
+      const jumboNote = document.getElementById("jumboNote");
+      const jumboToggleLabel = document.getElementById("jumboToggleLabel");
+      const capacityInstalled = document.getElementById("capacityInstalled");
+      const capacityInstalledItem = document.getElementById("capacityInstalledItem");
+      const capacityInstalledLabel = document.getElementById("capacityInstalledLabel");
+      const capacityTotal = document.getElementById("capacityTotal");
+      const capacityJumbo = document.getElementById("capacityJumbo");
+      const capacityUbuntu = document.getElementById("capacityUbuntu");
+      const capacityJumboLabel = document.getElementById("capacityJumboLabel");
+      const capacityUbuntuLabel = document.getElementById("capacityUbuntuLabel");
+      const capacityWarning = document.getElementById("capacityWarning");
+      const uninstallBtn = document.getElementById("uninstallOk");
+      const onNvme = {{ 'true' if on_nvme else 'false' }};
+      let freeMib = null;
+      let jumboAppMib = 0;
+      let capacityOk = true;
+
+      const MIB_PER_GIB = 1024;
+      const SWAP_GIB = 16;
+      const MIN_UBUNTU_ROOT_GIB = 40;
+      function gib(mib) { return Math.round((mib / MIB_PER_GIB) * 10) / 10; }
+
+      /* Install is gated on accepting the licence, running from NVMe, and
+         leaving Ubuntu enough room (see MIN_UBUNTU_ROOT_GIB below). */
+      function syncInstallEnabled() {
+        okBtn.disabled = !onNvme || !licenseAccept.checked || !capacityOk;
+      }
+      if (licenseAccept) {
+        licenseAccept.addEventListener("change", syncInstallEnabled);
+        syncInstallEnabled();
+      }
+
+      /* Reflect the default-boot choice in the label. */
+      function syncDefaultBootLabel() {
+        defaultBootLabel.textContent = ubuntuDefault.checked
+          ? "Ubuntu is the default boot option"
+          : "RAVE2 Buddy menu is the default boot option";
+      }
+      if (ubuntuDefault) {
+        ubuntuDefault.addEventListener("change", syncDefaultBootLabel);
+        syncDefaultBootLabel();
+      }
+
+      function jumboReserveGib() {
+        if (!jumboEnabled.checked) return 0;
+        const n = parseInt(jumboReserve.value, 10);
+        return (isNaN(n) || n < 0) ? 0 : n;
+      }
+
+      /* Draw the capacity bar showing Jumbo reservation vs. Ubuntu's share of
+         the free NVMe space (fetched once from /api/nvme-free-space), and
+         warn/gate Install if that leaves Ubuntu below MIN_UBUNTU_ROOT_GIB. */
+      function updateCapacityBar() {
+        const jumboMib = jumboReserveGib() * MIB_PER_GIB;
+        if (freeMib === null) {
+          capacityJumboLabel.textContent = jumboMib > 0 ? (gib(jumboMib) + " GiB") : "none";
+          capacityUbuntuLabel.textContent = "remaining free space";
+          capacityJumbo.style.flex = jumboMib > 0 ? "1" : "0";
+          capacityUbuntu.style.flex = "1";
+          capacityOk = true;
+          capacityWarning.style.display = "none";
+          syncInstallEnabled();
+          return;
+        }
+        const clampedJumbo = Math.min(jumboMib, Math.max(freeMib - 1, 0));
+        const ubuntuMib = Math.max(freeMib - clampedJumbo, 0);
+        /* An installed Jumbo app already owns part of the tail, so the bar is
+           drawn over the whole tail to show what is committed and what is not. */
+        const totalMib = jumboAppMib + freeMib;
+        const installedPct = totalMib > 0 ? (jumboAppMib / totalMib) * 100 : 0;
+        const jumboPct = totalMib > 0 ? (clampedJumbo / totalMib) * 100 : 0;
+        const ubuntuPct = Math.max(100 - installedPct - jumboPct, 0);
+        capacityInstalled.style.flex = installedPct > 0 ? installedPct.toFixed(2) : "0";
+        capacityJumbo.style.flex = jumboPct > 0 ? jumboPct.toFixed(2) : "0";
+        capacityUbuntu.style.flex = ubuntuPct.toFixed(2);
+        capacityInstalled.textContent = installedPct >= 8 ? Math.round(installedPct) + "%" : "";
+        capacityJumbo.textContent = jumboPct >= 8 ? Math.round(jumboPct) + "%" : "";
+        capacityUbuntu.textContent = ubuntuPct >= 8 ? Math.round(ubuntuPct) + "%" : "";
+        capacityInstalledItem.style.display = jumboAppMib > 0 ? "" : "none";
+        capacityInstalledLabel.textContent = gib(jumboAppMib) + " GiB";
+        capacityJumboLabel.textContent = clampedJumbo > 0 ? (gib(clampedJumbo) + " GiB") : "none";
+        capacityUbuntuLabel.textContent = gib(ubuntuMib) + " GiB of " + gib(freeMib) + " GiB free";
+
+        const committedMib = jumboAppMib + clampedJumbo;
+        capacityTotal.textContent = jumboAppMib > 0
+          ? ("Set aside for Jumbo applications: " + gib(jumboAppMib) +
+             " GiB installed + " + gib(clampedJumbo) + " GiB reserved = " +
+             gib(committedMib) + " GiB of the " + gib(totalMib) +
+             " GiB after rave-data. Ubuntu gets " + gib(ubuntuMib) + " GiB.")
+          : "";
+
+        const rootMib = ubuntuMib - (SWAP_GIB * MIB_PER_GIB);
+        const rootGib = gib(Math.max(rootMib, 0));
+        capacityOk = rootMib >= MIN_UBUNTU_ROOT_GIB * MIB_PER_GIB;
+        if (capacityOk) {
+          capacityWarning.style.display = "none";
+        } else {
+          capacityWarning.style.display = "block";
+          capacityWarning.textContent = "Only " + rootGib + " GiB would be left for Ubuntu (minimum " +
+            MIN_UBUNTU_ROOT_GIB + " GiB) — reduce the Jumbo reservation.";
+        }
+        syncInstallEnabled();
+      }
+      if (jumboReserve) jumboReserve.addEventListener("input", updateCapacityBar);
+      if (jumboEnabled) {
+        jumboEnabled.addEventListener("change", function () {
+          jumboReserve.disabled = !jumboEnabled.checked;
+          updateCapacityBar();
+        });
+        jumboReserve.disabled = !jumboEnabled.checked;
+      }
+      updateCapacityBar();
+      fetch("/api/nvme-free-space")
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          if (!d || !d.ok) return;
+          freeMib = d.free_mib;
+          jumboAppMib = d.jumbo_app_mib || 0;
+          if (d.jumbo_installed) {
+            /* Its partitions already exist and are excluded from free_mib, so
+               the default reserves nothing further - but more can be added. */
+            jumboEnabled.checked = false;
+            jumboReserve.value = "0";
+            jumboReserve.disabled = true;
+            jumboToggleLabel.innerHTML =
+              "Reserve <strong>additional</strong> space for future " +
+              "<strong>Jumbo applications</strong>";
+            jumboNote.textContent =
+              "A Jumbo application is already installed and holds " +
+              gib(jumboAppMib) + " GiB. That space is already set aside, so " +
+              "nothing more is reserved by default. Turn this on to hold back " +
+              "further space for another Jumbo application later; whatever is " +
+              "left goes to Ubuntu.";
+          }
+          updateCapacityBar();
+        })
+        .catch(function () { /* leave the bar in its no-data state */ });
+
+      function confirmMsg() {
+        const reserveGib = jumboReserveGib();
+        const reserveNote = reserveGib > 0
+          ? (" " + reserveGib + " GiB will be set aside ahead of it, unformatted, for future Jumbo applications.")
+          : "";
+        const installedNote = jumboAppMib > 0
+          ? (" The installed Jumbo application keeps its " + gib(jumboAppMib) + " GiB.")
+          : "";
+        return "This will DESTROY any partitions in the free NVMe space and install " +
+          "Ubuntu there." + reserveNote + installedNote +
+          " The RAVE2 menu and application images are kept. Continue?";
+      }
+
+      function appendLine(line) {
+        logEl.appendChild(document.createTextNode(line + "\n"));
+        logEl.scrollTop = logEl.scrollHeight;
+      }
+
+      /* In-page confirm modal — returns a Promise<boolean>. */
+      function showConfirm(message, opts) {
+        opts = opts || {};
+        return new Promise(function (resolve) {
+          const modal = document.getElementById("confirmModal");
+          const msgEl = document.getElementById("confirmMessage");
+          const titleEl = document.getElementById("confirmTitle");
+          const okEl = document.getElementById("confirmOk");
+          const cancelEl = document.getElementById("confirmCancel");
+          if (titleEl) titleEl.textContent = opts.title || "Please confirm";
+          msgEl.textContent = message;
+          okEl.textContent = opts.okLabel || "Continue";
+          cancelEl.textContent = opts.cancelLabel || "Cancel";
+          modal.classList.remove("hidden");
+          requestAnimationFrame(function () { cancelEl.focus(); });
+
+          function cleanup(result) {
+            modal.classList.add("hidden");
+            okEl.removeEventListener("click", onOk);
+            cancelEl.removeEventListener("click", onCancel);
+            modal.removeEventListener("click", onBackdrop);
+            document.removeEventListener("keydown", onKey);
+            resolve(result);
+          }
+          function onOk() { cleanup(true); }
+          function onCancel() { cleanup(false); }
+          function onBackdrop(e) { if (e.target === modal) cleanup(false); }
+          function onKey(e) {
+            if (e.key === "Escape") cleanup(false);
+            else if (e.key === "Enter") cleanup(true);
+          }
+          okEl.addEventListener("click", onOk);
+          cancelEl.addEventListener("click", onCancel);
+          modal.addEventListener("click", onBackdrop);
+          document.addEventListener("keydown", onKey);
+        });
+      }
+
+      cancelBtn.addEventListener("click", function () {
+        window.location.assign("/app-store");
+      });
+
+      rebootBtn.addEventListener("click", async function () {
+        rebootBtn.disabled = true;
+        status.textContent = "Rebooting...";
+        try {
+          await fetch("/api/reboot", { method: "POST" });
+        } catch (e) { /* connection drops as it reboots */ }
+        status.textContent = "Rebooting now — Ubuntu will start automatically.";
+      });
+
+      okBtn.addEventListener("click", async function () {
+        if (!licenseAccept.checked) return;
+        if (!(await showConfirm(confirmMsg(), { okLabel: "Install", cancelLabel: "Cancel" }))) return;
+
+        const bootChoice = ubuntuDefault.checked ? "default=ubuntu" : "default=buddy";
+        const jumboArg = "jumbo_reserve_gib=" + jumboReserveGib();
+
+        okBtn.disabled = true;
+        cancelBtn.disabled = true;
+        introBlock.style.display = "none";
+        if (optionsBlock) optionsBlock.style.display = "none";
+        logBlock.style.display = "block";
+        status.textContent = "Starting Ubuntu installation...";
+
+        fetch("/api/run/install-ubuntu", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ args: [bootChoice, jumboArg] })
+        })
+          .then(function (resp) {
+            if (!resp.ok) {
+              return resp.json().catch(function () { return {}; }).then(function (d) {
+                throw new Error(d.error || ("HTTP " + resp.status));
+              });
+            }
+            return resp.json();
+          })
+          .then(function (data) {
+            status.textContent = "Installing — this can take a while...";
+            const es = new EventSource("/api/stream/" + data.job_id);
+            es.onmessage = function (ev) { appendLine(ev.data); };
+            es.addEventListener("status", function (ev) {
+              es.close();
+              const m = /exited:(-?\d+)/.exec(ev.data || "");
+              const rc = m ? parseInt(m[1], 10) : -1;
+              if (rc === 0) {
+                status.textContent = "Ubuntu installed successfully.";
+                rebootBtn.style.display = "inline-flex";
+                cancelBtn.disabled = false;
+                cancelBtn.textContent = "Back";
+              } else {
+                status.textContent = "Installation failed (exit " + rc + "). See log above.";
+                okBtn.disabled = false;
+                cancelBtn.disabled = false;
+              }
+            });
+            es.onerror = function () {
+              status.textContent = "Connection to installer lost. Check the log above.";
+            };
+          })
+          .catch(function (err) {
+            status.textContent = "Failed to start: " + err.message;
+            okBtn.disabled = false;
+            cancelBtn.disabled = false;
+          });
+      });
+
+      /* Uninstall has its own dedicated confirm-and-run page. */
+      if (uninstallBtn) {
+        uninstallBtn.addEventListener("click", function () {
+          window.location.assign("/ubuntu-uninstall");
+        });
+      }
+    })();
+  </script>
+{% endblock %}

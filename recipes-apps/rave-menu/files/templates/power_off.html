@@ -1,0 +1,166 @@
+{#
+Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+SPDX-License-Identifier: MIT
+Contributors: KC
+Maintainer: KC
+#}
+{% extends "base.html" %}
+
+{% block title %}Confirm Power Off{% endblock %}
+{% block body_class %}power-off-page{% endblock %}
+
+{% block content %}
+
+    <main class="panel power-off-panel">
+      <div class="modal-title power-off-title">{{ _('Power Off Board') }}</div>
+      <div class="power-off-message">
+        Are you sure you want to turn off the board?
+      </div>
+      <div id="powerOffStatus" class="status power-off-status"></div>
+      <div class="power-off-actions">
+        <button id="powerOffOk" class="net-btn" type="button">{{ _('Power off') }}</button>
+        <button id="rebootBtn" class="net-btn" type="button">{{ _('Reboot') }}</button>
+        <button id="powerOffCancel" class="net-btn" type="button">{{ _('Cancel') }}</button>
+      </div>
+
+      <div class="power-off-oneshot" style="margin-top:28px; padding-top:22px; border-top:1px solid rgba(255,255,255,0.12);">
+        <div style="font-size:17px; color:var(--txt); margin-bottom:10px;">
+          Reboot once into a different GRUB entry
+        </div>
+        <div style="font-size:14px; color:#9aa3af; margin-bottom:14px;">
+          Boots the selected entry for this reboot only; the normal default
+          boot choice is unaffected and takes over again afterwards.
+        </div>
+        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+          <select id="onceTarget" style="font-size:16px; padding:10px 12px; border-radius:6px; border:1px solid rgba(255,255,255,0.25); background-color:#171a20; color:var(--txt);"></select>
+          <button id="onceRebootBtn" class="net-btn" type="button" style="min-height:48px;">{{ _('Reboot once') }}</button>
+        </div>
+      </div>
+
+    </main>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    (function () {
+      const okBtn = document.getElementById("powerOffOk");
+      const cancelBtn = document.getElementById("powerOffCancel");
+      const status = document.getElementById("powerOffStatus");
+
+      if (cancelBtn) {
+        cancelBtn.addEventListener("click", function () {
+          window.location.assign("/");
+        });
+      }
+
+      const rebootBtn = document.getElementById("rebootBtn");
+      const onceRebootBtn = document.getElementById("onceRebootBtn");
+      const onceTarget = document.getElementById("onceTarget");
+
+      /* Same targets, same labels, same order as the main menu's Boot
+         settings chooser (see app.js::targetsFor) — just different ids,
+         since these map to GRUB --id values rather than boot_default. */
+      (function populateOnceTarget() {
+        fetch("/api/boot-default")
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            var targets = [{ id: "menu", label: "Buddy (menu)" }];
+            if (d.installed) targets.push({ id: "ubuntu", label: "Ubuntu" });
+            if (d.app_installed) {
+              targets.push({ id: "app-a", label: (d.app_name || "Application").trim() || "Application" });
+            }
+            onceTarget.textContent = "";
+            targets.forEach(function (tgt) {
+              var opt = document.createElement("option");
+              opt.value = tgt.id;
+              opt.textContent = tgt.label;
+              opt.style.backgroundColor = "#171a20";
+              opt.style.color = "#e9edf2";
+              onceTarget.appendChild(opt);
+            });
+          })
+          .catch(function () { /* leave the select empty; Reboot once will just no-op */ });
+      })();
+
+      function disableAll() {
+        okBtn.disabled = true;
+        if (rebootBtn) rebootBtn.disabled = true;
+        if (onceRebootBtn) onceRebootBtn.disabled = true;
+        cancelBtn.disabled = true;
+      }
+      function enableAll() {
+        okBtn.disabled = false;
+        if (rebootBtn) rebootBtn.disabled = false;
+        if (onceRebootBtn) onceRebootBtn.disabled = false;
+        cancelBtn.disabled = false;
+      }
+
+      if (okBtn) {
+        okBtn.addEventListener("click", async function () {
+          disableAll();
+          status.textContent = "Power-off requested...";
+          try {
+            const resp = await fetch("/api/poweroff", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({})
+            });
+            if (!resp.ok) {
+              const text = await resp.text();
+              throw new Error(text || ("HTTP " + resp.status));
+            }
+            status.textContent = "Board is shutting down.";
+          } catch (err) {
+            status.textContent = "Failed to power off: " + err.message;
+            enableAll();
+          }
+        });
+      }
+
+      if (rebootBtn) {
+        rebootBtn.addEventListener("click", async function () {
+          disableAll();
+          status.textContent = "Reboot requested...";
+          try {
+            const resp = await fetch("/api/reboot", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({})
+            });
+            if (!resp.ok) {
+              const text = await resp.text();
+              throw new Error(text || ("HTTP " + resp.status));
+            }
+            status.textContent = "Board is rebooting.";
+          } catch (err) {
+            status.textContent = "Failed to reboot: " + err.message;
+            enableAll();
+          }
+        });
+      }
+
+      if (onceRebootBtn) {
+        onceRebootBtn.addEventListener("click", async function () {
+          const entry = onceTarget.value;
+          disableAll();
+          status.textContent = "Rebooting once into " + onceTarget.options[onceTarget.selectedIndex].text + "...";
+          try {
+            const resp = await fetch("/api/reboot-to", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ entry: entry })
+            });
+            const data = await resp.json().catch(function () { return {}; });
+            if (!resp.ok || !data.ok) {
+              throw new Error(data.error || ("HTTP " + resp.status));
+            }
+            status.textContent = "Board is rebooting into " + onceTarget.options[onceTarget.selectedIndex].text + ".";
+          } catch (err) {
+            status.textContent = "Failed to reboot: " + err.message;
+            enableAll();
+          }
+        });
+      }
+    })();
+  </script>
+{% endblock %}

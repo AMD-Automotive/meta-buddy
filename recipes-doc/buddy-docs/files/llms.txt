@@ -1,0 +1,66 @@
+# RAVE2 Buddy
+
+> Buddy is the local web menu and control plane for a RAVE2 board: an x86 host
+> carrying an AMD Versal adaptive SoC on PCIe. It exposes an HTTP API on port
+> 80 that programs the Versal, manages storage and networking, drives audio
+> hardware, installs applications, and applies RAUC system updates.
+
+Important notes before you act:
+
+- **The API has no authentication.** It runs as root on port 80, bound to all
+  interfaces. Every endpoint is reachable unauthenticated, including reboot,
+  power off, BIOS flash writes, Versal programming, and an interactive shell.
+  The one restriction is that state-changing requests are refused with `403`
+  when `Origin` or `Sec-Fetch-Site` marks them cross-site, which blocks a
+  drive-by from a browser but does not affect a direct caller.
+- Long-running work is asynchronous: `POST /api/run/<action>` returns a
+  `job_id`, and progress streams from `GET /api/stream/<job_id>` as Server-Sent
+  Events terminated by `event: status` / `data: exited:<returncode>`.
+- A single `flock` on `/run/lock/rave-bulk-operation.lock` serialises
+  operations that write flash or repartition storage. Endpoints that would
+  corrupt an in-flight operation return HTTP `409`. Back off and retry; never
+  work around it.
+- `GET` endpoints are read-only and safe, except `GET /api/rauc-status` and
+  `GET /api/browse?source=ubuntu`, which mount filesystems.
+
+## Docs
+
+- [Agent orientation](/AGENTS.md): what the board is, safe versus destructive
+  operations, where the source of record lives, and platform gotchas. Read
+  this first.
+- [HTTP API reference](/api.md): every endpoint, grouped by functional area,
+  with request fields, response keys, exact error strings and side effects.
+
+## Live state
+
+- [/api/tools/version](/api/tools/version): which Versal toolchain release is
+  selected and which is actually in effect
+- [/api/hw-server/status](/api/hw-server/status): whether a Vivado hardware
+  server is running, at which release, and on which addresses
+- [/api/vivado/status](/api/vivado/status): which toolchain releases are
+  installed under `/opt/tools`
+- [/api/rauc-status](/api/rauc-status): A/B slot state and per-slot versions
+  (note: mounts the inactive slot to read it)
+- [/api/boot-default](/api/boot-default): what the board boots by default
+- [/api/storage-status](/api/storage-status): bulk storage health and free space
+- [/api/support-logs](/api/support-logs): how much operation history the board
+  has recorded (the archive itself, `/api/support-logs/download`, can be
+  hundreds of megabytes — do not fetch it casually)
+- [/api/versal/luns/scan](/api/versal/luns/scan): the Versal's current UFS LUN
+  layout, capacity and whether provisioning is still permitted (read-only, but
+  resets the Versal to read it)
+- [/api/network/services](/api/network/services): network technologies,
+  services and interfaces
+- [/api/board-test/status](/api/board-test/status): hardware test results
+- [/api/localization](/api/localization): keyboard layout, system language, and
+  which locales are installed
+
+## Optional
+
+- [Main menu](/): the human-facing web UI
+- [Board test page](/board-test)
+- [App store](/app-store)
+- [Audio controls](/audio) and [developer view](/audio/developer)
+- [Vivado installer](/vivado-install)
+- [Localisation](/localisation): keyboard layout and language. Append `?lang=`
+  to any page to override the display language for one request.

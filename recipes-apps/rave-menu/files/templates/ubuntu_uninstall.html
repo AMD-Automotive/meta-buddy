@@ -1,0 +1,185 @@
+{#
+Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+SPDX-License-Identifier: MIT
+Contributors: KC
+Maintainer: KC
+#}
+{% extends "base.html" %}
+
+{% block title %}Uninstall Ubuntu{% endblock %}
+
+{% block content %}
+
+    <div class="panel" style="max-width:860px;">
+      <div class="modal-title" style="font-size:28px; margin-bottom:14px;">{{ _('Uninstall Ubuntu') }}</div>
+
+      <div id="introBlock" style="font-size:19px; line-height:1.5; color:var(--txt); margin-bottom:20px;">
+        This removes the Ubuntu install from the NVMe drive.
+        <ul style="margin:14px 0; padding-left:22px;">
+          <li>The Ubuntu <strong>root and swap partitions are deleted</strong>, along with
+              everything on them. This cannot be undone.</li>
+          <li>The RAVE2 application images and menu system are <strong>kept</strong>.</li>
+          <li>The free NVMe space is returned to the same unpartitioned state it was in
+              before Ubuntu was ever installed.</li>
+          <li>Ubuntu is removed from the boot menu; the RAVE2 menu becomes the default
+              boot option again.</li>
+        </ul>
+        {% if not on_nvme %}
+        <div class="status" style="display:block; color:#ffb4b4; margin-top:10px;">{{ _('This system appears to be running from the recovery USB. Ubuntu can only be uninstalled when running from the NVMe system.') }}</div>
+        {% elif not ubuntu_installed %}
+        <div class="status" style="display:block; color:#9aa3af; margin-top:10px;">{{ _('Ubuntu is not currently installed on this device.') }}</div>
+        {% endif %}
+      </div>
+
+      <div id="logBlock" style="display:none; margin-bottom:16px;">
+        <pre id="uninstallLog" class="terminal" style="height:46vh; overflow:auto;"></pre>
+      </div>
+
+      <div id="uninstallStatus" class="status" style="display:block; margin-bottom:14px;"></div>
+
+      <div class="board-test-actions" style="display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap;">
+        <button id="uninstallOk" class="net-btn" type="button" style="min-height:64px; min-width:200px; font-size:20px; background:rgba(220,60,60,0.85); border-color:rgba(255,120,120,0.5);"{% if not on_nvme or not ubuntu_installed %} disabled{% endif %}>{{ _('Uninstall Ubuntu') }}</button>
+        <button id="rebootBtn" class="net-btn" type="button" style="min-height:64px; min-width:200px; font-size:20px; display:none; align-items:center; justify-content:center;">{{ _('Reboot now') }}</button>
+        <button id="uninstallCancel" class="net-btn" type="button" style="min-height:64px; min-width:180px; font-size:20px;">{{ _('Back') }}</button>
+      </div>
+    </div>
+{% endblock %}
+
+{% block overlays %}
+
+  <!-- Confirm modal (in-page; no browser popups) -->
+  <div id="confirmModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="modal-card" style="width:min(640px,94vw); height:auto; padding:32px 32px 28px;">
+      <div id="confirmTitle" class="modal-title" style="font-size:22px; margin-bottom:16px;">{{ _('Please confirm') }}</div>
+      <div id="confirmMessage" style="color:var(--txt); font-size:17px; line-height:1.5; margin-bottom:28px;"></div>
+      <div style="display:flex; gap:16px; justify-content:flex-end; flex-wrap:wrap;">
+        <button id="confirmCancel" class="modal-close" style="min-width:160px; min-height:64px; padding:18px 32px; font-size:18px; font-weight:600; border-radius:14px;">{{ _('Cancel') }}</button>
+        <button id="confirmOk" class="modal-close" style="min-width:160px; min-height:64px; padding:18px 32px; font-size:18px; font-weight:700; border-radius:14px; background:rgba(220,60,60,0.85); border-color:rgba(255,120,120,0.5); color:#fff;">{{ _('Continue') }}</button>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    (function () {
+      const okBtn = document.getElementById("uninstallOk");
+      const cancelBtn = document.getElementById("uninstallCancel");
+      const rebootBtn = document.getElementById("rebootBtn");
+      const status = document.getElementById("uninstallStatus");
+      const logBlock = document.getElementById("logBlock");
+      const logEl = document.getElementById("uninstallLog");
+      const introBlock = document.getElementById("introBlock");
+
+      const CONFIRM_MSG =
+        "This will PERMANENTLY DELETE the Ubuntu root and swap partitions and " +
+        "everything on them, returning the free NVMe space to its pre-install " +
+        "state. The RAVE2 menu and application images are not affected. This " +
+        "cannot be undone. Continue?";
+
+      function appendLine(line) {
+        logEl.appendChild(document.createTextNode(line + "\n"));
+        logEl.scrollTop = logEl.scrollHeight;
+      }
+
+      /* In-page confirm modal — returns a Promise<boolean>. */
+      function showConfirm(message, opts) {
+        opts = opts || {};
+        return new Promise(function (resolve) {
+          const modal = document.getElementById("confirmModal");
+          const msgEl = document.getElementById("confirmMessage");
+          const titleEl = document.getElementById("confirmTitle");
+          const okEl = document.getElementById("confirmOk");
+          const cancelEl = document.getElementById("confirmCancel");
+          if (titleEl) titleEl.textContent = opts.title || "Please confirm";
+          msgEl.textContent = message;
+          okEl.textContent = opts.okLabel || "Continue";
+          cancelEl.textContent = opts.cancelLabel || "Cancel";
+          modal.classList.remove("hidden");
+          requestAnimationFrame(function () { cancelEl.focus(); });
+
+          function cleanup(result) {
+            modal.classList.add("hidden");
+            okEl.removeEventListener("click", onOk);
+            cancelEl.removeEventListener("click", onCancel);
+            modal.removeEventListener("click", onBackdrop);
+            document.removeEventListener("keydown", onKey);
+            resolve(result);
+          }
+          function onOk() { cleanup(true); }
+          function onCancel() { cleanup(false); }
+          function onBackdrop(e) { if (e.target === modal) cleanup(false); }
+          function onKey(e) {
+            if (e.key === "Escape") cleanup(false);
+            else if (e.key === "Enter") cleanup(true);
+          }
+          okEl.addEventListener("click", onOk);
+          cancelEl.addEventListener("click", onCancel);
+          modal.addEventListener("click", onBackdrop);
+          document.addEventListener("keydown", onKey);
+        });
+      }
+
+      cancelBtn.addEventListener("click", function () {
+        window.location.assign("/app-store");
+      });
+
+      rebootBtn.addEventListener("click", async function () {
+        rebootBtn.disabled = true;
+        status.textContent = "Rebooting...";
+        try {
+          await fetch("/api/reboot", { method: "POST" });
+        } catch (e) { /* connection drops as it reboots */ }
+        status.textContent = "Rebooting now...";
+      });
+
+      okBtn.addEventListener("click", async function () {
+        if (!(await showConfirm(CONFIRM_MSG, { okLabel: "Uninstall", cancelLabel: "Cancel" }))) return;
+
+        okBtn.disabled = true;
+        cancelBtn.disabled = true;
+        introBlock.style.display = "none";
+        logBlock.style.display = "block";
+        status.textContent = "Removing Ubuntu...";
+
+        fetch("/api/run/uninstall-ubuntu", { method: "POST" })
+          .then(function (resp) {
+            if (!resp.ok) {
+              return resp.json().catch(function () { return {}; }).then(function (d) {
+                throw new Error(d.error || ("HTTP " + resp.status));
+              });
+            }
+            return resp.json();
+          })
+          .then(function (data) {
+            status.textContent = "Uninstalling...";
+            const es = new EventSource("/api/stream/" + data.job_id);
+            es.onmessage = function (ev) { appendLine(ev.data); };
+            es.addEventListener("status", function (ev) {
+              es.close();
+              const m = /exited:(-?\d+)/.exec(ev.data || "");
+              const rc = m ? parseInt(m[1], 10) : -1;
+              cancelBtn.disabled = false;
+              cancelBtn.textContent = "Back";
+              if (rc === 0) {
+                status.textContent = "Ubuntu has been uninstalled.";
+                rebootBtn.style.display = "inline-flex";
+              } else {
+                status.textContent = "Uninstall failed (exit " + rc + "). See log above.";
+                okBtn.disabled = false;
+              }
+            });
+            es.onerror = function () {
+              status.textContent = "Connection to installer lost. Check the log above.";
+            };
+          })
+          .catch(function (err) {
+            status.textContent = "Failed to start: " + err.message;
+            okBtn.disabled = false;
+            cancelBtn.disabled = false;
+          });
+      });
+    })();
+  </script>
+{% endblock %}

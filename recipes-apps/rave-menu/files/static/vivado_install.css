@@ -1,0 +1,354 @@
+/*
+ * Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+ * SPDX-License-Identifier: MIT
+ * Contributors: KC
+ * Maintainer: KC
+ */
+
+/* Vivado Lab Tools installer page */
+
+/* The shared .bg uses height:100% + flex + overflow:hidden which clips long
+   pages. Drop the flex shell on this page and let the document body scroll
+   natively (mirrors the audio page fix). */
+html, body.vivado-page-body {
+  height: auto;
+  min-height: 100%;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+}
+body.vivado-page-body .bg {
+  display: block !important;
+  height: auto !important;
+  min-height: 100vh;
+  overflow: visible !important;
+  padding: 0 0 calc(24px + env(safe-area-inset-bottom)) 0;
+}
+body.vivado-page-body .topbar {
+  position: relative;
+  margin: 0 auto;
+}
+body.vivado-page-body .vivado-panel {
+  margin: 18px auto;
+}
+
+.vivado-panel { max-width: 920px; }
+
+.vi-current-state {
+  font-size: 14px; color: var(--muted); margin-bottom: 18px;
+}
+.vi-current-state.is-installed { color: #66bb6a; }
+.vi-current-state.is-missing  { color: var(--accent); }
+
+/* Release picker -- drives every version-specific part of the page. */
+.vi-version-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+}
+.vi-version-label {
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.vi-version-select { padding: 6px 10px; font-size: 14px; min-width: 210px; }
+.vi-version-row .vi-hint { margin-top: 0; flex: 1 1 100%; }
+
+.vi-steps { list-style: none; padding: 0; margin: 0; }
+.vi-step {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  margin-bottom: 14px;
+  padding: 14px 18px;
+}
+.vi-step-head {
+  font-size: 17px; font-weight: 600; color: var(--txt);
+  margin-bottom: 10px;
+  display: flex; align-items: center; gap: 10px;
+}
+.vi-step-title { flex: 1; }
+.vi-step-check {
+  display: none;
+  color: #66bb6a;
+  font-size: 22px;
+  font-weight: 700;
+}
+.vi-step-toggle {
+  display: none;
+  background: var(--btn); border: 1px solid rgba(255,255,255,0.10);
+  color: var(--txt); padding: 8px 14px; min-height: 36px;
+  border-radius: 6px; font-size: 13px; cursor: pointer;
+}
+.vi-step-toggle:hover { background: var(--btn2); }
+.vi-step.is-complete .vi-step-num { background: rgba(76,175,80,0.20); color: #66bb6a; }
+.vi-step.is-complete .vi-step-check { display: inline; }
+.vi-step.is-complete .vi-step-toggle { display: inline-block; }
+.vi-step.is-complete.is-collapsed .vi-step-head { margin-bottom: 0; }
+.vi-step.is-complete.is-collapsed .vi-step-body { display: none; }
+.vi-step-num {
+  display: inline-block; width: 26px; height: 26px;
+  border-radius: 50%; background: var(--btn);
+  font-size: 14px; line-height: 26px; text-align: center;
+  margin-right: 10px;
+}
+.vi-step-body { color: var(--muted); font-size: 14px; line-height: 1.5; }
+.vi-step-body p { margin: 0 0 10px; }
+
+.vi-download-row { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
+.vi-qr {
+  width: 200px; height: 200px;
+  background: #fff; padding: 6px; border-radius: 8px;
+  flex: 0 0 auto;
+}
+.vi-download-meta { flex: 1; min-width: 240px; }
+.vi-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.vi-mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px; color: var(--txt); word-break: break-all; }
+.vi-mono-sha { font-size: 11px; }
+.vi-url-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+.vi-url { color: var(--accent2); font-size: 13px; word-break: break-all; flex: 1; min-width: 220px; }
+
+.vi-btn-small {
+  font-size: 14px; padding: 10px 18px; min-height: 44px; min-width: 80px;
+  background: var(--btn); border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 8px; color: var(--txt); cursor: pointer; font-weight: 500;
+}
+.vi-btn-small:hover { background: var(--btn2); }
+
+.vi-tabs { display: flex; gap: 4px; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 12px; }
+.vi-tab {
+  background: transparent; border: none; color: var(--muted);
+  font-size: 14px; padding: 8px 14px; cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+.vi-tab:hover { color: var(--txt); }
+.vi-tab.is-active { color: var(--txt); border-bottom-color: var(--accent); }
+.vi-tab-panel { display: none; }
+.vi-tab-panel.is-active { display: block; }
+.vi-tab-help { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+.vi-tab-help code { background: rgba(255,255,255,0.05); padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+
+.vi-source-list { list-style: none; padding: 0; margin: 0 0 10px; }
+.vi-source-list li {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 10px 12px; margin-bottom: 6px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 6px;
+  cursor: pointer; transition: background 0.12s;
+}
+.vi-source-list li:hover { background: rgba(255,255,255,0.07); }
+.vi-source-list li.is-selected { border-color: var(--accent); background: rgba(255,45,45,0.10); }
+.vi-source-list .vi-src-main { flex: 1; min-width: 240px; }
+.vi-source-list .vi-src-name { font-size: 13px; color: var(--txt); word-break: break-all; }
+.vi-source-list .vi-src-meta { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.vi-source-list .vi-src-hint { font-size: 11px; color: #f0ad4e; margin-top: 3px; }
+.vi-source-empty { color: var(--muted); font-size: 13px; cursor: default !important; background: transparent !important; }
+
+.vi-badge {
+  font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 4px;
+  letter-spacing: 0.04em;
+}
+.vi-badge.ok    { background: rgba(76,175,80,0.20); color: #66bb6a; }
+.vi-badge.bad   { background: rgba(255,45,45,0.20); color: var(--accent); }
+.vi-badge.warn  { background: rgba(240,173,78,0.20); color: #f0ad4e; }
+.vi-badge.kind  { background: rgba(255,255,255,0.06); color: var(--muted); }
+
+.vi-drop {
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px; min-height: 80px;
+  background: rgba(255,255,255,0.03);
+  border: 1px dashed rgba(255,255,255,0.18); border-radius: 8px;
+  cursor: pointer; transition: border-color 0.15s;
+}
+.vi-drop:hover, .vi-drop.is-drag { border-color: var(--accent); }
+.vi-drop-label { color: var(--muted); font-size: 14px; }
+.vi-upload-status { margin-top: 8px; font-size: 13px; color: var(--muted); }
+
+.vi-installed-row { margin-bottom: 12px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.vi-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.vi-btn-primary {
+  background: rgba(255,45,45,0.25); border: 1px solid rgba(255,45,45,0.35);
+  color: var(--txt); font-weight: 600; padding: 10px 22px; min-height: 44px;
+  border-radius: 8px; cursor: pointer; font-size: 15px;
+}
+.vi-btn-primary:hover:not(:disabled) { background: rgba(255,45,45,0.40); }
+.vi-btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+.vi-btn-secondary {
+  background: var(--btn); border: 1px solid rgba(255,255,255,0.10);
+  color: var(--txt); padding: 10px 20px; min-height: 44px; min-width: 100px;
+  border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer;
+}
+.vi-btn-secondary:hover { background: var(--btn2); }
+.vi-btn-danger {
+  background: rgba(240,173,78,0.20); border: 1px solid rgba(240,173,78,0.45);
+  color: #f0ad4e; padding: 8px 18px; min-height: 40px;
+  border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600;
+}
+.vi-btn-danger:hover { background: rgba(240,173,78,0.30); }
+
+.vi-sha-warning {
+  background: rgba(255,45,45,0.10); border: 1px solid rgba(255,45,45,0.30);
+  border-radius: 6px; padding: 10px 14px; margin-top: 8px;
+  font-size: 13px; color: var(--txt);
+}
+.vi-sha-warning strong { color: var(--accent); }
+.vi-hint { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.vi-hint.is-blocked { color: var(--accent); }
+
+.vi-progress {
+  margin-top: 16px; padding: 14px;
+  background: rgba(255,255,255,0.03); border-radius: 8px;
+}
+.vi-progress-head { font-size: 14px; color: var(--txt); margin-bottom: 8px; }
+.vi-progress-log {
+  max-height: 320px; overflow-y: auto;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px;
+  line-height: 1.5; color: var(--muted); white-space: pre-wrap; margin: 0;
+}
+
+/* EULA modal */
+.vi-eula-modal {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.78);
+  /* align top, not centre -- on a fullscreen cog window the card can be
+     taller than the viewport, and centred alignment pushes the header
+     above the top edge with no way to scroll back to it. */
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 24px;
+  overflow-y: auto;
+}
+.vi-eula-card {
+  background: var(--bg1, #0f1218);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 12px;
+  width: min(960px, 100%);
+  max-height: calc(100vh - 48px);
+  display: flex; flex-direction: column;
+  box-shadow: 0 16px 60px rgba(0,0,0,0.7);
+}
+#eulaModal {
+  overflow: hidden;
+}
+#eulaModal .vi-eula-card {
+  height: calc(100vh - 48px);
+  min-height: 0;
+}
+.vi-eula-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.vi-eula-title { font-size: 20px; font-weight: 600; color: var(--txt); }
+.vi-eula-close {
+  background: transparent; color: var(--muted); border: none;
+  font-size: 18px; cursor: pointer; padding: 4px 10px;
+}
+.vi-eula-close:hover { color: var(--txt); }
+.vi-eula-intro {
+  padding: 12px 20px 0; font-size: 13px; color: var(--muted);
+}
+.vi-eula-sections {
+  flex: 1 1 auto; overflow-y: auto;
+  padding: 12px 20px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+#eulaModal .vi-eula-sections {
+  min-height: 0;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+}
+.vi-eula-section { display: flex; flex-direction: column; gap: 6px; }
+#eulaModal .vi-eula-section { min-height: 0; }
+.vi-eula-section-title {
+  font-size: 15px; font-weight: 600; color: var(--accent2);
+}
+.vi-eula-body {
+  max-height: 38vh; overflow-y: auto;
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px;
+  line-height: 1.55; color: var(--txt);
+  white-space: pre-wrap; word-wrap: break-word;
+}
+#eulaModal .vi-eula-section .vi-eula-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none;
+}
+.vi-eula-foot {
+  padding: 14px 20px; border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  flex-wrap: wrap;
+}
+.vi-eula-check {
+  display: flex; align-items: center; gap: 8px;
+  color: var(--txt); font-size: 14px; cursor: pointer;
+}
+.vi-eula-check input { width: 18px; height: 18px; }
+.vi-eula-buttons { display: flex; gap: 10px; }
+
+/* Browser navigation tips modal (reuses .vi-eula-modal/card structure) */
+.vi-tips-intro {
+  font-size: 16px !important;
+  color: var(--txt) !important;
+  padding-top: 18px !important;
+  line-height: 1.55;
+}
+.vi-tips-body {
+  padding: 20px 24px 28px;
+  color: var(--txt);
+  font-size: 18px;
+  line-height: 1.55;
+  text-align: center;
+}
+.vi-tips-shortcut {
+  margin: 22px 0 18px;
+  font-size: 34px;
+  font-weight: 600;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+}
+.vi-tips-shortcut kbd {
+  display: inline-block;
+  min-width: 80px;
+  padding: 14px 22px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--txt);
+  background: #1a1f29;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-bottom-width: 4px;
+  border-radius: 8px;
+  text-align: center;
+}
+.vi-tips-note {
+  font-size: 17px;
+  color: var(--txt);
+}
+.vi-tips-note kbd {
+  display: inline-block;
+  min-width: 28px;
+  padding: 3px 8px;
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--txt);
+  background: #1a1f29;
+  border: 1px solid rgba(255,255,255,0.22);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+}
+.vi-tips-foot {
+  justify-content: flex-end;
+}
+

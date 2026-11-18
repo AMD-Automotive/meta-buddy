@@ -1,0 +1,18 @@
+# Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+# SPDX-License-Identifier: MIT
+# Contributors: KC
+# Maintainer: KC
+
+[Unit]
+Description=RAVE2 Bulk Storage Setup
+After=local-fs.target systemd-udev-settle.service
+Wants=systemd-udev-settle.service
+Before=rave-menu.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/rave-menu/scripts/setup_bulk_storage.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

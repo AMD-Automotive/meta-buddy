@@ -1,0 +1,58 @@
+rust/allocator: provide V2 ABI function symbols for Rust 1.92+
+
+Rust 1.92 and later stdlib (liballoc) references V2-mangled allocator shim
+symbols via R_X86_64_PLT32 relocations (function calls).  Chromium 138 only
+defines the V1 symbols as static u8 data.  When a non-rustc linker drives the
+final link (as Chromium does), the V2 symbols are never generated, so every
+Rust allocation CALLs into a data byte and segfaults.
+
+Add V2 function definitions with #[export_name] using the exact mangled names
+liballoc expects:
+
+  __rust_no_alloc_shim_is_unstable_v2  - no-op (return value ignored)
+  __rust_alloc_error_handler_should_panic_v2 - returns 0 (abort on OOM)
+
+V1 symbols are preserved for backward compatibility.
+
+WARNING: the mangled names embed the __rustc crate disambiguator, which is
+not stable across rustc releases.  These names are correct for rustc 1.98.1
+(meta-lts-mixins scarthgap/rust, rust_1.98.1.bb).  They were previously
+pinned to 1.92 and silently stopped matching, which surfaced as
+"undefined symbol: __rustc::__rust_no_alloc_shim_is_unstable_v2" at link
+time in chrome_crashpad_handler, mksnapshot and the yocto_native tools.
+To re-derive after a rustc upgrade:
+
+  nm -u <sysroot>/usr/lib/rustlib/<target>/lib/liballoc-*.rlib | grep _v2
+
+and substitute the disambiguator that appears there.
+
+Upstream-Status: Pending [ABI mismatch between Yocto Rust and Chromium 138]
+
+diff --git a/build/rust/allocator/lib.rs b/build/rust/allocator/lib.rs
+--- a/build/rust/allocator/lib.rs
++++ b/build/rust/allocator/lib.rs
+@@ -90,12 +90,24 @@ mod both_allocators {
+     #[linkage = "weak"]
+     static __rust_no_alloc_shim_is_unstable: u8 = 0;
+ 
++    /// Rust 1.92+ V2 ABI: stdlib calls this as a function (PLT relocation),
++    /// not a data load.  Provide a no-op function with the exact mangled name.
++    #[export_name = "_RNvCshfJ12k0ydlO_7___rustc35___rust_no_alloc_shim_is_unstable_v2"]
++    #[linkage = "weak"]
++    extern "C" fn __rust_no_alloc_shim_is_unstable_v2() {}
++
+     // Mangle the symbol name as rustc expects.
+     #[rustc_std_internal_symbol]
+     #[allow(non_upper_case_globals)]
+     #[linkage = "weak"]
+     static __rust_alloc_error_handler_should_panic: u8 = 0;
+ 
++    /// Rust 1.92+ V2 ABI: stdlib calls this as a function returning u8.
++    /// Return 0 = abort on alloc error (matches Chromium's static u8 = 0).
++    #[export_name = "_RNvCshfJ12k0ydlO_7___rustc42___rust_alloc_error_handler_should_panic_v2"]
++    #[linkage = "weak"]
++    extern "C" fn __rust_alloc_error_handler_should_panic_v2() -> u8 { 0 }
++
+     // Mangle the symbol name as rustc expects.
+     #[rustc_std_internal_symbol]
+     #[allow(non_upper_case_globals)]

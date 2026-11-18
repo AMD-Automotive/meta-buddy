@@ -1,0 +1,395 @@
+{#
+Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+SPDX-License-Identifier: MIT
+Contributors: KC
+Maintainer: KC
+#}
+{% extends "base.html" %}
+
+{% block title %}RAVE2 Buddy{% endblock %}
+{% block head %}
+  <link rel="stylesheet" href="/static/lab.css" />
+  <link rel="stylesheet" href="/static/vendor/xterm/xterm.css" />
+{% endblock %}
+
+{% block content %}
+    <div id="storageWarning" class="storage-warning" hidden>
+      {{ _('Bulk storage unavailable. Uploads and installers are using limited menu storage.') }}
+    </div>
+      <div class="panel">
+        <div class="menu-btn-row">
+          <button class="menu-btn" data-action="more-info">
+            <span class="ico svg-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18" />
+                <path d="M12 10v6" />
+                <path d="M12 7.2v.1" />
+              </svg>
+            </span>
+            <span class="txt">{{ _('About RAVE2') }}</span>
+          </button>
+          <button class="menu-btn" data-action="app-store">
+            <span class="ico svg-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M3 8h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <path d="M3 8V6a2 2 0 0 1 2-2h5l1.4 2H19a2 2 0 0 1 2 2" />
+              </svg>
+            </span>
+            <span class="txt">{{ _('App Store') }}</span>
+          </button>
+        </div>
+        <div class="menu-btn-row">
+          <button class="menu-btn" data-action="board-test" data-terminal="1">
+            <span class="ico svg-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M7 7h10v10H7z" />
+                <path d="M12 9.2v5.6" />
+                <path d="M9.2 12h5.6" />
+                <path d="M5 8h2" />
+                <path d="M5 12h2" />
+                <path d="M5 16h2" />
+                <path d="M17 8h2" />
+                <path d="M17 12h2" />
+                <path d="M17 16h2" />
+              </svg>
+            </span>
+            <span class="txt">{{ _('Program board test') }}</span>
+          </button>
+          <button class="menu-btn" data-action="run-board-test-page">
+            <span class="ico svg-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M8 5.5 18.2 12 8 18.5z" />
+                <path d="M5.2 6.5v11" />
+              </svg>
+            </span>
+            <span class="txt">{{ _('Run board test') }}</span>
+          </button>
+        </div>
+        <div class="menu-btn-row" style="grid-template-columns: 2fr 1fr;">
+          <button class="menu-btn" data-action="versal-lab">
+            <span class="ico svg-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M9 3v6.5L4.5 18a2 2 0 0 0 1.7 3h11.6a2 2 0 0 0 1.7-3L15 9.5V3" />
+                <path d="M9 3h6" />
+                <path d="M7.5 14h9" />
+              </svg>
+            </span>
+            <span class="txt">{{ _('Versal&trade; AI Edge Series Gen 2 Lab') }}</span>
+          </button>
+          <button class="menu-btn" data-action="reconfigure-versal" data-terminal="1">
+            <span class="ico svg-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M4 12a8 8 0 0 1 13.66-5.66L20 8.5" />
+                <path d="M20 4v4.5h-4.5" />
+                <path d="M20 12a8 8 0 0 1-13.66 5.66L4 15.5" />
+                <path d="M4 20v-4.5h4.5" />
+              </svg>
+            </span>
+            <span class="txt">{{ _('Reboot Versal') }}</span>
+          </button>
+        </div>
+      </div>
+
+
+      <div class="bottom-power-wrap">
+      <div class="menu-btn-row" style="grid-template-columns: 2fr 1fr 190px;">
+        <button class="menu-btn" data-action="wifi">
+          <span class="ico svg-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M2.5 9.5a14 14 0 0 1 19 0" />
+              <path d="M5.5 12.5a9.5 9.5 0 0 1 13 0" />
+              <path d="M8.8 15.8a5.2 5.2 0 0 1 6.4 0" />
+              <path d="M12 19.2v.1" />
+            </svg>
+          </span>
+          <span class="txt">{{ _('Setup WiFi/Networking') }}</span>
+        </button>
+        <button class="menu-btn" data-action="audio-page">
+          <span class="ico svg-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M11 5 6 9H3v6h3l5 4z" />
+              <path d="M15.5 8.5a5 5 0 0 1 0 7" />
+              <path d="M18.5 5.5a9 9 0 0 1 0 13" />
+            </svg>
+          </span>
+          <span class="txt">{{ _('Setup Audio') }}</span>
+        </button>
+        <button class="menu-btn" data-action="localisation-page">
+          <span class="ico svg-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <rect x="2" y="6" width="20" height="12" rx="2" />
+              <path d="M6 10h.01" />
+              <path d="M10 10h.01" />
+              <path d="M14 10h.01" />
+              <path d="M18 10h.01" />
+              <path d="M7 14h10" />
+            </svg>
+          </span>
+          <span class="txt">{{ _('Localisation') }}</span>
+        </button>
+      </div>
+      {% if show_install_nvme %}
+      <button class="menu-btn power-btn" data-action="install-nvme-page">
+        <span class="ico svg-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="M12 3v12" />
+            <path d="m8 11 4 4 4-4" />
+            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+          </svg>
+        </span>
+        <span class="txt">{{ _('Install to NVMe') }}</span>
+      </button>
+      {% endif %}
+      {% if show_system_update %}
+      <div style="display:flex; gap:10px; align-items:stretch;">
+        <button class="menu-btn" data-action="system-update-page" style="flex:1; margin:0;">
+          <span class="ico svg-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M12 4v10" />
+              <path d="m8 10 4 4 4-4" />
+              <path d="M5 18h14" />
+            </svg>
+          </span>
+          <span class="txt">{{ _('System / Updates / Logs') }}</span>
+        </button>
+        <button class="menu-btn" id="bootSettingsBtn" type="button" style="flex:0 0 190px; width:190px; margin:0;">
+          <span class="ico svg-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M12 3v3" />
+              <path d="M12 18v3" />
+              <path d="M4.2 4.2l2.1 2.1" />
+              <path d="M17.7 17.7l2.1 2.1" />
+              <path d="M3 12h3" />
+              <path d="M18 12h3" />
+              <path d="M4.2 19.8l2.1-2.1" />
+              <path d="M17.7 6.3l2.1-2.1" />
+            </svg>
+          </span>
+          <span class="txt">{{ _('Boot settings') }}</span>
+        </button>
+      </div>
+      {% endif %}
+      <div style="display:flex; gap:10px; align-items:stretch;">
+        <button class="menu-btn power-btn" data-action="power-off-page" style="flex:1; margin:0;">
+          <span class="ico svg-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M12 3v8" />
+              <path d="M7 5.8a7.3 7.3 0 1 0 10 0" />
+            </svg>
+          </span>
+          <span class="txt">{{ _('Power Off Board') }}</span>
+        </button>
+        <button id="aboutBtn" class="menu-btn" style="flex:0 0 190px; width:190px; margin:0; opacity:0.7;">
+          <span class="ico svg-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <circle cx="12" cy="12" r="10" style="fill:none; stroke:currentColor; stroke-width:1.8;" />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <path d="M12 17h.01" />
+            </svg>
+          </span>
+          <span class="txt">{{ _('About') }}</span>
+        </button>
+      </div>
+    </div>
+{% endblock %}
+
+{% block overlays %}
+  <!-- About modal -->
+  <div id="aboutModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card about-card" style="width:min(980px,94vw); height:auto; max-height:90vh; overflow-y:auto; text-align:center; padding:36px 32px;">
+      <a href="/" style="display:block; text-decoration:none;">
+        <img class="about-logo" src="/static/buddy_logo.svg" alt="RAVE2 BUDDY" style="width:100%; margin:0 auto 24px; display:block;">
+      </a>
+      {% if hw_info and hw_info.available %}
+      <div class="about-info-grid" style="max-width:820px; margin:0 auto 22px; display:grid; grid-template-columns:1fr 1fr; gap:0 32px; text-align:left;">
+        {% for label, value in hw_info.summary %}
+        <div class="about-info-row" style="display:flex; gap:16px; padding:7px 2px; border-bottom:1px solid rgba(255,255,255,0.08);">
+          <span class="about-info-label" style="flex:0 0 150px; color:var(--muted,#9aa); font-size:14px;">{{ label }}</span>
+          <span class="about-info-value" style="flex:1; color:var(--txt); font-size:14px; font-weight:600; word-break:break-word; white-space:pre-line;">{{ value }}</span>
+        </div>
+        {% endfor %}
+        {% if displays and displays.available %}
+        <div style="grid-column:1 / -1; border-top:1px solid rgba(255,255,255,0.08); margin:8px 0 0;"></div>
+        {% for d in displays.displays %}
+        <div class="about-info-row" style="display:flex; gap:16px; padding:7px 2px; border-bottom:1px solid rgba(255,255,255,0.08);">
+          <span class="about-info-label" style="flex:0 0 150px; color:var(--muted,#9aa); font-size:14px;">{{ d.port }}{% if d.sink %} &middot; {{ d.sink }}{% endif %}</span>
+          <span class="about-info-value" style="flex:1; color:var(--txt); font-size:14px; font-weight:600; word-break:break-word;">{{ d.mode or 'connected' }}{% if d.name %}<span style="display:block; color:var(--muted,#9aa); font-weight:400;">{{ d.name }}</span>{% endif %}</span>
+        </div>
+        {% endfor %}
+        {% endif %}
+      </div>
+      <details style="max-width:820px; margin:0 auto 12px; text-align:left;">
+        <summary style="cursor:pointer; color:var(--muted,#9aa); font-size:13px; margin-bottom:8px;">{{ _('Full hardware report') }}</summary>
+        <pre style="white-space:pre-wrap; word-break:break-word; font-size:12px; color:var(--txt); background:rgba(0,0,0,0.25); padding:14px; border-radius:10px; margin:0;">{{ hw_info.full }}</pre>
+      </details>
+      {% if displays and displays.available and displays.full %}
+      <details style="max-width:820px; margin:0 auto 20px; text-align:left;">
+        <summary style="cursor:pointer; color:var(--muted,#9aa); font-size:13px; margin-bottom:8px;">{{ _('Full video report') }}</summary>
+        <pre style="white-space:pre-wrap; word-break:break-word; font-size:12px; color:var(--txt); background:rgba(0,0,0,0.25); padding:14px; border-radius:10px; margin:0;">{{ displays.full }}</pre>
+      </details>
+      {% endif %}
+      {% endif %}
+      <div style="font-size:14px; color:var(--txt); margin-bottom:8px;">Concept and Initial development by Kris Chaplin &ndash; AMD UK</div>
+      {% if menu_version %}
+      <div style="font-size:15px; color:var(--txt); font-weight:600; margin-bottom:18px;">Version {{ menu_version }}</div>
+      {% endif %}
+      <button id="aboutClose" class="modal-close" style="margin:0 auto; padding:8px 28px;">{{ _('Close') }}</button>
+      <div style="margin:16px auto 0; font-size:13px; display:flex; justify-content:center; gap:28px;">
+        <a href="/api.md" style="color:var(--muted,#9aa); text-decoration:underline;">HTTP API reference</a>
+        <a href="/AGENTS.md" style="color:var(--muted,#9aa); text-decoration:underline;">Agent orientation</a>
+        <a href="/llms.txt" style="color:var(--muted,#9aa); text-decoration:underline;">llms.txt</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Versal AI Edge Series Gen 2 Lab modal -->
+  {% include "_versal_lab.html" %}
+
+  <!-- Confirm modal -->
+  <div id="confirmModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="modal-card" style="width:min(640px,94vw); height:auto; padding:32px 32px 28px;">
+      <div id="confirmTitle" class="modal-title" style="font-size:22px; margin-bottom:16px;">{{ _('Please confirm') }}</div>
+      <div id="confirmMessage" style="color:var(--txt); font-size:17px; line-height:1.5; margin-bottom:28px;"></div>
+      <div style="display:flex; gap:16px; justify-content:flex-end; flex-wrap:wrap;">
+        <button id="confirmCancel" class="modal-close" style="min-width:160px; min-height:64px; padding:18px 32px; font-size:18px; font-weight:600; border-radius:14px;">{{ _('Cancel') }}</button>
+        <button id="confirmOk" class="modal-close" style="min-width:160px; min-height:64px; padding:18px 32px; font-size:18px; font-weight:700; border-radius:14px; background:rgba(220,60,60,0.85); border-color:rgba(255,120,120,0.5); color:#fff;">{{ _('Continue') }}</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Terminal modal -->
+  {% include "_terminal_modal.html" %}
+
+  <!-- Boot settings chooser (default boot target) -->
+  <div id="bootSettingsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="bootSettingsTitle">
+    <div class="modal-card" style="width:min(560px,94vw); height:auto; padding:28px 28px 24px;">
+      <div class="modal-head">
+        <div id="bootSettingsTitle" class="modal-title">{{ _('Default boot') }}</div>
+        <button id="bootSettingsClose" class="modal-close">X</button>
+      </div>
+      <div id="bootChooserList" class="boot-chooser-list"></div>
+      <div class="boot-timeout-row">
+        <label class="boot-timeout-label" for="bootTimeoutInput">{{ _('Menu countdown') }}</label>
+        <input id="bootTimeoutInput" class="boot-timeout-input" type="number" min="1" max="3600" step="1" inputmode="numeric" />
+        <span class="boot-timeout-unit">sec</span>
+      </div>
+      <div id="bootChooserStatus" class="status" style="margin-top:14px;">{{ _('Applies on next boot.') }}</div>
+    </div>
+  </div>
+
+  <!-- Network settings modal -->
+  <div id="netModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card net-card">
+      <div class="modal-head">
+        <div class="modal-title">{{ _('Network Settings') }}</div>
+        <button id="netClose" class="modal-close">X</button>
+      </div>
+      <div class="net-toolbar">
+        <span id="netStatus" class="status">{{ _('idle') }}</span>
+      </div>
+      <div id="netInfo" class="net-info">Saved connections are managed by ConnMan and persist across reboot.</div>
+      <div class="net-form-grid">
+      <form id="ethConfigForm" class="eth-form">
+        <div class="eth-form-head">Wired Connection</div>
+        <div class="eth-row">
+          <label class="eth-label" for="ethServiceSelect">{{ _('Interface') }}</label>
+          <select id="ethServiceSelect" class="eth-input"></select>
+        </div>
+        <div class="eth-row">
+          <span class="eth-label">Mode</span>
+          <label class="eth-radio"><input type="radio" name="ethMode" value="dhcp" checked> DHCP</label>
+          <label class="eth-radio"><input type="radio" name="ethMode" value="static"> Static</label>
+        </div>
+        <div class="eth-grid">
+            <label class="eth-field static-only">
+              <span>IPv4 Address</span>
+              <input id="ethAddress" class="eth-input" type="text" placeholder="192.168.0.50">
+            </label>
+            <label class="eth-field static-only">
+              <span>Netmask</span>
+              <input id="ethNetmask" class="eth-input" type="text" placeholder="255.255.255.0">
+            </label>
+            <label class="eth-field static-only">
+              <span>Gateway</span>
+              <input id="ethGateway" class="eth-input" type="text" placeholder="192.168.0.1">
+            </label>
+            <label class="eth-field static-only dns-split">
+              <span>DNS Servers</span>
+              <div class="dns-split-row">
+                <input id="ethDns1" class="eth-input" type="text" placeholder="1.1.1.1">
+                <input id="ethDns2" class="eth-input" type="text" placeholder="8.8.8.8">
+              </div>
+            </label>
+          </div>
+        <div class="eth-actions">
+          <button id="ethApply" type="submit" class="net-btn">{{ _('Apply') }}</button>
+        </div>
+      </form>
+        <form id="wifiConfigForm" class="eth-form wifi-form">
+          <div class="eth-form-head">WiFi Connection</div>
+          <div class="eth-row">
+            <label class="eth-label" for="wifiServiceSelect">{{ _('Network') }}</label>
+            <select id="wifiServiceSelect" class="eth-input"></select>
+            <button id="wifiScan" type="button" class="net-btn net-btn-secondary">{{ _('Scan WiFi') }}</button>
+          </div>
+          <div class="eth-grid">
+            <label class="eth-field">
+              <span>Encryption</span>
+              <select id="wifiSecurity" class="eth-input">
+                <option value="auto">Auto (use scanned type)</option>
+                <option value="open">Open</option>
+                <option value="psk">WPA/WPA2-PSK</option>
+                <option value="wep">WEP</option>
+                <option value="8021x">802.1X (Enterprise)</option>
+              </select>
+            </label>
+            <label class="eth-field">
+              <span>Identity (802.1X)</span>
+              <input id="wifiIdentity" class="eth-input" type="text" placeholder="{{ _('username') }}">
+            </label>
+            <label class="eth-field">
+              <span>Password / Passphrase</span>
+              <input id="wifiPassphrase" class="eth-input passphrase-mask" type="text" placeholder="{{ _('password') }}" autocomplete="off" spellcheck="false">
+            </label>
+          </div>
+          <div class="eth-actions">
+              <button id="wifiConnect" type="submit" class="net-btn">{{ _('Connect WiFi') }}</button>
+          </div>
+          </form>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="fileBrowserModal" class="fb-overlay hidden">
+    <div class="fb-modal">
+      <div class="fb-header">
+        <span class="fb-title">{{ _('Browse Files') }}</span>
+        <div class="fb-header-actions">
+          <button id="fbRefresh" class="fb-refresh" type="button" title="Refresh"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M23 4v6h-6M1 20v-6h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button id="fbClose" class="fb-close" type="button">&times;</button>
+        </div>
+      </div>
+      <div id="fbSources" class="fb-sources hidden"></div>
+      <div id="fbBreadcrumb" class="fb-breadcrumb"></div>
+      <div id="fbList" class="fb-list"></div>
+    </div>
+  </div>
+
+  <!-- Serial console (full-screen) -->
+  {% include "_serial_console.html" %}
+
+{% endblock %}
+
+{% block scripts %}
+  <script src="/static/terminal.js"></script>
+  <script src="/static/network.js"></script>
+  <script src="/static/file_browser.js"></script>
+  <script src="/static/app.js"></script>
+  <script src="/static/vendor/xterm/xterm.js"></script>
+  <script src="/static/vendor/xterm/xterm-addon-fit.js"></script>
+  <script src="/static/lab.js"></script>
+  <script src="/static/serial_console.js"></script>
+  <script src="/static/vivado_gate.js"></script>
+{% endblock %}

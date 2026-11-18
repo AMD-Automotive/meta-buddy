@@ -1,0 +1,1083 @@
+/*
+ * Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+ * SPDX-License-Identifier: MIT
+ * Contributors: KC
+ * Maintainer: KC
+ */
+
+/* ── Versal AI Edge Series Gen 2 Lab modal ── */
+
+/* The shared .modal-card fixes a 620px height, which forced the lab body to
+ * scroll. Size to content instead and only scroll if the viewport is short. */
+.lab-modal-card{
+  width: min(900px, 92vw);
+  height: auto;
+  max-height: 90vh;
+  padding: 0;
+}
+#versalLabBody{
+  min-height: 0;
+  overflow: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.lab-card{
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+.lab-card-compact{
+  padding: 12px 16px;
+}
+.lab-card-compact .lab-status{
+  margin-top: 6px;
+  font-size: 13px;
+}
+.lab-card-compact .lab-endpoints{
+  margin-top: 8px;
+  font-size: 12px;
+  padding: 8px 10px;
+  line-height: 1.35;
+}
+.lab-card-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+}
+.lab-card-title{
+  font-size: 18px;
+  font-weight: 650;
+  color: var(--txt);
+}
+.lab-card-sub{
+  margin-top:4px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height:1.4;
+}
+.lab-status{
+  margin-top: 14px;
+  font-size: 14px;
+  color: var(--muted);
+  white-space: pre-line;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* Version picker + on/off switch sit together on the HW Server card head. */
+.lab-hw-controls{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.lab-hw-version{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.lab-hw-version-label{
+  font-size:12px;
+  letter-spacing:0.04em;
+  text-transform:uppercase;
+  color: var(--muted);
+}
+.lab-select{
+  padding: 5px 8px;
+  font-size: 13px;
+  min-width: 128px;
+}
+
+/* Global programming-toolchain selector: one segmented control that drives
+ * both programming tabs and the hardware server. Sits below the payload
+ * card, styled as a slimmer sibling of .lab-card. */
+.tools-card{
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 12px 16px;
+}
+.tools-card-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  flex-wrap:wrap;
+}
+.tools-card-label{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  min-width:0;
+}
+.tools-card-ico{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:30px;
+  height:30px;
+  flex:0 0 30px;
+  border-radius:9px;
+  background: rgba(255,45,45,0.12);
+  color: var(--accent);
+}
+.tools-card-ico svg{ width:18px; height:18px; }
+.tools-card-text{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  min-width:0;
+}
+.tools-card-title{
+  font-size:15px;
+  font-weight:650;
+  color: var(--txt);
+  line-height:1.2;
+}
+.tools-card-sub{
+  font-size:12px;
+  color: var(--muted);
+  line-height:1.3;
+}
+
+/* Segmented control */
+.tools-seg{
+  display:inline-flex;
+  align-items:center;
+  gap:3px;
+  padding:3px;
+  border-radius:11px;
+  background: rgba(0,0,0,0.28);
+  border: 1px solid rgba(255,255,255,0.09);
+}
+.tools-seg-opt{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:6px 15px;
+  border-radius:8px;
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:0.2px;
+  color: var(--muted);
+  cursor:pointer;
+  white-space:nowrap;
+  user-select:none;
+  transition: background 0.14s ease, color 0.14s ease, box-shadow 0.14s ease;
+}
+/* The radio stays in the DOM for semantics and keyboard use, but the pill
+ * is what is actually seen. */
+.tools-seg-opt input{
+  position:absolute;
+  opacity:0;
+  width:0;
+  height:0;
+  pointer-events:none;
+}
+.tools-seg-opt:hover{
+  color: var(--txt);
+  background: rgba(255,255,255,0.06);
+}
+.tools-seg-opt.is-active{
+  color:#fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  box-shadow: 0 2px 10px rgba(255,45,45,0.30);
+}
+.tools-seg-opt.is-active:hover{
+  color:#fff;
+}
+.tools-seg-opt input:focus-visible + .tools-seg-text{
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+/* Greyed = "needs installing", not "unavailable". Deliberately not
+ * `disabled`, which would swallow the click that starts the install. */
+.tools-seg-opt.is-uninstalled{
+  color: rgba(174,182,194,0.55);
+  font-style: italic;
+  font-weight: 500;
+}
+.tools-seg-opt.is-uninstalled:hover{
+  color: var(--muted);
+}
+.tools-seg-dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background: currentColor;
+  opacity:0.5;
+  flex:0 0 6px;
+}
+.tools-seg-opt.is-active .tools-seg-dot{ opacity:0.95; }
+.tools-seg-loading{
+  padding:6px 14px;
+  font-size:14px;
+  color: var(--muted);
+}
+.tools-card-note{
+  margin-top:10px;
+  font-size:12.5px;
+  line-height:1.45;
+  color: #ffb4a0;
+  white-space: pre-line;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+@media (max-width: 720px){
+  .tools-card-row{ align-items:flex-start; }
+  .tools-seg{ width:100%; justify-content:space-between; }
+}
+
+/* The lab "Program custom Versal payload" header is static (no
+ * collapse), so neutralise the pointer cursor inherited from
+ * .custom-url-head. */
+.custom-url-head.custom-url-head-static{
+  cursor: default;
+}
+
+/* Give that header the same icon badge as the tools card below it. Scoped to
+ * the lab modal because .ico is shared with the main-menu buttons, where it is
+ * a larger viewport-scaled gold glyph with no fixed height -- which is what
+ * made the two panels look misaligned. */
+#labCustomUrlCard .custom-url-head{
+  gap: 11px;
+  font-size: 17px;
+  font-weight: 650;
+  /* .main-menu-page adds a viewport-clamped inset here: horizontally it
+   * pushed this icon ~13px right of the tools badge below, and vertically it
+   * added 25px around a 20px line. The 30px icon badge sets the height. */
+  padding: 0;
+}
+/* The modal body already puts a 14px gap between cards. */
+#labCustomUrlCard{
+  margin: 0;
+}
+#labCustomUrlCard .custom-url-head .ico{
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  border-radius: 9px;
+  background: rgba(255,45,45,0.12);
+  color: var(--accent);
+  font-size: 18px;
+}
+#labCustomUrlCard .custom-url-head .svg-ico svg{
+  width: 18px;
+  height: 18px;
+  stroke-width: 1.6;
+}
+.lab-endpoints{
+  margin-top: 10px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 14px;
+  color: var(--txt);
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 10px 12px;
+  white-space: pre-line;
+}
+.lab-endpoints.hidden{ display:none; }
+
+/* iOS-style toggle switch (touch friendly) */
+.switch{
+  position:relative;
+  display:inline-block;
+  width:64px;
+  height:36px;
+  flex-shrink:0;
+}
+.switch input{
+  opacity:0;
+  width:0;
+  height:0;
+}
+.switch-slider{
+  position:absolute;
+  inset:0;
+  background: rgba(120,120,130,0.55);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:36px;
+  cursor:pointer;
+  transition: background 0.2s ease;
+}
+.switch-slider::before{
+  content:"";
+  position:absolute;
+  height:28px;
+  width:28px;
+  left:3px;
+  top:3px;
+  background:#fff;
+  border-radius:50%;
+  transition: transform 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+.switch input:checked + .switch-slider{
+  background: rgba(40,170,90,0.85);
+  border-color: rgba(80,210,130,0.6);
+}
+.switch input:checked + .switch-slider::before{
+  transform: translateX(28px);
+}
+.switch input:disabled + .switch-slider{
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ── Full-screen serial console ── */
+.serial-console-modal{
+  padding: 0;
+}
+.serial-console-card{
+  width: 100vw;
+  height: 100vh;
+  background: rgba(10, 11, 14, 0.98);
+  display: flex;
+  flex-direction: column;
+  border: none;
+  border-radius: 0;
+}
+/* The default .modal-head uses space-between with no gap, so the
+ * status and Keep-alive toggle end up squashed against the title.
+ * Inside the serial console give the header explicit gap and let
+ * each child take only the room it needs. */
+.serial-console-card .modal-head{
+  gap: 18px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.serial-console-card .modal-title{
+  margin-right: auto;
+}
+.serial-console-card .status{
+  white-space: nowrap;
+  font-size: 13px;
+}
+.serial-console-term{
+  flex: 1;
+  min-height: 0;
+  padding: 8px 10px;
+  background: #000;
+  overflow: hidden;
+}
+/* Make xterm fill its container. */
+.serial-console-term .xterm{
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden;
+  background: #000 !important;
+}
+.serial-console-term .xterm-viewport{
+  overflow-x: hidden;
+  background: #000 !important;
+}
+.serial-console-foot{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 12px 16px;
+}
+/* Font-size slider lives at the bottom-left of the console. */
+.serial-fontsize{
+  display: flex;
+  align-items: center;
+  flex: 1 1 360px;
+  gap: 10px;
+  margin-right: auto; /* pushes the action buttons to the right */
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  color: var(--txt);
+}
+.serial-fontsize-ico{
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-weight: 700;
+  font-size: 16px;
+  opacity: 0.85;
+  user-select: none;
+}
+.serial-fontsize input[type="range"]{
+  width: 180px;
+  accent-color: #4aa3ff;
+  cursor: pointer;
+}
+.serial-fontsize-val{
+  min-width: 2.2em;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  opacity: 0.85;
+}
+.serial-timestamp-toggle{
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-left: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+.serial-timestamp-toggle[hidden]{
+  display: none;
+}
+.serial-timestamp-toggle input{
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.serial-timestamp-box{
+  width: 18px;
+  height: 18px;
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 4px;
+  background: rgba(255,255,255,0.06);
+}
+.serial-timestamp-toggle input:checked + .serial-timestamp-box{
+  border-color: #43c6d9;
+  background: #43c6d9;
+  box-shadow: inset 0 0 0 4px #17313a;
+}
+.serial-timestamp-toggle input:focus-visible + .serial-timestamp-box{
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+.serial-foot-btn{
+  flex: 1 1 140px;
+  min-width: 160px;
+  min-height: 56px;
+  font-size: 17px;
+  font-weight: 650;
+  border-radius: 12px;
+  padding: 14px 26px;
+}
+@media (max-width: 1180px){
+  .serial-fontsize{
+    flex-basis: 100%;
+  }
+  .serial-foot-btn{
+    min-width: 140px;
+  }
+}
+@media (max-width: 600px){
+  #versalLabModal{
+    padding: 8px;
+  }
+  #versalLabModal > .modal-card{
+    width: calc(100vw - 16px) !important;
+    height: calc(100dvh - 16px) !important;
+    max-height: none;
+  }
+  #versalLabModal .modal-head{
+    padding: 12px 14px;
+  }
+  #versalLabModal .modal-title{
+    min-width: 0;
+    font-size: 17px;
+    line-height: 1.25;
+  }
+  #versalLabBody{
+    padding: 12px !important;
+    gap: 12px !important;
+    overflow-x: hidden !important;
+  }
+  #labCustomUrlCard,
+  #labCustomUrlCard .custom-url-form,
+  #labCustomUrlCard .browse-field,
+  #labCustomUrlCard .browse-row{
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+  #labCustomUrlCard{
+    padding: 12px;
+  }
+  #labCustomUrlCard .custom-url-head{
+    min-width: 0;
+    font-size: 16px;
+    line-height: 1.3;
+  }
+  #labCustomUrlCard .custom-url-form{
+    align-items: stretch;
+  }
+  #labCustomUrlCard .custom-url-form > .net-btn{
+    width: 100%;
+  }
+  #versalLabBody > .menu-btn-row{
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .serial-console-foot{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .serial-fontsize{
+    grid-column: 1 / -1;
+    width: 100%;
+    min-width: 0;
+    margin-right: 0;
+  }
+  .serial-fontsize input[type="range"]{
+    width: auto;
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+  .serial-foot-btn{
+    width: 100%;
+    min-width: 0;
+  }
+}
+.serial-foot-btn-secondary{
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: var(--txt);
+}
+
+/* Keep-alive toggle in the console header. */
+.serial-keepalive-toggle{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+  cursor: pointer;
+  user-select: none;
+  font-size: 14px;
+  color: var(--txt);
+  opacity: 0.92;
+}
+.serial-keepalive-toggle input{
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.serial-keepalive-track{
+  position: relative;
+  width: 44px;
+  height: 24px;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 999px;
+  transition: background 0.15s ease;
+  flex: 0 0 auto;
+}
+.serial-keepalive-thumb{
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  transition: left 0.15s ease, background 0.15s ease;
+}
+.serial-keepalive-toggle input:checked + .serial-keepalive-track{
+  background: #2a8f3f;
+  border-color: #36b14e;
+}
+.serial-keepalive-toggle input:checked + .serial-keepalive-track .serial-keepalive-thumb{
+  left: 22px;
+}
+.serial-keepalive-label{
+  white-space: nowrap;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+/* ── Tabs inside the "Program custom Versal payload" card ────────────
+ * Styled to match the "Select installer" tabs on the vivado-install page:
+ * flat, underline-on-active, muted-on-inactive. */
+.lab-tabs{
+  display: flex;
+  gap: 8px;
+  margin: 10px 0 6px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.lab-tab{
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 6px 13px;
+  margin-bottom: -1px;          /* let the active underline overlap the bar */
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.12s ease, border-color 0.12s ease;
+}
+.lab-tab:hover{
+  color: var(--txt);
+}
+.lab-tab.active{
+  color: var(--txt);
+  border-bottom-color: var(--accent);
+}
+.lab-tab-pane{
+  margin-top: 2px;
+}
+
+/* ── Sub-tabs inside a pane ──────────────────────────────────────────
+ * Same language as .lab-tab one level down, so a nested strip reads as
+ * subordinate rather than competing with the strip above it. Separate
+ * class names keep the outer tab handler from matching these. */
+.lab-subtabs{
+  display: flex;
+  gap: 6px;
+  margin: 2px 0 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.lab-subtab{
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 5px 11px;
+  margin-bottom: -1px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.12s ease, border-color 0.12s ease;
+}
+.lab-subtab:hover{
+  color: var(--txt);
+}
+.lab-subtab.active{
+  color: var(--txt);
+  border-bottom-color: var(--accent);
+}
+
+/* ── Drag-and-drop upload styling on browse-row ──────────────────── */
+.browse-row{
+  position: relative;
+  border-radius: 8px;
+  transition: outline-color 0.12s ease, background 0.12s ease;
+}
+.browse-row.is-drop-hover{
+  outline: 2px dashed var(--accent);
+  outline-offset: 2px;
+  background: rgba(255, 106, 0, 0.06);
+}
+.browse-row.is-uploading{
+  outline: 1px dashed rgba(255,255,255,0.18);
+  outline-offset: 2px;
+}
+.upload-status{
+  min-height: 0;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+  line-height: 1.4;
+  word-break: break-all;
+}
+.upload-status.is-error{ color: #ff6b6b; }
+.upload-status.is-success{ color: #66bb6a; }
+.upload-status .upload-bar{
+  display: inline-block;
+  vertical-align: middle;
+  width: 120px;
+  height: 4px;
+  background: rgba(255,255,255,0.10);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-left: 6px;
+}
+.upload-status .upload-bar > span{
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  transition: width 0.15s ease;
+}
+
+/* Upload history picker */
+.upload-history-status{
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 10px;
+  min-height: 1em;
+}
+.upload-history-status.is-error{ color: #ff6b6b; }
+.upload-history-status.is-success{ color: #66bb6a; }
+.upload-history-list{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.upload-history-list li{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.upload-history-list li:hover{
+  background: rgba(255,106,0,0.10);
+  border-color: rgba(255,106,0,0.35);
+}
+.upload-history-list .uh-name{
+  font-family: var(--mono, monospace);
+  font-size: 13px;
+  word-break: break-all;
+  flex: 1;
+}
+.upload-history-list .uh-meta{
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.upload-history-list .uh-empty{
+  cursor: default;
+  background: none;
+  border-style: dashed;
+  color: var(--muted);
+  justify-content: center;
+}
+.upload-history-list .uh-empty:hover{
+  background: none;
+  border-color: rgba(255,255,255,0.08);
+}
+.upload-history-clear{
+  background: rgba(255,80,80,0.18);
+  border-color: rgba(255,80,80,0.45);
+}
+.upload-history-clear:hover{
+  background: rgba(255,80,80,0.30);
+}
+
+.upload-history-list .uh-del{
+  appearance: none;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--muted);
+  padding: 4px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+.upload-history-list .uh-del:hover{
+  background: rgba(255,80,80,0.18);
+  border-color: rgba(255,80,80,0.45);
+  color: #ff6b6b;
+}
+
+.upload-history-free{
+  font-size: 12px;
+  color: var(--muted);
+  font-family: var(--mono, monospace);
+}
+
+/* ── Advanced partition selection (Flash Program tab) ──────────────── */
+/* Claim a full row in the wrapping .custom-url-form flexbox so the Program
+   button below it wraps onto its own line. */
+.lab-advanced{
+  flex: 1 1 100%;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 10px;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.03);
+}
+.lab-advanced-summary{
+  cursor: pointer;
+  font-weight: 650;
+  padding: 4px 0;
+}
+.lab-advanced-body{
+  padding-top: 8px;
+}
+.lab-advanced-warning{
+  margin-bottom: 12px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255,170,0,0.45);
+  border-radius: 8px;
+  background: rgba(255,170,0,0.10);
+  color: #ffc24d;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+.lab-advanced-check{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.lab-advanced-check input{
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+.lab-advanced-note{
+  margin: 4px 0 0 24px;
+  font-size: 0.85em;
+  opacity: 0.7;
+}
+.lab-advanced-rule{
+  margin: 12px 0;
+  border: 0;
+  border-top: 1px solid rgba(255,255,255,0.14);
+}
+.lab-advanced-subhead{
+  font-weight: 650;
+  margin-bottom: 8px;
+}
+.lab-scan-progress{
+  height: 6px;
+  margin-top: 10px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.12);
+  overflow: hidden;
+}
+.lab-scan-progress > span{
+  display: block;
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg,#5c0d12 0%,#b31a22 45%,#ff2d2d 100%);
+  transition: width 0.3s linear;
+}
+.lab-advanced-actions{
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.lab-advanced-secondary{
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.25);
+}
+.lab-layout{
+  margin-top: 12px;
+}
+.lab-partbar{
+  display: flex;
+  width: 100%;
+  height: 34px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.18);
+}
+.lab-part{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 54px;
+  overflow: hidden;
+  border-right: 1px solid rgba(0,0,0,0.35);
+}
+.lab-part:last-child{ border-right: 0; }
+.lab-part-name{
+  font-size: 11px;
+  font-weight: 650;
+  white-space: nowrap;
+  padding: 0 6px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.lab-part-1{ background: #2f6f8f; }
+.lab-part-2{ background: #3f8f6f; }
+.lab-part-3{ background: #8f6f3f; }
+.lab-part-4{ background: #6f4f8f; }
+.lab-part-gap{ background: repeating-linear-gradient(45deg,#333 0 6px,#2a2a2a 6px 12px); min-width: 0; }
+.lab-part-free{ background: repeating-linear-gradient(45deg,#3a3a3a 0 6px,#303030 6px 12px); min-width: 0; }
+.lab-partrows{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+}
+.lab-partrow{
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.04);
+  cursor: pointer;
+}
+.lab-partrow input[disabled]{ cursor: not-allowed; }
+.lab-partrow-main{
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.lab-partrow-meta{
+  font-size: 12px;
+  opacity: 0.75;
+}
+.lab-partrow-note{
+  font-size: 12px;
+  color: #d9b45b;
+}
+.lab-partrow-note.is-blocked{ color: #e08a8a; }
+.lab-partmode{
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.lab-partmode.is-partial{ color: #7fd3a8; }
+.lab-partmode.is-error{ color: #e08a8a; }
+
+/* ── UFS Layout tab: LUN editor ───────────────────────────────────────── */
+.lab-lunedit{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 10px 0;
+}
+.lab-lunrow{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+.lab-lunlabel{
+  min-width: 58px;
+  font-weight: 650;
+  font-size: 12px;
+}
+.lab-lunslider{ flex: 1; min-width: 80px; }
+.lab-lunsize{
+  width: 86px;
+  text-align: right;
+  background: rgba(0,0,0,0.35);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 6px;
+  color: inherit;
+  padding: 3px 6px;
+}
+.lab-lununit{ font-size: 11px; opacity: 0.75; min-width: 24px; }
+.lab-lunrest{
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  opacity: 0.85;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.lab-lunboot{
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  opacity: 0.85;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.lab-lunboot input[disabled]{ cursor: not-allowed; }
+.lab-lunboot input[disabled] + *{ opacity: 0.5; }
+.lab-lunremove{
+  background: none;
+  border: 0;
+  color: inherit;
+  opacity: 0.6;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0 4px;
+}
+.lab-lunremove:hover:not([disabled]){ opacity: 1; color: #e08a8a; }
+.lab-lunremove[disabled]{ opacity: 0.2; cursor: not-allowed; }
+
+/* Reserved boot LUNs: visibly not part of the editable set. */
+.lab-lunrow-reserved{
+  background: repeating-linear-gradient(45deg,
+              rgba(255,255,255,0.04) 0 6px, rgba(255,255,255,0.02) 6px 12px);
+  border-style: dashed;
+  opacity: 0.8;
+}
+.lab-lunbadge{
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: #6f5a2f;
+  color: #ffe6ad;
+  margin-right: 8px;
+}
+/* A 4 MiB boot LUN is far too small to size proportionally on the bar. */
+.lab-part-reserved{
+  flex: 0 0 12px;
+  background: repeating-linear-gradient(45deg,#6f5a2f 0 4px,#4f3f20 4px 8px);
+}
+.lab-lunfree{ font-size: 11.5px; opacity: 0.8; margin-left: auto; }
+.lab-lunfree.is-over{ color: #e08a8a; opacity: 1; font-weight: 650; }
+.lab-lundanger{ border-color: #8f4f4f !important; }
+.lab-lundanger:not([disabled]):hover{ background: #7f3f3f !important; }
+/* LUNs not yet brought into service: present but clearly inert. */
+.lab-lunrow-unused{ opacity: 0.45; }
+.lab-lunrow-unused .lab-lunlabel{ font-weight: 500; }
+.lab-lunuse{
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  cursor: pointer;
+  min-width: 56px;
+}
+.lab-lunuse input[disabled]{ cursor: not-allowed; }
+/* The scan button sits between two blocks of prose, so it needs room to read
+   as a control rather than part of the paragraph above it. */
+.lab-lunscan-row{ margin: 14px 0 10px; }
+.lab-lunfreerow{
+  display: flex;
+  justify-content: flex-end;
+  margin: 6px 2px 2px;
+}
+
+/* Release selector in the lab title bar. .modal-head is space-between, so the
+   selector is pushed next to the close button rather than floating mid-header. */
+#versalLabModal .modal-head{ gap: 12px; }
+#versalLabModal .modal-title{ margin-right: auto; }
+.lab-head-seg{ flex: 0 0 auto; }
+.lab-head-seg .tools-seg-opt{ padding: 3px 10px; font-size: 11.5px; }
+#toolsVersionNote.hidden{ display: none; }
+
+/* ── Narrow screens ───────────────────────────────────────────────────── */
+@media (max-width: 720px){
+  /* Title bar: let the release selector drop onto its own line rather than
+     squeezing the title. The close button keeps its place on the first line. */
+  #versalLabModal .modal-head{ flex-wrap: wrap; }
+  #versalLabModal .modal-title{ flex: 1 1 auto; margin-right: 8px; }
+  #versalLabModal .modal-close{ order: 2; }
+  .lab-head-seg{
+    order: 3;
+    flex: 1 0 100%;
+    justify-content: flex-start;
+    margin-top: 2px;
+  }
+
+  /* LUN editor: the slider takes its own line, so the size box, unit and
+     remainder tick wrap below instead of running off the edge. */
+  .lab-lunrow{ flex-wrap: wrap; row-gap: 6px; }
+  .lab-lunslider{ flex: 1 1 100%; min-width: 0; }
+  .lab-lunsize{ width: 76px; }
+  .lab-lunrest{ margin-left: auto; }
+}

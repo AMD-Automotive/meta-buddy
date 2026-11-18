@@ -1,0 +1,205 @@
+{#
+Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+SPDX-License-Identifier: MIT
+Contributors: KC
+Maintainer: KC
+#}
+{% extends "base.html" %}
+
+{% block title %}RAVE2 App Store{% endblock %}
+{% block body_class %}app-store-page{% endblock %}
+{% block head %}
+  <link rel="stylesheet" href="/static/app_store.css" />
+{% endblock %}
+
+{% block content %}
+
+    <section class="appstore-shell">
+      <header class="appstore-banner">App Store</header>
+
+      <!-- Installed app summary (populated from /api/apps/installed) -->
+      <div id="installedSection" class="installed-section hidden">
+        <div class="installed-info">
+          <span class="installed-badge">Installed</span>
+          <span id="installedJumboBadge" class="installed-badge installed-badge-jumbo hidden">Jumbo</span>
+          <span id="installedName" class="installed-name"></span>
+          <span id="installedVersion" class="installed-version"></span>
+        </div>
+        <button id="recoverVersalBtn" class="app-flash hidden" type="button">{{ _('Reprogram Versal') }}</button>
+      </div>
+
+      <div class="appstore-grid">
+        <div class="appstore-left">
+          <!-- Manage additional app stores (persists across boots) -->
+          <article class="app-card app-card-stores">
+            <button id="storesDisclosure" class="url-disclosure" type="button" aria-expanded="false">{{ _('Manage app stores') }}</button>
+            <div id="storesPanel" class="stores-panel hidden">
+              <p class="stores-hint">
+                Add a store root and the App Store will read its
+                <code>appstore.json</code> for more apps. Stores are saved and
+                restored on every boot.
+              </p>
+              <ul id="storesList" class="stores-list"></ul>
+              <form id="addStoreForm" class="install-url-form">
+                <label class="url-field">
+                  <span>Store root URL</span>
+                  <input id="storeInput" type="url" inputmode="url" autocomplete="off"
+                         placeholder="https://host/updates/" />
+                </label>
+                <button id="addStoreBtn" class="app-flash" type="button" disabled>{{ _('Add store') }}</button>
+              </form>
+            </div>
+          </article>
+
+          <!-- Catalog status line (loading / offline) -->
+          <div id="catalogStatus" class="catalog-status">{{ _('Loading apps&hellip;') }}</div>
+
+          <!-- Catalog cards are rendered here from /api/apps -->
+          <div id="appCatalog"></div>
+
+          <!-- Standalone Ubuntu install (independent of the app catalog) -->
+          <article class="app-card">
+            <div class="app-thumb app-thumb-ubuntu" aria-hidden="true"></div>
+            <div class="app-copy">
+              <h3>{{ _('Install Ubuntu') }}</h3>
+              <p>{{ _('Install Ubuntu&reg; Desktop into the free NVMe space, alongside the RAVE2 menu') }}</p>
+            </div>
+            <div class="app-ubuntu-actions">
+              <button id="installUbuntuBtn" class="app-flash" type="button">{{ _('NVMe Install') }}</button>
+              {% if ubuntu_installed %}
+              <button id="uninstallUbuntuBtn" class="app-flash" type="button">{{ _('Uninstall Ubuntu') }}</button>
+              {% endif %}
+            </div>
+          </article>
+
+          <!-- Manual install from URL, uploaded file, or USB/local path -->
+          <article class="app-card app-card-url">
+            <button id="urlDisclosure" class="url-disclosure" type="button" aria-expanded="false">{{ _('Manual install') }}</button>
+            <form id="installUrlForm" class="install-url-form hidden">
+              <label class="url-field" for="urlInput">{{ _('Bundle source') }}</label>
+              <div class="app-source-row" data-drop-target="urlInput">
+                <button type="button" class="app-source-btn history-btn" title="Previously uploaded files">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                </button>
+                <input id="urlInput" type="text" autocomplete="off" spellcheck="false"
+                       placeholder="{{ _('URL, Dropbox share or local path to .rave2app') }}" />
+                <button type="button" class="app-source-btn upload-btn" title="Upload a file from your computer">
+                  <svg viewBox="0 0 24 24" width="18" height="18"><path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-6l-2-2H5a2 2 0 0 0-2 2z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+                </button>
+                <button type="button" class="app-source-btn browse-btn usb-btn" data-target="urlInput" title="Browse USB media or an installed Ubuntu">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 2h6v5H9z"/><path d="M7 7h10v14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V7z"/><circle cx="12" cy="18" r=".9" fill="currentColor"/></svg>
+                </button>
+              </div>
+              <div id="appUploadStatus" class="app-upload-status"></div>
+              <button id="installUrlBtn" class="app-flash" type="button" disabled>{{ _('Install bundle') }}</button>
+            </form>
+          </article>
+        </div>
+
+        <aside class="appstore-right">
+          <div class="video-thumb"></div>
+          <h3>{{ _('RAVE2 Introduction') }}</h3>
+          <p>Simon George</p>
+          <button id="watchVideoBtn" class="watch-video" type="button">
+            <span class="ico svg-ico" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M8 6.8 17 12 8 17.2z" />
+                <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18" />
+              </svg>
+            </span>
+            <span>Watch video</span>
+          </button>
+        </aside>
+      </div>
+
+      <button id="appStoreBack" class="menu-btn appstore-back" type="button">
+        <span class="ico svg-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="m13.6 6.2-6 5.8 6 5.8" />
+            <path d="M8 12h8.5" />
+          </svg>
+        </span>
+        <span class="txt">{{ _('Back to Main Menu') }}</span>
+      </button>
+    </section>
+{% endblock %}
+
+{% block overlays %}
+
+  <!-- Themed confirm modal (shared shape with index.html) -->
+  <div id="confirmModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="modal-card" style="width:min(640px,94vw); height:auto; padding:32px 32px 28px;">
+      <div id="confirmTitle" class="modal-title" style="font-size:22px; margin-bottom:16px;">{{ _('Please confirm') }}</div>
+      <div id="confirmMessage" style="color:var(--txt); font-size:17px; line-height:1.5; margin-bottom:28px; white-space:pre-line;"></div>
+      <div style="display:flex; gap:16px; justify-content:flex-end; flex-wrap:wrap;">
+        <button id="confirmCancel" class="modal-close" style="min-width:160px; min-height:64px; padding:18px 32px; font-size:18px; font-weight:600; border-radius:14px;">{{ _('Cancel') }}</button>
+        <button id="confirmOk" class="modal-close" style="min-width:160px; min-height:64px; padding:18px 32px; font-size:18px; font-weight:700; border-radius:14px; background:rgba(220,60,60,0.85); border-color:rgba(255,120,120,0.5); color:#fff;">{{ _('Continue') }}</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Jumbo application sizing: how much of the disk tail the app may take -->
+  <div id="jumboModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="jumboTitle">
+    <div class="modal-card" style="width:min(680px,94vw); height:auto; padding:32px 32px 28px;">
+      <div id="jumboTitle" class="modal-title" style="font-size:22px; margin-bottom:8px;">{{ _('Jumbo Bundle Storage Allocation') }}</div>
+      <div id="jumboNote" style="color:#9aa3af; font-size:15px; line-height:1.5; margin-bottom:20px;"></div>
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+        <label for="jumboSize" style="color:var(--txt); font-size:17px;">{{ _('Storage for this application') }}</label>
+        <input id="jumboSize" type="number" step="10"
+               style="width:120px; font-size:17px; padding:8px 10px; border-radius:6px; border:1px solid rgba(255,255,255,0.25); background:rgba(255,255,255,0.06); color:var(--txt);">
+        <span style="font-size:14px; color:#9aa3af;">GiB</span>
+      </div>
+      <div style="height:26px; border-radius:6px; overflow:hidden; display:flex; border:1px solid rgba(255,255,255,0.2); margin-bottom:8px;">
+        <div id="jumboBarApp" style="background:linear-gradient(180deg, #e9723d, #a4451e); display:flex; align-items:center; justify-content:center; font-size:12px; color:#fff; white-space:nowrap; overflow:hidden;"></div>
+        <div id="jumboBarFree" style="background:linear-gradient(180deg, #5a7dbd, #2f4d80); display:flex; align-items:center; justify-content:center; font-size:12px; color:#fff; white-space:nowrap; overflow:hidden;"></div>
+      </div>
+      <div id="jumboWarn" style="display:none; color:#ffb4b4; font-size:14px; margin-bottom:12px;"></div>
+      <div style="display:flex; gap:16px; justify-content:flex-end; flex-wrap:wrap; margin-top:20px;">
+        <button id="jumboCancel" class="modal-close" style="min-width:160px; min-height:64px; padding:18px 32px; font-size:18px; font-weight:600; border-radius:14px;">{{ _('Cancel') }}</button>
+        <button id="jumboOk" class="modal-close" style="min-width:160px; min-height:64px; padding:18px 32px; font-size:18px; font-weight:700; border-radius:14px; background:rgba(220,60,60,0.85); border-color:rgba(255,120,120,0.5); color:#fff;">{{ _('Install') }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="uploadHistoryModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="uploadHistoryTitle">
+    <div class="modal-card app-history-card">
+      <div class="modal-head">
+        <div id="uploadHistoryTitle" class="modal-title">{{ _('Previously uploaded files') }}</div>
+        <button type="button" id="uploadHistoryClose" class="modal-close" aria-label="Close">X</button>
+      </div>
+      <div class="app-history-body">
+        <div id="uploadHistoryStatus" class="upload-history-status"></div>
+        <ul id="uploadHistoryList" class="upload-history-list"></ul>
+      </div>
+      <div class="app-history-footer">
+        <div id="uploadHistoryFree" class="upload-history-free"></div>
+        <button type="button" class="app-flash" id="uploadHistoryClear">{{ _('Delete All') }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="fileBrowserModal" class="fb-overlay hidden">
+    <div class="fb-modal">
+      <div class="fb-header">
+        <span class="fb-title">{{ _('Browse Files') }}</span>
+        <div class="fb-header-actions">
+          <button id="fbRefresh" class="fb-refresh" type="button" title="Refresh"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M23 4v6h-6M1 20v-6h6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.5 9A9 9 0 0 1 18.4 5.6L23 10M1 14l4.6 4.4A9 9 0 0 0 20.5 15" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
+          <button id="fbClose" class="fb-close" type="button">&times;</button>
+        </div>
+      </div>
+      <div id="fbSources" class="fb-sources hidden"></div>
+      <div id="fbBreadcrumb" class="fb-breadcrumb"></div>
+      <div id="fbList" class="fb-list"></div>
+    </div>
+  </div>
+
+  <!-- Shared multi-tab terminal modal -->
+  {% include "_terminal_modal.html" %}
+
+{% endblock %}
+
+{% block scripts %}
+  <script src="/static/terminal.js"></script>
+  <script src="/static/file_browser.js"></script>
+  <script src="/static/app_store.js"></script>
+{% endblock %}

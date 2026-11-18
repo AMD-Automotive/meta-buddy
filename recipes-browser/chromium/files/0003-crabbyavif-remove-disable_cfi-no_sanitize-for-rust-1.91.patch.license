@@ -1,0 +1,10 @@
+Copyright (C) The CrabbyAvif Authors (https://github.com/webmproject/CrabbyAvif)
+Modifications Copyright(C) 2026 Advanced Micro Devices, Inc. All rights reserved.
+SPDX-License-Identifier: Apache-2.0
+Contributors: KC
+Maintainer: KC
+
+Licence per third_party/crabbyavif/README.chromium in Chromium
+138.0.7204.157: License: Apache-2.0, License File: LICENSE, Revision
+eb883022a5886739f07f0241f918e2be97d65ff0. This is the vendored crate's own
+licence, not that of the parent chromium-ozone-wayland recipe.

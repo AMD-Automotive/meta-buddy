@@ -1,0 +1,8 @@
+Copyright 2025 The Chromium Authors
+Modifications Copyright © 2026 Advanced Micro Devices, Inc.
+SPDX-License-Identifier: BSD-3-Clause
+Contributors: KC
+Maintainer: KC
+
+Licence follows build/rust/allocator/lib.rs in Chromium 138.0.7204.157,
+the file this patch modifies, not the licence of the parent recipe.

@@ -1,0 +1,24 @@
+# Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+# SPDX-License-Identifier: MIT
+# Contributors: KC
+# Maintainer: KC
+
+[Unit]
+Description=Restore ALSA state for ACP70 (card 1)
+Documentation=man:alsactl(1)
+After=sound.target systemd-udev-settle.service
+Wants=sound.target
+
+# Restore NAU8822 mixer state once controlC1 appears. Runs BEFORE
+# WirePlumber so the driver's runtime init (ADAU1860) takes precedence.
+# A separate nau8822-hp-fixup.service re-applies headphone controls
+# AFTER WirePlumber overrides them.
+
+[Service]
+Type=oneshot
+SuccessExitStatus=99
+ExecStart=/bin/sh -c 'for i in 1 2 3 4 5 6 7 8 9 10; do if [ -e /dev/snd/controlC1 ]; then /usr/sbin/alsactl restore 1 || true; break; fi; sleep 1; done'
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

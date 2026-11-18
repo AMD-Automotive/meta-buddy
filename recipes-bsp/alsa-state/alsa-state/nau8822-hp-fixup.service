@@ -1,0 +1,24 @@
+# Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+# SPDX-License-Identifier: MIT
+# Contributors: KC
+# Maintainer: KC
+
+[Unit]
+Description=Re-apply NAU8822 headphone mixer after WirePlumber
+After=wireplumber-session.service
+Wants=wireplumber-session.service
+
+# WirePlumber's ACP route management disables the headphone output on the
+# NAU8822 codec when it first probes the device. This unit re-asserts just
+# the headphone controls without touching ADAU1860 or other codec state.
+
+[Service]
+Type=oneshot
+ExecStartPre=/bin/sleep 3
+ExecStart=/usr/bin/amixer -c 1 cset name='Headphone Playback Switch' on,on
+ExecStart=/usr/bin/amixer -c 1 cset name='Headphone Volume' 57,57
+ExecStart=/usr/bin/amixer -c 1 cset name='Headphone Switch' on
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

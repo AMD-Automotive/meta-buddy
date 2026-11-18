@@ -1,0 +1,730 @@
+/*
+ * Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+ * SPDX-License-Identifier: MIT
+ * Contributors: KC
+ * Maintainer: KC
+ */
+
+.appstore-shell {
+  width: min(1040px, 94vw);
+  margin-top: 6px;
+  margin-bottom: 14px;
+  padding: 8px 8px 12px;
+}
+
+/* The shared .bg is height:100% + overflow:hidden, which clips the App Store
+ * once its content (e.g. several added stores) grows past the viewport. Let
+ * this page scroll vertically instead of hiding the overflow. */
+.app-store-page .bg {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.appstore-banner {
+  text-align: center;
+  font-size: 40px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: #f3f5f8;
+  margin: 2px 0 8px;
+  text-shadow: 0 1px 10px rgba(255, 43, 43, 0.2);
+}
+
+.appstore-grid {
+  display: grid;
+  grid-template-columns: 1.85fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.appstore-left,
+.appstore-right {
+  background: rgba(21, 16, 23, 0.58);
+  border: 1px solid rgba(255, 110, 110, 0.35);
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px rgba(255, 80, 80, 0.12);
+  padding: 8px;
+}
+
+.app-card {
+  display: grid;
+  grid-template-columns: 150px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  border: 1px solid rgba(255, 110, 110, 0.3);
+  border-radius: 8px;
+  padding: 6px;
+  margin-bottom: 8px;
+  background: linear-gradient(180deg, rgba(42, 19, 24, 0.65), rgba(25, 16, 20, 0.55));
+}
+
+.app-card:last-child {
+  margin-bottom: 0;
+}
+
+/* Disabled "Coming soon" cards */
+.app-card-soon {
+  position: relative;
+  opacity: 0.45;
+  filter: grayscale(0.85);
+  pointer-events: none;
+}
+
+.app-card-soon .coming-soon-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-6deg);
+  padding: 6px 18px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(20, 16, 20, 0.78);
+  border: 1px solid rgba(255, 110, 110, 0.7);
+  border-radius: 8px;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.app-thumb {
+  height: 78px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.app-thumb-reset {
+  background-image: url('/static/app-store-reset.png');
+}
+
+.app-thumb-ubuntu {
+  background: radial-gradient(circle at 30% 30%, #e95420, #772953 70%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 34px;
+  font-weight: 700;
+}
+
+.app-thumb-ubuntu::after {
+  content: 'Ubuntu';
+  font-size: 18px;
+  letter-spacing: 0.04em;
+}
+
+.app-copy h3 {
+  margin: 0 0 3px;
+  font-size: 25px;
+  font-weight: 500;
+  color: #f0f4f8;
+}
+
+.app-copy p {
+  margin: 0;
+  font-size: 17px;
+  color: #cbd4df;
+}
+
+.app-flash {
+  border: 1px solid rgba(255, 110, 110, 0.58);
+  background: linear-gradient(180deg, rgba(132, 28, 28, 0.82), rgba(73, 17, 17, 0.88));
+  color: #f8f1f1;
+  border-radius: 5px;
+  font-size: 16px;
+  padding: 8px 10px;
+}
+
+.app-ubuntu-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reset-card {
+  grid-template-columns: 150px 1fr auto;
+  grid-template-areas:
+    'icon copy flash'
+    'reset reset reset';
+}
+
+.reset-card .app-thumb-reset {
+  grid-area: icon;
+}
+
+.reset-card .app-copy {
+  grid-area: copy;
+}
+
+.reset-card .app-flash {
+  grid-area: flash;
+}
+
+.reset-board {
+  grid-area: reset;
+  width: 170px;
+  margin-top: 8px;
+  border: 1px solid rgba(255, 110, 110, 0.65);
+  background: linear-gradient(180deg, rgba(128, 25, 25, 0.78), rgba(70, 16, 16, 0.86));
+  color: #f9eaea;
+  border-radius: 5px;
+  font-size: 17px;
+  padding: 7px 10px;
+}
+
+.appstore-right {
+  display: flex;
+  flex-direction: column;
+  align-self: start;
+}
+
+.video-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background-image: url('/static/app-store-video.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  margin-bottom: 8px;
+}
+
+.appstore-right h3 {
+  margin: 0 0 3px;
+  font-size: 34px;
+  font-weight: 500;
+}
+
+.appstore-right p {
+  margin: 0 0 10px;
+  font-size: 21px;
+  color: #d8dfea;
+}
+
+.watch-video {
+  margin-top: auto;
+  border: 1px solid rgba(255, 110, 110, 0.58);
+  background: linear-gradient(180deg, rgba(72, 26, 32, 0.78), rgba(45, 16, 20, 0.86));
+  color: #f2f6fb;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.watch-video .svg-ico svg {
+  width: 18px;
+  height: 18px;
+}
+
+.appstore-back {
+  width: min(360px, 90vw);
+  margin: 0 auto;
+}
+
+@media (max-width: 900px) {
+  .appstore-shell {
+    width: 95vw;
+  }
+
+  .appstore-banner {
+    font-size: 32px;
+  }
+
+  .appstore-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .app-card {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .reset-card {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      'icon'
+      'copy'
+      'flash'
+      'reset';
+  }
+
+  .app-thumb,
+  .app-thumb-reset {
+    height: 120px;
+  }
+
+  .app-copy h3 {
+    font-size: 22px;
+  }
+
+  .app-copy p {
+    font-size: 16px;
+  }
+
+  .appstore-right h3 {
+    font-size: 28px;
+  }
+
+  .appstore-right p {
+    font-size: 18px;
+  }
+
+  .watch-video {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .appstore-left,
+  .app-card-stores,
+  .app-card-url,
+  .stores-panel,
+  .install-url-form,
+  .url-field,
+  .url-field input {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .app-source-row {
+    grid-template-columns: 38px minmax(0, 1fr) 38px 38px;
+    gap: 4px;
+  }
+
+  .app-source-btn {
+    width: 38px;
+  }
+}
+
+/* ===== Phase 5: live catalog, installed surface, install-from-URL ===== */
+
+.catalog-status {
+  font-size: 17px;
+  color: #cbd4df;
+  padding: 10px 6px;
+}
+
+.catalog-status.hidden,
+.installed-section.hidden,
+.install-url-form.hidden,
+.app-flash.hidden {
+  display: none;
+}
+
+/* Catalog thumbnail image (full web URL from the catalog) */
+.app-thumb-catalog {
+  height: 78px;
+  overflow: hidden;
+  background: rgba(15, 12, 16, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Badges */
+.app-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 2px 0 4px;
+}
+
+.app-badge {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #f1f4f8;
+}
+
+.badge-installed {
+  background: rgba(40, 120, 60, 0.7);
+  border-color: rgba(120, 220, 150, 0.5);
+}
+
+.badge-versal {
+  background: rgba(60, 80, 150, 0.7);
+  border-color: rgba(140, 165, 245, 0.5);
+}
+
+.badge-exp {
+  background: rgba(150, 110, 30, 0.7);
+  border-color: rgba(245, 205, 120, 0.5);
+}
+
+.badge-jumbo {
+  background: rgba(150, 70, 35, 0.7);
+  border-color: rgba(245, 150, 110, 0.5);
+}
+
+.app-meta {
+  margin: 4px 0 0;
+  font-size: 14px !important;
+  color: #aeb8c4 !important;
+}
+
+/* Installed-app summary bar */
+.installed-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  border: 1px solid rgba(120, 220, 150, 0.4);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 10px;
+  background: rgba(20, 30, 22, 0.55);
+}
+
+.installed-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.installed-badge {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 3px 10px;
+  border-radius: 10px;
+  background: rgba(40, 120, 60, 0.75);
+  border: 1px solid rgba(120, 220, 150, 0.5);
+  color: #f1f7f2;
+}
+
+.installed-badge-jumbo {
+  background: rgba(150, 70, 35, 0.75);
+  border-color: rgba(245, 150, 110, 0.5);
+}
+
+.installed-name {
+  font-size: 20px;
+  font-weight: 500;
+  color: #eef3f8;
+}
+
+.installed-version {
+  font-size: 16px;
+  color: #b8c2cd;
+}
+
+/* Install-from-URL card */
+.app-card-url {
+  display: block;
+  background: linear-gradient(180deg, rgba(30, 20, 26, 0.6), rgba(20, 14, 18, 0.55));
+}
+
+.url-disclosure {
+  background: none;
+  border: none;
+  color: #e6b8b8;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 2px;
+  text-decoration: underline;
+}
+
+.install-url-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.url-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  color: #cbd4df;
+}
+
+.url-field input {
+  font-size: 16px;
+  padding: 8px 10px;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 110, 110, 0.4);
+  background: rgba(12, 10, 14, 0.7);
+  color: #f2f6fb;
+}
+
+.install-url-form .app-flash {
+  align-self: flex-start;
+}
+
+.app-source-row {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) 40px 40px;
+  align-items: stretch;
+  gap: 6px;
+}
+
+.app-source-row input {
+  min-width: 0;
+  font-size: 16px;
+  padding: 8px 10px;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 110, 110, 0.4);
+  background: rgba(12, 10, 14, 0.7);
+  color: #f2f6fb;
+}
+
+.app-source-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  min-height: 40px;
+  padding: 0;
+  border: 1px solid rgba(255, 110, 110, 0.4);
+  border-radius: 5px;
+  background: rgba(30, 24, 34, 0.9);
+  color: #eef3f8;
+  cursor: pointer;
+}
+
+.app-source-row.is-drop-hover {
+  outline: 2px solid rgba(255, 120, 120, 0.8);
+  outline-offset: 4px;
+}
+
+.app-source-row.is-uploading {
+  opacity: 0.78;
+}
+
+.app-upload-status,
+.upload-history-status,
+.upload-history-free {
+  min-height: 18px;
+  font-size: 13px;
+  color: #aeb8c4;
+}
+
+.app-upload-status.is-error,
+.upload-history-status.is-error { color: #ff7b7b; }
+.app-upload-status.is-success,
+.upload-history-status.is-success { color: #74d48a; }
+
+.upload-bar {
+  display: block;
+  height: 4px;
+  margin-top: 6px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.upload-bar > span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: #ef5b62;
+}
+
+.app-history-card {
+  width: min(640px, 92vw);
+  max-height: 80vh;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-history-body { flex: 1; overflow: auto; padding: 16px 20px; }
+.app-history-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.upload-history-list { list-style: none; margin: 8px 0 0; padding: 0; }
+.upload-history-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 36px;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  cursor: pointer;
+}
+.upload-history-list .uh-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.upload-history-list .uh-meta { color: #aeb8c4; font-size: 12px; }
+.upload-history-list .uh-del { color: #ff9292; background: transparent; border: 0; cursor: pointer; }
+.upload-history-list .uh-empty { display: block; color: #aeb8c4; cursor: default; }
+
+.app-flash:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ===== Additional app stores (user-managed, persisted) ===== */
+
+.app-card-stores {
+  display: block;
+  background: linear-gradient(180deg, rgba(24, 22, 32, 0.6), rgba(16, 14, 22, 0.55));
+}
+
+.stores-panel {
+  margin-top: 8px;
+}
+
+.stores-panel.hidden {
+  display: none;
+}
+
+.stores-hint {
+  margin: 0 0 10px;
+  font-size: 14px !important;
+  color: #aeb8c4 !important;
+  line-height: 1.5;
+}
+
+.stores-hint code {
+  font-size: 13px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #e6edf5;
+}
+
+.stores-list {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stores-list:empty {
+  display: none;
+}
+
+.store-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border: 1px solid rgba(255, 110, 110, 0.28);
+  border-radius: 6px;
+  background: rgba(15, 12, 18, 0.55);
+}
+
+/* Colour-coded per-store accent (var set inline from the store's palette
+ * colour). A thick left edge keeps the row readable while flagging the
+ * source that its app cards echo. */
+.store-row[style*="--store-color"] {
+  border-left: 5px solid var(--store-color);
+  padding-left: 8px;
+}
+
+.store-main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.store-name {
+  display: block;
+  font-size: 16px;
+  color: #eef3f8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.store-url {
+  display: block;
+  font-size: 13px;
+  color: #9aa5b2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.store-status {
+  flex: 0 0 auto;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #d7dde6;
+}
+
+.store-status.ok {
+  background: rgba(40, 120, 60, 0.55);
+  border-color: rgba(120, 220, 150, 0.5);
+}
+
+.store-status.err {
+  background: rgba(150, 45, 45, 0.55);
+  border-color: rgba(240, 130, 130, 0.5);
+}
+
+.store-status.builtin {
+  background: rgba(60, 80, 150, 0.55);
+  border-color: rgba(140, 165, 245, 0.5);
+}
+
+.store-remove {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  line-height: 1;
+  font-size: 22px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 110, 110, 0.5);
+  background: rgba(60, 20, 20, 0.6);
+  color: #f3d6d6;
+  cursor: pointer;
+}
+
+.store-remove:hover {
+  background: rgba(120, 30, 30, 0.7);
+}
+
+.store-remove:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.store-badge {
+  font-size: 12px;
+  font-weight: 600;
+  color: #9aa5b2;
+  margin-left: 6px;
+}
+
+/* Catalog card tinted to match the store that delivered it (colour set inline
+ * from the store palette). A coloured left edge makes the source obvious at a
+ * glance and mirrors the store-manager rows, without recolouring the whole
+ * border. */
+.app-card-sourced {
+  border-left-width: 5px;
+  border-left-color: var(--store-color);
+}

@@ -1,0 +1,65 @@
+{#
+Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+SPDX-License-Identifier: MIT
+Contributors: KC
+Maintainer: KC
+#}
+{% extends "base.html" %}
+
+{% block title %}Install to NVMe{% endblock %}
+
+{% block content %}
+
+    <div class="panel" style="max-width:720px;">
+      <div class="modal-title" style="font-size:28px; margin-bottom:14px;">{{ _('Install to NVMe') }}</div>
+      <div style="font-size:20px; line-height:1.4; color:var(--txt); margin-bottom:20px;">
+        The board will reboot into the NVMe installer.<br>
+        <strong>All data on the NVMe drive will be erased.</strong>
+      </div>
+      <div id="installStatus" class="status" style="display:block; margin-bottom:14px;"></div>
+      <div class="board-test-actions" style="display:flex; gap:12px; justify-content:space-between;">
+        <button id="installOk" class="net-btn" type="button" style="min-height:64px; min-width:180px; font-size:20px;">{{ _('Install') }}</button>
+        <button id="installCancel" class="net-btn" type="button" style="min-height:64px; min-width:180px; font-size:20px;">{{ _('Cancel') }}</button>
+      </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    (function () {
+      const okBtn = document.getElementById("installOk");
+      const cancelBtn = document.getElementById("installCancel");
+      const status = document.getElementById("installStatus");
+
+      if (cancelBtn) {
+        cancelBtn.addEventListener("click", function () {
+          window.location.assign("/");
+        });
+      }
+
+      if (okBtn) {
+        okBtn.addEventListener("click", async function () {
+          okBtn.disabled = true;
+          cancelBtn.disabled = true;
+          status.textContent = "Rebooting into NVMe installer...";
+          try {
+            const resp = await fetch("/api/install-nvme", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({})
+            });
+            if (!resp.ok) {
+              const data = await resp.json().catch(() => ({}));
+              throw new Error(data.error || ("HTTP " + resp.status));
+            }
+            status.textContent = "Rebooting now — the installer will start automatically.";
+          } catch (err) {
+            status.textContent = "Failed: " + err.message;
+            okBtn.disabled = false;
+            cancelBtn.disabled = false;
+          }
+        });
+      }
+    })();
+  </script>
+{% endblock %}

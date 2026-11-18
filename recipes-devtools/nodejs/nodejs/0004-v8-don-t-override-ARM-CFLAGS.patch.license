@@ -1,0 +1,7 @@
+Copyright (C) The OpenEmbedded Contributors
+SPDX-License-Identifier: MIT
+
+Imported unmodified from meta-openembedded, branch walnascar, revision
+07330a98cf93806b7a4e0170a541b94962ff3960, path
+meta-oe/recipes-devtools/nodejs/nodejs/0004-v8-don-t-override-ARM-CFLAGS.patch.
+Support file for nodejs_22.14.0.bb.

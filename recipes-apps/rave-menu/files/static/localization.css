@@ -1,0 +1,195 @@
+/*
+ * Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+ * SPDX-License-Identifier: MIT
+ * Contributors: KC
+ * Maintainer: KC
+ */
+
+/* Localisation page styles. Replaces plugins.css, whose page this supersedes. */
+
+/* Page scrollability */
+html, body.loc-page-body {
+  height: auto;
+  min-height: 100%;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+}
+body.loc-page-body .bg {
+  display: block !important;
+  height: auto !important;
+  min-height: 100vh;
+  overflow: visible !important;
+  padding: 0 0 calc(24px + env(safe-area-inset-bottom)) 0;
+}
+body.loc-page-body .topbar {
+  position: relative;
+  margin: 0 auto;
+}
+
+/* Panel */
+.loc-panel {
+  max-width: 900px;
+  width: min(900px, 96vw);
+  padding: 18px 22px 22px;
+  margin: 18px auto;
+}
+.loc-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.loc-back { white-space: nowrap; }
+.loc-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  flex: 1;
+  margin: 0;
+}
+
+/* Sections */
+.loc-section {
+  margin-bottom: 22px;
+  background: var(--btn);
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+.loc-section-title {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+  margin: 0 0 8px 0;
+  font-weight: 600;
+}
+.loc-section-help {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0 0 14px 0;
+  line-height: 1.45;
+}
+.loc-warn {
+  display: block;
+  margin-top: 6px;
+  color: #ffb648;
+}
+
+/* Fields */
+.loc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.loc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.loc-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+}
+.loc-input {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  color: inherit;
+  font: inherit;
+  padding: 10px 12px;
+  width: 100%;
+}
+.loc-input:focus {
+  outline: none;
+  border-color: var(--accent, #4aa3ff);
+}
+
+/* Full layout list */
+.loc-allwrap { margin-bottom: 14px; }
+.loc-link {
+  background: none;
+  border: none;
+  color: var(--accent, #4aa3ff);
+  cursor: pointer;
+  font: inherit;
+  padding: 4px 0;
+  text-decoration: underline;
+}
+.loc-search { margin: 10px 0; }
+.loc-results {
+  max-height: 320px;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+}
+.loc-result {
+  background: none;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  color: inherit;
+  cursor: pointer;
+  display: block;
+  font: inherit;
+  padding: 12px 14px;
+  text-align: left;
+  width: 100%;
+}
+.loc-result:hover,
+.loc-result:focus { background: rgba(255, 255, 255, 0.08); }
+
+/* Active vs saved. These differ between apply and restart, and permanently
+   if a restart failed, so the active value is always shown separately. */
+.loc-active {
+  align-items: baseline;
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.loc-active-value {
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 1rem;
+}
+
+/* Test box: deliberately large, since it is read at arm's length from a
+   kiosk screen while checking which characters actually arrive. */
+.loc-testwrap { margin-bottom: 16px; }
+.loc-test {
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 1.25rem;
+  letter-spacing: 1px;
+}
+
+.loc-apply { min-width: 220px; }
+
+/* Confirm / revert banner */
+.loc-confirm {
+  align-items: center;
+  background: rgba(255, 182, 72, 0.14);
+  border: 1px solid rgba(255, 182, 72, 0.5);
+  border-radius: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  padding: 14px 16px;
+}
+/* [hidden] is only display:none in the UA stylesheet, so the display:flex
+   above outranks it and the element stays visible when hidden is set. */
+.loc-confirm[hidden] { display: none; }
+.loc-confirm-text { line-height: 1.5; }
+.loc-confirm-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.loc-error {
+  background: rgba(255, 86, 86, 0.14);
+  border: 1px solid rgba(255, 86, 86, 0.5);
+  border-radius: 10px;
+  margin-bottom: 18px;
+  padding: 12px 16px;
+}

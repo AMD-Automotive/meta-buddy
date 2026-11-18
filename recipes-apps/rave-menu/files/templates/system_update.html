@@ -1,0 +1,714 @@
+{#
+Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+SPDX-License-Identifier: MIT
+Contributors: KC
+Maintainer: KC
+#}
+{% extends "base.html" %}
+
+{% block title %}System Update{% endblock %}
+{% block head %}
+  <link rel="stylesheet" href="/static/app_store.css" />
+  <style>
+    .bg { overflow-y:auto; height:auto; min-height:100%; }
+    /* backdrop-filter on .panel makes each panel its own stacking context, so
+       the OS panel must outrank the BIOS panel for its dropdown to overlap it. */
+    .update-panel { max-width:780px; position:relative; }
+    .os-update-panel { z-index:2; }
+    .update-section { margin-bottom:18px; }
+    .update-section h2 {
+      font-size:20px; font-weight:600; margin:0 0 10px;
+      color:var(--txt); opacity:0.85;
+    }
+    .update-row {
+      display:flex; align-items:center; gap:12px;
+      flex-wrap:wrap; margin-bottom:8px;
+    }
+    .update-label { font-size:15px; color:var(--muted); min-width:140px; }
+    .update-value { font-size:15px; color:var(--txt); word-break:break-all; }
+    .update-value.highlight { color:var(--accent2); font-weight:600; }
+    .update-btn {
+      display:inline-flex; align-items:center; justify-content:center;
+      min-height:48px; min-width:54px; padding:0 8px;
+      font-size:12px; font-weight:500;
+      color:var(--txt); background:var(--btn); border:1px solid rgba(255,255,255,0.10);
+      border-radius:6px; cursor:pointer; transition:background 0.15s;
+    }
+    .update-btn:hover { background:var(--btn2); }
+    .update-btn:disabled { opacity:0.4; cursor:not-allowed; }
+    .update-btn.primary { background:rgba(255,45,45,0.25); border-color:rgba(255,45,45,0.35); }
+    .update-btn.primary:hover { background:rgba(255,45,45,0.40); }
+    .url-input {
+      flex:1; min-width:200px; padding:10px 12px;
+      font-size:15px; color:var(--txt); background:var(--bg1);
+      border:1px solid rgba(255,255,255,0.12); border-radius:6px;
+      outline:none;
+    }
+    .url-input:focus { border-color:var(--accent); }
+    .usb-list { list-style:none; padding:0; margin:6px 0 0; }
+    .usb-list li {
+      display:flex; align-items:center; gap:10px;
+      padding:8px 10px; margin-bottom:4px;
+      background:rgba(255,255,255,0.03); border-radius:6px;
+      font-size:14px; word-break:break-all;
+    }
+    .usb-list .usb-path { flex:1; color:var(--muted); }
+    .usb-list .update-btn { min-height:36px; min-width:50px; font-size:11px; }
+    .progress-wrap {
+      display:none; margin-top:12px; padding:12px;
+      background:rgba(255,255,255,0.03); border-radius:8px;
+    }
+    .progress-wrap.active { display:block; }
+    .progress-bar-outer {
+      height:8px; background:rgba(255,255,255,0.08); border-radius:4px;
+      overflow:hidden; margin-top:8px;
+    }
+    .progress-bar-inner {
+      height:100%; width:0%; background:linear-gradient(90deg,var(--accent),var(--accent2));
+      border-radius:4px; transition:width 0.3s;
+    }
+    .progress-log {
+      margin-top:8px; max-height:200px; overflow-y:auto;
+      font-family:monospace; font-size:13px; line-height:1.5;
+      color:var(--muted); white-space:pre-wrap;
+    }
+    .progress-status { font-size:14px; color:var(--txt); }
+    .divider { border:none; border-top:1px solid rgba(255,255,255,0.06); margin:16px 0; }
+    .update-card {
+      padding:12px 14px; margin-bottom:8px;
+      background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06);
+      border-radius:8px;
+    }
+    .update-card-head { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    .update-card-ver { font-size:16px; font-weight:600; color:var(--accent2); }
+    .update-card-cur { font-size:13px; color:var(--muted); font-style:italic; }
+    .update-card-desc { font-size:14px; color:var(--muted); margin:6px 0 10px; line-height:1.4; }
+    .update-list-empty { font-size:14px; color:var(--muted); padding:8px 0; }
+
+    /* Dropdown container */
+    .update-dropdown { position:relative; margin-bottom:8px; }
+    .update-dropdown-trigger {
+      display:flex; align-items:center; justify-content:space-between;
+      padding:10px 14px; min-height:48px;
+      background:var(--bg1); border:1px solid rgba(255,255,255,0.12); border-radius:8px;
+      cursor:pointer; color:var(--muted); font-size:15px; transition:border-color 0.15s;
+    }
+    .update-dropdown-trigger:hover { border-color:rgba(255,255,255,0.25); }
+    .update-dropdown.open .update-dropdown-trigger { border-color:var(--accent); border-radius:8px 8px 0 0; }
+    .update-dropdown-trigger .dd-arrow {
+      border:solid var(--muted); border-width:0 2px 2px 0; display:inline-block;
+      padding:3px; transform:rotate(45deg); transition:transform 0.2s; flex-shrink:0; margin-left:12px;
+    }
+    .update-dropdown.open .update-dropdown-trigger .dd-arrow { transform:rotate(-135deg); }
+    .update-dropdown-trigger .dd-selected-ver { color:var(--accent2); font-weight:600; }
+    .update-dropdown-trigger .dd-selected-desc { color:var(--muted); font-size:13px; margin-left:10px; }
+
+    .update-dropdown-panel {
+      display:none; position:absolute; left:0; right:0; z-index:10;
+      max-height:320px; overflow-y:auto;
+      background:var(--bg1); border:1px solid var(--accent); border-top:none;
+      border-radius:0 0 8px 8px; box-shadow:0 8px 24px rgba(0,0,0,0.5);
+    }
+    .update-dropdown.open .update-dropdown-panel { display:block; }
+
+    .update-list { list-style:none; padding:0; margin:0; }
+    .update-item {
+      display:flex; align-items:flex-start; gap:12px; padding:10px 14px;
+      background:transparent; border-left:3px solid transparent;
+      cursor:pointer; transition:background 0.12s;
+    }
+    .update-item:not(:last-child) { border-bottom:1px solid rgba(255,255,255,0.04); }
+    .update-item:hover { background:rgba(255,255,255,0.06); }
+    .update-item.selected { background:rgba(255,45,45,0.10); border-left-color:var(--accent); }
+    .update-item.is-experimental { border-left-color:#f0ad4e; }
+    .update-item-body { flex:1; min-width:0; }
+    .update-item-ver { font-size:16px; font-weight:600; color:var(--accent2); }
+    .update-item.is-experimental .update-item-ver { color:#f0ad4e; }
+    .update-item-badges { display:inline; margin-left:8px; }
+    .update-badge {
+      display:inline-block; font-size:11px; font-weight:600; padding:1px 7px;
+      border-radius:4px; vertical-align:middle; letter-spacing:0.3px;
+    }
+    .update-badge.exp { background:rgba(240,173,78,0.20); color:#f0ad4e; }
+    .update-badge.inst { background:rgba(255,255,255,0.08); color:var(--muted); }
+    .update-item-desc { font-size:13px; color:var(--muted); margin-top:3px; line-height:1.4; }
+    .slot-table { width:100%; border-collapse:collapse; font-size:14px; margin-top:6px; }
+    .slot-table th { text-align:left; color:var(--muted); font-weight:500; padding:6px 10px; border-bottom:1px solid rgba(255,255,255,0.08); }
+    .slot-table td { padding:6px 10px; color:var(--txt); border-bottom:1px solid rgba(255,255,255,0.04); }
+    .slot-badge {
+      display:inline-block; font-size:11px; font-weight:600; padding:1px 7px;
+      border-radius:4px; letter-spacing:0.3px;
+    }
+    .slot-badge.booted { background:rgba(76,175,80,0.20); color:#66bb6a; }
+    .slot-badge.inactive { background:rgba(255,255,255,0.06); color:var(--muted); }
+    .slot-badge.good { background:rgba(76,175,80,0.15); color:#66bb6a; }
+    .slot-badge.bad { background:rgba(255,45,45,0.20); color:var(--accent); }
+    .check-spinner { display:inline-block; width:18px; height:18px; border:2px solid var(--muted);
+      border-top-color:var(--accent); border-radius:50%; animation:spin 0.7s linear infinite;
+      vertical-align:middle; margin-right:8px; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .section-label {
+      font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em;
+      color:var(--muted); margin:0 0 12px;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+
+    <div class="panel update-panel os-update-panel">
+      <div class="modal-title" style="font-size:28px; margin-bottom:6px;">{{ _('System Update') }}</div>
+      <div class="section-label">{{ _('OS Update (RAUC)') }}</div>
+
+      <!-- Slot status -->
+      <div class="update-section">
+        <div id="slotStatus" class="update-value" style="font-size:14px; color:var(--muted);">Loading...</div>
+      </div>
+
+      <!-- Progress area (shared by all install methods) -->
+      <div id="progressWrap" class="progress-wrap">
+        <div class="progress-status">
+          <span id="progressLabel">Installing...</span>
+        </div>
+        <div class="progress-bar-outer">
+          <div id="progressBar" class="progress-bar-inner"></div>
+        </div>
+        <div id="progressLog" class="progress-log"></div>
+      </div>
+
+      <!-- Reboot button (shown after successful install) -->
+      <button id="rebootBtn" class="update-btn primary" type="button" style="display:none; margin:12px 0 20px;">{{ _('Reboot Now') }}</button>
+
+      <hr class="divider">
+
+      <!-- Available updates (auto-populated on load) -->
+      <div class="update-section">
+        <h2>{{ _('Available Updates') }}</h2>
+        <div id="checkStatus" class="update-value" style="font-size:14px;">
+          <span class="check-spinner"></span> Checking for updates...
+        </div>
+        <div style="display:flex; gap:8px; align-items:flex-start;">
+          <div style="flex:1;">
+            <div id="updateDropdown" class="update-dropdown" style="display:none;">
+              <div id="dropdownTrigger" class="update-dropdown-trigger">
+                <span id="dropdownLabel">-- select an update --</span>
+                <span class="dd-arrow"></span>
+              </div>
+              <div class="update-dropdown-panel">
+                <ul id="updateListEl" class="update-list"></ul>
+              </div>
+            </div>
+          </div>
+          <button id="serverInstallBtn" class="update-btn primary" type="button" style="display:none; padding:4px 4px; font-size:12px;" disabled>{{ _('Install') }}</button>
+          <button id="checkBtn" class="update-btn" type="button" style="padding:4px 4px; line-height:0;" title="Refresh">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12a9 9 0 0 0-9-9M3 12a9 9 0 0 0 9 9"/>
+              <path d="M21 3v6h-6"/>
+              <path d="M3 21v-6h6"/>
+            </svg>
+          </button>
+        </div>
+        <label style="display:flex; align-items:center; gap:8px; margin-top:10px; font-size:14px; color:var(--muted); cursor:pointer;">
+          <input id="showExperimental" type="checkbox"> Show experimental releases
+        </label>
+      </div>
+
+      <hr class="divider">
+
+      <!-- USB sideload + Manual URL on same row -->
+      <div class="update-section" style="display:flex; gap:16px; flex-wrap:wrap;">
+        <div style="flex:0 0 auto; min-width:160px;">
+          <h2>{{ _('Install from USB') }}</h2>
+          <div class="update-row">
+            <button id="scanUsbBtn" class="update-btn" type="button">{{ _('Scan USB') }}</button>
+          </div>
+          <ul id="usbList" class="usb-list"></ul>
+          <div id="usbEmpty" class="update-value" style="display:none; font-size:14px; color:var(--muted);">
+            No .raucb bundles found.
+          </div>
+        </div>
+
+        <div style="flex:1; min-width:200px;">
+          <h2>{{ _('Install from URL') }}</h2>
+          <form id="urlForm" style="display:flex; gap:8px; align-items:center;" autocomplete="off">
+            <input id="urlInput" class="url-input" type="text" style="flex:1;"
+                   placeholder="http://192.168.0.10:8000/bundle.raucb">
+            <button id="urlInstallBtn" class="update-btn primary" type="submit" style="padding:6px 8px; line-height:0;" disabled title="Install">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 5v14"/>
+                <path d="m19 12-7 7-7-7"/>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- BIOS Update -- its own top-level panel (Phase 1, see
+         docs/bios-update-plan.md), deliberately separate from the RAUC/OS
+         update panel above: different mechanism, different risk profile
+         (local presence required, no rollback yet). -->
+    <div class="panel update-panel">
+      <div class="modal-title" style="font-size:22px; margin-bottom:18px;">{{ _('BIOS Update') }}</div>
+      <div class="update-section">
+        <div id="biosStatus" class="update-value" style="font-size:14px; color:var(--muted); margin-bottom:8px;">
+          <span class="check-spinner"></span> Checking BIOS...
+        </div>
+        <form id="biosForm" class="install-url-form" autocomplete="off">
+          <label class="url-field" for="biosInput">{{ _('BIOS image (.zip)') }}</label>
+          <div class="app-source-row" data-drop-target="biosInput">
+            <button type="button" class="app-source-btn history-btn" title="Previously uploaded files">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            </button>
+            <input id="biosInput" type="text" autocomplete="off" spellcheck="false"
+                   placeholder="{{ _('URL, Dropbox share or local path to a BIOS update .zip') }}" />
+            <button type="button" class="app-source-btn upload-btn" title="Upload a file from your computer">
+              <svg viewBox="0 0 24 24" width="18" height="18"><path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-6l-2-2H5a2 2 0 0 0-2 2z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+            </button>
+            <button type="button" class="app-source-btn browse-btn usb-btn" data-target="biosInput" title="Browse USB media or an installed Ubuntu">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 2h6v5H9z"/><path d="M7 7h10v14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V7z"/><circle cx="12" cy="18" r=".9" fill="currentColor"/></svg>
+            </button>
+          </div>
+          <div id="biosUploadStatus" class="app-upload-status"></div>
+          <button id="biosUpdateBtn" class="app-flash" type="button" disabled>{{ _('Update BIOS') }}</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Support logs. Deliberately the last panel: it is about the other two
+         rather than an operation of its own. No z-index -- the OS panel above
+         raises itself so its dropdown can overlap, and giving this one a
+         stacking order would put it in front of that dropdown. -->
+    <div class="panel update-panel">
+      <div class="modal-title" style="font-size:22px; margin-bottom:8px;">{{ _('Support Logs') }}</div>
+      <div class="update-card-desc" style="margin:0 0 14px;">
+        {{ _('A record of what has been programmed, installed and changed on this board. Logs are kept on this machine only. They are never uploaded or shared unless you download them and send them yourself.') }}
+      </div>
+      <label style="display:flex; align-items:center; gap:8px; font-size:14px; color:var(--muted); cursor:pointer;">
+        <input id="supportLogEnabled" type="checkbox"> {{ _('Record support logs') }}
+      </label>
+      <div id="supportLogSummary" class="update-value" style="font-size:14px; color:var(--muted); margin:10px 0 14px;">
+        <span class="check-spinner"></span> {{ _('Loading…') }}
+      </div>
+      <div class="update-row">
+        <a id="supportLogDownload" class="update-btn" href="/api/support-logs/download" download>{{ _('Download support archive') }}</a>
+      </div>
+    </div>
+
+    <div style="margin-top:18px; margin-bottom:24px;">
+      <button id="backBtn" class="menu-btn" type="button" style="max-width:280px;">
+        <span class="ico svg-ico" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="m13.6 6.2-6 5.8 6 5.8" />
+            <path d="M8 12h8.5" />
+          </svg>
+        </span>
+        <span class="txt">{{ _('Back to Main Menu') }}</span>
+      </button>
+    </div>
+{% endblock %}
+
+{% block overlays %}
+
+  <script>
+  (function () {
+    var checkBtn = document.getElementById("checkBtn");
+    var checkStatus = document.getElementById("checkStatus");
+    var updateListEl = document.getElementById("updateListEl");
+    var serverInstallBtn = document.getElementById("serverInstallBtn");
+    var updateDropdown = document.getElementById("updateDropdown");
+    var dropdownTrigger = document.getElementById("dropdownTrigger");
+    var dropdownLabel = document.getElementById("dropdownLabel");
+    var scanUsbBtn = document.getElementById("scanUsbBtn");
+    var usbList = document.getElementById("usbList");
+    var usbEmpty = document.getElementById("usbEmpty");
+    var urlForm = document.getElementById("urlForm");
+    var urlInput = document.getElementById("urlInput");
+    var urlInstallBtn = document.getElementById("urlInstallBtn");
+    var progressWrap = document.getElementById("progressWrap");
+    var progressBar = document.getElementById("progressBar");
+    var progressLabel = document.getElementById("progressLabel");
+    var progressLog = document.getElementById("progressLog");
+    var backBtn = document.getElementById("backBtn");
+    var currentVersion = "{{ menu_version or '' }}";
+
+    var updateData = {};  // version -> {url, description, experimental}
+    var allUpdates = [];   // full list from server
+    var showExperimental = document.getElementById("showExperimental");
+    var selectedVersion = "";
+
+    backBtn.addEventListener("click", function () { window.location.assign("/"); });
+
+    urlInput.addEventListener("input", function () {
+      urlInstallBtn.disabled = !urlInput.value.trim();
+    });
+
+    function selectItem(version) {
+      selectedVersion = version;
+      updateListEl.querySelectorAll(".update-item").forEach(function (el) {
+        el.classList.toggle("selected", el.dataset.version === version);
+      });
+      var entry = updateData[version];
+      if (entry) {
+        var label = version;
+        if (entry.description) label += " — " + entry.description;
+        dropdownLabel.innerHTML = "";
+        var verSpan = document.createElement("span");
+        verSpan.className = "dd-selected-ver";
+        verSpan.textContent = version;
+        dropdownLabel.appendChild(verSpan);
+        if (entry.description) {
+          var descSpan = document.createElement("span");
+          descSpan.className = "dd-selected-desc";
+          descSpan.textContent = entry.description;
+          dropdownLabel.appendChild(descSpan);
+        }
+      } else {
+        dropdownLabel.textContent = "-- select an update --";
+      }
+      serverInstallBtn.disabled = !version;
+      updateDropdown.classList.remove("open");
+    }
+
+    // Toggle dropdown open/close
+    dropdownTrigger.addEventListener("click", function () {
+      updateDropdown.classList.toggle("open");
+    });
+    // Close dropdown when clicking outside
+    document.addEventListener("click", function (e) {
+      if (!updateDropdown.contains(e.target)) {
+        updateDropdown.classList.remove("open");
+      }
+    });
+
+    // Re-populate list when experimental checkbox changes
+    showExperimental.addEventListener("change", function () {
+      populateDropdown();
+    });
+
+    serverInstallBtn.addEventListener("click", function () {
+      var entry = updateData[selectedVersion];
+      if (entry && entry.url) startInstall({ url: entry.url });
+    });
+
+    function compareVersionsDesc(a, b) {
+      // Versions are YYYY-MM-DD_hash — lexicographic sort gives newest first
+      if (a > b) return -1;
+      if (a < b) return 1;
+      return 0;
+    }
+
+    function populateDropdown() {
+      var includeExp = showExperimental.checked;
+      var visible = allUpdates.filter(function (u) {
+        return includeExp || !u.experimental;
+      });
+      updateListEl.innerHTML = "";
+      updateData = {};
+      selectedVersion = "";
+      dropdownLabel.textContent = "-- select an update --";
+      updateDropdown.classList.remove("open");
+      if (visible.length === 0) {
+        checkStatus.textContent = "No compatible updates available.";
+        checkStatus.style.display = "block";
+        updateDropdown.style.display = "none";
+        serverInstallBtn.style.display = "none";
+      } else {
+        checkStatus.style.display = "none";
+        updateDropdown.style.display = "";
+        visible.forEach(function (u) {
+          updateData[u.version] = { url: u.url, description: u.description };
+          var li = document.createElement("li");
+          li.className = "update-item";
+          if (u.experimental) li.classList.add("is-experimental");
+          li.dataset.version = u.version;
+
+          var body = document.createElement("div");
+          body.className = "update-item-body";
+
+          var verLine = document.createElement("div");
+          var verSpan = document.createElement("span");
+          verSpan.className = "update-item-ver";
+          verSpan.textContent = u.version;
+          verLine.appendChild(verSpan);
+
+          var badges = document.createElement("span");
+          badges.className = "update-item-badges";
+          if (u.experimental) {
+            var expBadge = document.createElement("span");
+            expBadge.className = "update-badge exp";
+            expBadge.textContent = "experimental";
+            badges.appendChild(expBadge);
+          }
+          if (u.version === currentVersion) {
+            var instBadge = document.createElement("span");
+            instBadge.className = "update-badge inst";
+            instBadge.textContent = "installed";
+            badges.appendChild(instBadge);
+          }
+          verLine.appendChild(badges);
+          body.appendChild(verLine);
+
+          if (u.description) {
+            var desc = document.createElement("div");
+            desc.className = "update-item-desc";
+            desc.textContent = u.description;
+            body.appendChild(desc);
+          }
+
+          li.appendChild(body);
+          li.addEventListener("click", function () { selectItem(u.version); });
+          updateListEl.appendChild(li);
+        });
+        serverInstallBtn.style.display = "";
+        serverInstallBtn.disabled = true;
+      }
+    }
+
+    // ── Check for updates ──
+    async function checkForUpdates() {
+      checkBtn.disabled = true;
+      checkStatus.innerHTML = '<span class="check-spinner"></span> Checking for updates...';
+      checkStatus.style.display = "block";
+      updateDropdown.style.display = "none";
+      serverInstallBtn.style.display = "none";
+      updateData = {};
+      try {
+        var resp = await fetch("/api/check-update");
+        var data = await resp.json();
+        if (!data.ok) throw new Error(data.error || "Check failed");
+
+        allUpdates = data.updates || [];
+        // Sort highest version first
+        allUpdates.sort(function (a, b) { return compareVersionsDesc(a.version, b.version); });
+        populateDropdown();
+      } catch (err) {
+        checkStatus.textContent = "Error: " + err.message;
+      } finally {
+        checkBtn.disabled = false;
+      }
+    }
+
+    checkBtn.addEventListener("click", checkForUpdates);
+
+    // ── Scan USB ──
+    scanUsbBtn.addEventListener("click", async function () {
+      scanUsbBtn.disabled = true;
+      usbList.innerHTML = "";
+      usbEmpty.style.display = "none";
+      try {
+        var resp = await fetch("/api/usb-bundles");
+        var data = await resp.json();
+        var bundles = data.bundles || [];
+        if (bundles.length === 0) {
+          usbEmpty.style.display = "block";
+          usbEmpty.textContent = "No .raucb bundles found on USB media.";
+        } else {
+          bundles.forEach(function (path) {
+            var li = document.createElement("li");
+            var span = document.createElement("span");
+            span.className = "usb-path";
+            span.textContent = path;
+            var btn = document.createElement("button");
+            btn.className = "update-btn primary";
+            btn.type = "button";
+            btn.textContent = "Install";
+            btn.addEventListener("click", function () { startInstall({ path: path }); });
+            li.appendChild(span);
+            li.appendChild(btn);
+            usbList.appendChild(li);
+          });
+        }
+      } catch (err) {
+        usbEmpty.style.display = "block";
+        usbEmpty.textContent = "Error scanning USB: " + err.message;
+      } finally {
+        scanUsbBtn.disabled = false;
+      }
+    });
+
+    // ── Install from URL ──
+    urlForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var url = urlInput.value.trim();
+      if (url) startInstall({ url: url });
+    });
+
+    // ── Shared install logic ──
+    function setAllButtons(disabled) {
+      [checkBtn, serverInstallBtn, scanUsbBtn, urlInstallBtn].forEach(function (b) {
+        if (b) b.disabled = disabled;
+      });
+      document.querySelectorAll(".update-item").forEach(function (el) {
+        el.style.pointerEvents = disabled ? "none" : "";
+        el.style.opacity = disabled ? "0.4" : "";
+      });
+      document.querySelectorAll(".usb-list .update-btn").forEach(function (b) {
+        b.disabled = disabled;
+      });
+    }
+
+    async function startInstall(body) {
+      setAllButtons(true);
+      progressWrap.classList.add("active");
+      progressBar.style.width = "0%";
+      progressLog.textContent = "";
+      progressLabel.textContent = "Starting installation...";
+
+      try {
+        var resp = await fetch("/api/install-update", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body)
+        });
+        var data = await resp.json();
+        if (!data.ok) throw new Error(data.error || "Install failed");
+
+        var jobId = data.job_id;
+        var es = new EventSource("/api/stream/" + jobId);
+        var lines = 0;
+
+        es.onmessage = function (ev) {
+          lines++;
+          progressLog.textContent += ev.data + "\n";
+          progressLog.scrollTop = progressLog.scrollHeight;
+          var pct = Math.min(90, lines * 3);
+          progressBar.style.width = pct + "%";
+          progressLabel.textContent = "Installing...";
+        };
+
+        es.addEventListener("status", function (ev) {
+          es.close();
+          var parts = ev.data.split(":");
+          var code = parseInt(parts[1], 10);
+          if (code === 0) {
+            progressBar.style.width = "100%";
+            progressLabel.textContent = "Update installed successfully. Reboot to activate.";
+            document.getElementById("rebootBtn").style.display = "block";
+          } else {
+            progressLabel.textContent = "Installation failed (exit code " + code + ").";
+          }
+          setAllButtons(false);
+        });
+
+        es.onerror = function () {
+          es.close();
+          progressLabel.textContent = "Stream disconnected.";
+          setAllButtons(false);
+        };
+      } catch (err) {
+        progressLabel.textContent = "Error: " + err.message;
+        setAllButtons(false);
+      }
+    }
+
+    // ── Slot status ──
+    async function loadSlotStatus() {
+      var el = document.getElementById("slotStatus");
+      try {
+        var resp = await fetch("/api/rauc-status");
+        var data = await resp.json();
+        if (!data.ok) throw new Error(data.error || "Failed");
+        var s = data.status;
+        var booted = s.booted || "?";
+        var slots = s.slots || [];
+
+        var html = '<table class="slot-table"><tr><th>Slot</th><th>Device</th><th>Version</th><th>State</th><th>Boot Status</th></tr>';
+        slots.forEach(function (entry) {
+          Object.keys(entry).forEach(function (name) {
+            var sl = entry[name];
+            var stCls = sl.state === "booted" ? "booted" : "inactive";
+            var bsCls = sl.boot_status === "good" ? "good" : "bad";
+            html += "<tr>";
+            html += "<td><strong>" + name + "</strong> (Slot " + (sl.bootname || "?") + ")</td>";
+            html += "<td>" + (sl.device || "?") + "</td>";
+            html += "<td>" + (sl.version || "<em>unknown</em>") + "</td>";
+            html += '<td><span class="slot-badge ' + stCls + '">' + (sl.state || "?") + "</span></td>";
+            html += '<td><span class="slot-badge ' + bsCls + '">' + (sl.boot_status || "?") + "</span></td>";
+            html += "</tr>";
+          });
+        });
+        html += "</table>";
+        el.innerHTML = html;
+      } catch (err) {
+        el.textContent = "Error: " + err.message;
+      }
+    }
+
+    // Auto-load on page open
+    checkForUpdates();
+    loadSlotStatus();
+
+    // Reboot button — two-click confirm (no dialog for kiosk mode)
+    var rebootBtn = document.getElementById("rebootBtn");
+    var rebootArmed = false;
+    rebootBtn.addEventListener("click", async function () {
+      if (!rebootArmed) {
+        rebootArmed = true;
+        rebootBtn.textContent = "Confirm Reboot?";
+        setTimeout(function () {
+          if (rebootArmed) {
+            rebootArmed = false;
+            rebootBtn.textContent = "Reboot Now";
+          }
+        }, 5000);
+        return;
+      }
+      rebootBtn.disabled = true;
+      rebootBtn.textContent = "Rebooting...";
+      try {
+        await fetch("/api/reboot", { method: "POST" });
+      } catch (e) {}
+    });
+  })();
+  </script>
+
+  <!-- Shared confirm dialog, upload-history, and USB/local file browser
+       (markup copied from app_store.html; wired by bios_update.js / file_browser.js) -->
+  <div id="confirmModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="modal-card" style="width:min(640px,94vw); height:auto; padding:32px 32px 28px;">
+      <div id="confirmTitle" class="modal-title" style="font-size:22px; margin-bottom:16px;">{{ _('Please confirm') }}</div>
+      <div id="confirmMessage" style="color:var(--txt); font-size:17px; line-height:1.5; margin-bottom:28px; white-space:pre-line;"></div>
+      <div style="display:flex; gap:16px; justify-content:flex-end; flex-wrap:wrap;">
+        <button id="confirmCancel" class="modal-close" style="min-width:160px; min-height:64px; padding:18px 32px; font-size:18px; font-weight:600; border-radius:14px;">{{ _('Cancel') }}</button>
+        <button id="confirmOk" class="modal-close" style="min-width:160px; min-height:64px; padding:18px 32px; font-size:18px; font-weight:700; border-radius:14px; background:rgba(220,60,60,0.85); border-color:rgba(255,120,120,0.5); color:#fff;">{{ _('Continue') }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="uploadHistoryModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="uploadHistoryTitle">
+    <div class="modal-card app-history-card">
+      <div class="modal-head">
+        <div id="uploadHistoryTitle" class="modal-title">{{ _('Previously uploaded files') }}</div>
+        <button type="button" id="uploadHistoryClose" class="modal-close" aria-label="Close">X</button>
+      </div>
+      <div class="app-history-body">
+        <div id="uploadHistoryStatus" class="upload-history-status"></div>
+        <ul id="uploadHistoryList" class="upload-history-list"></ul>
+      </div>
+      <div class="app-history-footer">
+        <div id="uploadHistoryFree" class="upload-history-free"></div>
+        <button type="button" class="app-flash" id="uploadHistoryClear">{{ _('Delete All') }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="fileBrowserModal" class="fb-overlay hidden">
+    <div class="fb-modal">
+      <div class="fb-header">
+        <span class="fb-title">{{ _('Browse Files') }}</span>
+        <div class="fb-header-actions">
+          <button id="fbRefresh" class="fb-refresh" type="button" title="Refresh"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M23 4v6h-6M1 20v-6h6" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.5 9A9 9 0 0 1 18.4 5.6L23 10M1 14l4.6 4.4A9 9 0 0 0 20.5 15" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
+          <button id="fbClose" class="fb-close" type="button">&times;</button>
+        </div>
+      </div>
+      <div id="fbSources" class="fb-sources hidden"></div>
+      <div id="fbBreadcrumb" class="fb-breadcrumb"></div>
+      <div id="fbList" class="fb-list"></div>
+    </div>
+  </div>
+
+  <script src="/static/file_browser.js"></script>
+  <script src="/static/bios_update.js"></script>
+  <script src="/static/support_logs.js"></script>
+{% endblock %}

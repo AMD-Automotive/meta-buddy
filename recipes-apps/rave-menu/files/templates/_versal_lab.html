@@ -1,0 +1,304 @@
+<!--
+Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+SPDX-License-Identifier: MIT
+Contributors: KC
+Maintainer: KC
+-->
+
+{# Versal(TM) AI Edge Series Gen 2 Lab modal. Included from index.html. #}
+<div id="versalLabModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="versalLabTitle">
+  <div class="modal-card lab-modal-card">
+    <div class="modal-head">
+      <div id="versalLabTitle" class="modal-title">{{ _('Versal&trade; AI Edge Series Gen 2 Lab') }}</div>
+      {# Release selector lives in the title bar: one choice governs both
+         programming tabs and the hardware server, so it is not part of any
+         one section below. #}
+      <div id="toolsVersionOpts" class="tools-seg lab-head-seg" role="radiogroup"
+           aria-label="{{ _('Programming tools') }}">
+        <span class="tools-seg-loading">Loading&hellip;</span>
+      </div>
+      <button id="versalLabClose" class="modal-close">X</button>
+    </div>
+    <div id="versalLabBody">
+      {# Warnings about the selected release, e.g. a running hw_server pinning
+         a different one. The selector itself is in the title bar. #}
+      <div id="toolsVersionNote" class="tools-card-note hidden"></div>
+
+      {# Vivado HW Server toggle (compact) #}
+      <div class="lab-card lab-card-compact">
+        <div class="lab-card-head">
+          <div class="lab-card-title">{{ _('Vivado&trade; Hardware &amp; ChipScope&trade; Servers') }}</div>
+          <div class="lab-hw-controls">
+            <label class="switch" title="Enable Vivado&trade; HW Server and ChipScope&trade; Server">
+              <input id="hwServerToggle" type="checkbox">
+              <span class="switch-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div id="hwServerStatus" class="lab-status">{{ _('Status: stopped') }}</div>
+      </div>
+
+      {# x86 console, Serial 1, Serial 2, Reboot #}
+      <div class="menu-btn-row" style="grid-template-columns: repeat(4, 1fr);">
+        <button class="menu-btn" data-action="x86-console">
+          <span class="ico svg-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <rect x="3" y="6" width="18" height="12" rx="2" />
+              <path d="M7 10h2" /><path d="M11 10h6" />
+              <path d="M7 14h10" />
+            </svg>
+          </span>
+          <span class="txt">{{ _('x86 Console') }}</span>
+        </button>
+        <button class="menu-btn" data-action="serial-1" data-serial="1">
+          <span class="ico svg-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <rect x="3" y="6" width="18" height="12" rx="2" />
+              <path d="M7 10h2" /><path d="M11 10h6" />
+              <path d="M7 14h10" />
+            </svg>
+          </span>
+          <span class="txt">{{ _('Serial 1') }}</span>
+        </button>
+        <button class="menu-btn" data-action="serial-2" data-serial="2">
+          <span class="ico svg-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <rect x="3" y="6" width="18" height="12" rx="2" />
+              <path d="M7 10h2" /><path d="M11 10h6" />
+              <path d="M7 14h10" />
+            </svg>
+          </span>
+          <span class="txt">{{ _('Serial 2') }}</span>
+        </button>
+        <button class="menu-btn" data-action="reconfigure-versal" data-terminal="1" id="labRebootVersalBtn">
+          <span class="ico svg-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path d="M4 12a8 8 0 0 1 13.66-5.66L20 8.5" />
+              <path d="M20 4v4.5h-4.5" />
+              <path d="M20 12a8 8 0 0 1-13.66 5.66L4 15.5" />
+              <path d="M4 20v-4.5h4.5" />
+            </svg>
+          </span>
+          <span class="txt">{{ _('Reboot') }}</span>
+        </button>
+      </div>
+      {# Program Versal and Flash Devices (always expanded) #}
+      <div id="labCustomUrlCard" class="custom-url-card">
+        <div class="custom-url-head custom-url-head-static">
+          <span class="ico svg-ico" aria-hidden="true">
+            {# Fewer, longer pins than a full chip glyph: at badge size the
+               12-pin version collapses into an unreadable blob. #}
+            <svg viewBox="0 0 24 24" focusable="false">
+              <rect x="7.5" y="7.5" width="9" height="9" rx="1.5" />
+              <path d="M10.5 4v3.5" /><path d="M13.5 4v3.5" />
+              <path d="M10.5 16.5V20" /><path d="M13.5 16.5V20" />
+              <path d="M4 10.5h3.5" /><path d="M4 13.5h3.5" />
+              <path d="M16.5 10.5H20" /><path d="M16.5 13.5H20" />
+            </svg>
+          </span>
+          <span class="txt">{{ _('Program Versal and Flash Devices') }}</span>
+        </div>
+
+        {# Tab strip — mirrors the "Select installer" tabs on vivado-install. #}
+        <div class="lab-tabs" role="tablist" aria-label="Program method">
+          <button type="button" class="lab-tab active" role="tab"
+                  aria-selected="true" data-tab="flash" id="labTabFlash">{{ _('Flash Program') }}</button>
+          <button type="button" class="lab-tab" role="tab"
+                  aria-selected="false" data-tab="jtag" id="labTabJtag">{{ _('Jtag Program') }}</button>
+          <button type="button" class="lab-tab" role="tab"
+                  aria-selected="false" data-tab="storage" id="labTabStorage">{{ _('UFS Layout') }}</button>
+        </div>
+
+        {# ── Flash Program tab ────────────────────────────────────────── #}
+        <div class="lab-tab-pane" data-tab-pane="flash" role="tabpanel"
+             aria-labelledby="labTabFlash">
+          <form id="labCustomUrlForm" class="custom-url-form" autocomplete="off">
+            <div class="browse-field">
+              <label class="browse-label">{{ _('OSPI Image') }}</label>
+              <div class="browse-row" data-drop-target="labOspiInput">
+                <button type="button" class="browse-btn history-btn" data-history-target="labOspiInput" title="Previously uploaded files">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                </button>
+                <input id="labOspiInput" class="custom-url-input" type="text" placeholder="{{ _('URL, Dropbox share or local path') }}">
+                <button type="button" class="browse-btn upload-btn" data-upload-target="labOspiInput" title="Upload a file from your computer">
+                  <svg viewBox="0 0 24 24" width="18" height="18"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button type="button" class="browse-btn" data-target="labOspiInput" title="Browse USB media or an installed Ubuntu">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6v5H9z"/><line x1="11" y1="3.5" x2="11" y2="5.5"/><line x1="13" y1="3.5" x2="13" y2="5.5"/><path d="M7 7h10v14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V7z"/><circle cx="12" cy="18" r="0.9" fill="currentColor" stroke="none"/></svg>
+                </button>
+              </div>
+              <div class="upload-status" data-upload-status="labOspiInput"></div>
+            </div>
+            <div class="browse-field">
+              <label class="browse-label">{{ _('Rootfs WIC') }}</label>
+              <div class="browse-row" data-drop-target="labWicInput">
+                <button type="button" class="browse-btn history-btn" data-history-target="labWicInput" title="Previously uploaded files">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                </button>
+                <input id="labWicInput" class="custom-url-input" type="text" placeholder="{{ _('URL, Dropbox share or local path') }}">
+                <button type="button" class="browse-btn upload-btn" data-upload-target="labWicInput" title="Upload a file from your computer">
+                  <svg viewBox="0 0 24 24" width="18" height="18"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button type="button" class="browse-btn" data-target="labWicInput" title="Browse USB media or an installed Ubuntu">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6v5H9z"/><line x1="11" y1="3.5" x2="11" y2="5.5"/><line x1="13" y1="3.5" x2="13" y2="5.5"/><path d="M7 7h10v14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V7z"/><circle cx="12" cy="18" r="0.9" fill="currentColor" stroke="none"/></svg>
+                </button>
+              </div>
+              <div class="upload-status" data-upload-status="labWicInput"></div>
+            </div>
+            <div class="browse-field">
+                <label class="browse-label">Bmap <span class="field-optional">(Optional)</span></label>
+              <div class="browse-row" data-drop-target="labBmapInput">
+                <button type="button" class="browse-btn history-btn" data-history-target="labBmapInput" title="Previously uploaded files">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                </button>
+                <input id="labBmapInput" class="custom-url-input" type="text" placeholder="{{ _('URL, Dropbox share or local path') }}">
+                <button type="button" class="browse-btn upload-btn" data-upload-target="labBmapInput" title="Upload a file from your computer">
+                  <svg viewBox="0 0 24 24" width="18" height="18"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button type="button" class="browse-btn" data-target="labBmapInput" title="Browse USB media or an installed Ubuntu">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6v5H9z"/><line x1="11" y1="3.5" x2="11" y2="5.5"/><line x1="13" y1="3.5" x2="13" y2="5.5"/><path d="M7 7h10v14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V7z"/><circle cx="12" cy="18" r="0.9" fill="currentColor" stroke="none"/></svg>
+                </button>
+              </div>
+              <div class="upload-status" data-upload-status="labBmapInput"></div>
+            </div>
+            <details id="labAdvanced" class="lab-advanced hidden">
+              <summary class="lab-advanced-summary">{{ _('Advanced') }}</summary>
+              <div class="lab-advanced-body">
+                <div class="lab-advanced-warning">
+                  {{ _('Warning: these options are experimental and may cause data loss. Ensure logging is enabled and use at your own risk.') }}
+                </div>
+                <label class="lab-advanced-check"
+                       title="Sparse programming only writes the blocks the bmap marks as mapped. Every other block keeps whatever the previous image left there, including filesystem metadata the new image expects to be empty. Enable this when changing from one image to another.">
+                  <input type="checkbox" id="labZeroFirst">
+                  {{ _('Erase before programming (recommended when changing image)') }}
+                </label>
+                <div id="labZeroNote" class="lab-advanced-note">{{ _('Erases only the region being programmed, then writes the image over it. Takes a few seconds on UFS.') }}</div>
+                <hr class="lab-advanced-rule">
+                <div class="lab-advanced-subhead">{{ _('Program Individual Partitions') }}</div>
+                <div class="lab-advanced-actions">
+                  <button type="button" id="labScanLayout" class="net-btn"
+                          title="Boots the Versal into recovery to read the partition table, then restores OSPI boot">{{ _('Detect layout') }}</button>
+                  <button type="button" id="labSelectAll" class="net-btn lab-advanced-secondary hidden">{{ _('Select all') }}</button>
+                </div>
+                <div id="labScanProgress" class="lab-scan-progress hidden" aria-hidden="true"><span id="labScanProgressFill"></span></div>
+                <div id="labLayoutStatus" class="upload-status"></div>
+                <div id="labLayoutResult" class="lab-layout hidden">
+                  <div id="labLayoutBar" class="lab-partbar" aria-hidden="true"></div>
+                  <div id="labLayoutRows" class="lab-partrows"></div>
+                  <div id="labLayoutMode" class="lab-partmode"></div>
+                </div>
+              </div>
+            </details>
+            <button id="labCustomUrlGo" type="submit" class="net-btn" disabled>{{ _('Program') }}</button>
+          </form>
+        </div>
+
+        {# ── Jtag Program tab ─────────────────────────────────────────── #}
+        <div class="lab-tab-pane hidden" data-tab-pane="jtag" role="tabpanel"
+             aria-labelledby="labTabJtag">
+          <form id="labJtagForm" class="custom-url-form" autocomplete="off">
+            <div class="browse-field">
+              <label class="browse-label">{{ _('boot.bin / pdi') }}</label>
+              <div class="browse-row" data-drop-target="labJtagInput">
+                <button type="button" class="browse-btn history-btn" data-history-target="labJtagInput" title="Previously uploaded files">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                </button>
+                <input id="labJtagInput" class="custom-url-input" type="text" placeholder="{{ _('URL, Dropbox share or local path') }}">
+                <button type="button" class="browse-btn upload-btn" data-upload-target="labJtagInput" title="Upload a file from your computer">
+                  <svg viewBox="0 0 24 24" width="18" height="18"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button type="button" class="browse-btn" data-target="labJtagInput" title="Browse USB media or an installed Ubuntu">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6v5H9z"/><line x1="11" y1="3.5" x2="11" y2="5.5"/><line x1="13" y1="3.5" x2="13" y2="5.5"/><path d="M7 7h10v14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V7z"/><circle cx="12" cy="18" r="0.9" fill="currentColor" stroke="none"/></svg>
+                </button>
+              </div>
+              <div class="upload-status" data-upload-status="labJtagInput"></div>
+            </div>
+            <button id="labJtagGo" type="submit" class="net-btn" disabled>{{ _('Configure') }}</button>
+          </form>
+        </div>
+
+        {# ── UFS Layout tab ───────────────────────────────────────────── #}
+        <div class="lab-tab-pane hidden" data-tab-pane="storage" role="tabpanel"
+             aria-labelledby="labTabStorage">
+
+          {# Keep each _() argument on one line: the rendered string is the gettext
+             key, so a wrapped literal looks up with its newlines and indentation
+             embedded and never matches the catalogue. #}
+          <div class="lab-advanced-note">
+            {{ _('The UFS device is divided into logical units. LUN 0 holds the Versal root filesystem and is what Flash Program writes. Boot LUNs are optional: the Versal boots from OSPI and does not use them.') }}
+          </div>
+
+          <div class="lab-advanced-actions lab-lunscan-row">
+            <button type="button" id="labLunScan" class="net-btn"
+                    title="Boots the Versal into recovery to read the UFS LUN layout, then restores OSPI boot">{{ _('Read layout from target') }}</button>
+          </div>
+          <div id="labLunScanProgress" class="lab-scan-progress hidden" aria-hidden="true"><span id="labLunScanProgressFill"></span></div>
+          <div id="labLunStatus" class="upload-status"></div>
+
+          <div id="labLunResult" class="lab-layout hidden">
+            <div class="lab-subtabs" role="tablist" aria-label="UFS layout view">
+              <button type="button" class="lab-subtab active" role="tab"
+                      aria-selected="true" data-lun-view="current"
+                      id="labLunViewCurrent">{{ _('Current Layout') }}</button>
+              <button type="button" class="lab-subtab" role="tab"
+                      aria-selected="false" data-lun-view="modify"
+                      id="labLunViewModify">{{ _('Modify Layout') }}</button>
+            </div>
+
+            <div class="lab-subtab-pane" data-lun-view-pane="current" role="tabpanel"
+                 aria-labelledby="labLunViewCurrent">
+              <div id="labLunBar" class="lab-partbar" aria-hidden="true"></div>
+              <div id="labLunRows" class="lab-partrows"></div>
+              <div id="labLunSummary" class="lab-partmode"></div>
+            </div>
+
+            <div class="lab-subtab-pane hidden" data-lun-view-pane="modify" role="tabpanel"
+                 aria-labelledby="labLunViewModify">
+              <div id="labLunPlanBar" class="lab-partbar" aria-hidden="true"></div>
+              <div id="labLunEditor" class="lab-lunedit"></div>
+
+              <div class="lab-lunfreerow">
+                <span id="labLunFree" class="lab-lunfree"></span>
+              </div>
+
+              <div class="lab-advanced-note">
+                {{ _('Tick "used" to bring the next LUN into service. Sizes snap to whole allocation units; mark one LUN as "remainder" to give it whatever capacity is left. "boot" marks a UFS boot LUN: at most two exist, and they are optional because the Versal boots from OSPI.') }}
+              </div>
+
+              <div class="lab-advanced-actions">
+                <button type="button" id="labLunReset" class="net-btn lab-advanced-secondary">{{ _('Reset') }}</button>
+                <button type="button" id="labLunRestore" class="net-btn lab-advanced-secondary">{{ _('Restore Factory Default') }}</button>
+                <button type="button" id="labLunApply" class="net-btn lab-lundanger">{{ _('Overwrite UFS Layout') }}</button>
+              </div>
+
+              {# Provisioning runs from the buttons above, which sit well below
+                 the scan controls, so it reports progress here rather than making
+                 the user scroll back to the top of the panel. #}
+              <div id="labLunOpProgress" class="lab-scan-progress hidden" aria-hidden="true"><span id="labLunOpProgressFill"></span></div>
+              <div id="labLunOpStatus" class="upload-status"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{# Upload history picker (shared by all Versal lab file inputs) #}
+<div id="uploadHistoryModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="uploadHistoryTitle">
+  <div class="modal-card" style="width:min(640px,92vw); max-height:80vh; padding:0; display:flex; flex-direction:column;">
+    <div class="modal-head">
+      <div id="uploadHistoryTitle" class="modal-title">{{ _('Previously uploaded files') }}</div>
+      <button type="button" id="uploadHistoryClose" class="modal-close" aria-label="Close">X</button>
+    </div>
+    <div style="flex:1; overflow:auto; padding:16px 20px;">
+      <div id="uploadHistoryStatus" class="upload-history-status"></div>
+      <ul id="uploadHistoryList" class="upload-history-list"></ul>
+    </div>
+    <div style="padding:12px 20px; border-top:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center; gap:12px;">
+      <div id="uploadHistoryFree" class="upload-history-free"></div>
+      <button type="button" class="net-btn upload-history-clear" id="uploadHistoryClear">{{ _('Delete All') }}</button>
+    </div>
+  </div>
+</div>

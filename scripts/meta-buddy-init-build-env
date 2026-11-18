@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# meta-buddy build environment setup script
+#
+# Copyright (C) 2006-2011 Linux Foundation
+# Modifications Copyright © 2026 Advanced Micro Devices, Inc.
+#
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# Adapted from the Yocto Project poky oe-init-build-env, which this script also
+# sources. The upstream notice and licence are retained.
+#
+# Contributors: KC
+# Maintainer: KC
+
+if [ -n "$BASH_SOURCE" ]; then
+        ROOT=$(readlink -f $(dirname "$BASH_SOURCE"))
+elif [ -n "$ZSH_NAME" ]; then
+        ROOT=$(readlink -f $(dirname "$0"))
+else
+        ROOT=$(readlink -f ${PWD})
+fi
+
+if [ -z ${TEMPLATECONF} ]; then
+    TEMPLATECONF=$ROOT/sources/meta-buddy/conf/templates/default
+fi
+
+if [ -d $ROOT/sources/meta-xilinx/meta-xilinx-core/gen-machine-conf ]; then
+    PATH=$ROOT/sources/meta-xilinx/meta-xilinx-core/gen-machine-conf:$PATH
+fi
+
+source $ROOT/sources/poky/oe-init-build-env "$@"

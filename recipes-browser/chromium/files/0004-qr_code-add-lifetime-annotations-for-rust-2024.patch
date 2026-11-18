@@ -1,0 +1,39 @@
+qr_code: add explicit lifetimes for newer rustc elided-lifetime diagnostics
+
+rustc has tightened its elided-lifetime-in-paths handling since this crate
+(qr_code 2.0.0) was vendored; QrCode::iter and Parser::new both return a type
+carrying a lifetime from an elided `&self`/`&[u8]` parameter without naming
+it, which a newer rustc flags as an error rather than a warning under this
+build's lint configuration.
+
+Add the lifetime explicitly in both signatures. No behavioural change: this
+is the same lifetime the compiler was already inferring, written out rather
+than elided.
+
+Upstream-Status: Inappropriate [Yocto toolchain workaround for a vendored
+Chromium third-party crate; not a Chromium or qr_code upstream change]
+
+diff --git a/third_party/rust/chromium_crates_io/vendor/qr_code-v2/src/lib.rs b/third_party/rust/chromium_crates_io/vendor/qr_code-v2/src/lib.rs
+--- a/third_party/rust/chromium_crates_io/vendor/qr_code-v2/src/lib.rs
++++ b/third_party/rust/chromium_crates_io/vendor/qr_code-v2/src/lib.rs
+@@ -216,7 +216,7 @@ impl QrCode {
+     }
+ 
+     /// Returns an iterator over QR code vector of colors.
+-    pub fn iter(&self) -> QrCodeIterator {
++    pub fn iter(&self) -> QrCodeIterator<'_> {
+         QrCodeIterator::new(self)
+     }
+ 
+diff --git a/third_party/rust/chromium_crates_io/vendor/qr_code-v2/src/optimize.rs b/third_party/rust/chromium_crates_io/vendor/qr_code-v2/src/optimize.rs
+--- a/third_party/rust/chromium_crates_io/vendor/qr_code-v2/src/optimize.rs
++++ b/third_party/rust/chromium_crates_io/vendor/qr_code-v2/src/optimize.rs
+@@ -109,7 +109,7 @@ impl<'a> Parser<'a> {
+     ///                                Segment { mode: Numeric, begin: 3, end: 6 },
+     ///                                Segment { mode: Byte, begin: 6, end: 10 }]);
+     ///
+-    pub fn new(data: &[u8]) -> Parser {
++    pub fn new(data: &'a [u8]) -> Parser<'a> {
+         Parser {
+             ecs_iter: EcsIter {
+                 base: data.iter(),

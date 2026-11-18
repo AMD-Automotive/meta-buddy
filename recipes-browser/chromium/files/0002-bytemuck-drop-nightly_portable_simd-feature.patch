@@ -1,0 +1,36 @@
+bytemuck: drop nightly_portable_simd feature for the Yocto Rust toolchain
+
+Chromium 138 builds the vendored bytemuck 1.23 with the nightly_portable_simd
+feature and passes -Zallow-features=portable_simd. That code path needs
+core::simd::LaneCount and core::simd::SupportedLaneCount, which the Yocto
+Rust toolchain does not provide; rustc 1.98.1 from meta-lts-mixins
+(rust_1.98.1.bb) fails with:
+
+  error[E0425]: cannot find type `LaneCount` in module `core::simd`
+  error[E0405]: cannot find trait `SupportedLaneCount` in module `core::simd`
+  --> third_party/rust/chromium_crates_io/vendor/bytemuck-v1/src/zeroable.rs:233
+
+which fails libbytemuck_lib.rlib for both the target and yocto_native
+toolchains and stops the build.
+
+The feature only adds `unsafe impl Zeroable for core::simd::Simd<T, N>`, a
+trait implementation for portable-SIMD vector types. Dropping it removes
+those impls and nothing else; it changes no behaviour for code that does not
+name core::simd types. If something in the tree does depend on those impls,
+it will surface as a compile error naming the type, not as a silent
+behavioural change.
+
+Upstream-Status: Inappropriate [Yocto toolchain workaround; upstream Chromium
+builds this with its own bundled nightly Rust, where the feature compiles]
+
+diff --git a/third_party/rust/bytemuck/v1/BUILD.gn b/third_party/rust/bytemuck/v1/BUILD.gn
+--- a/third_party/rust/bytemuck/v1/BUILD.gn
++++ b/third_party/rust/bytemuck/v1/BUILD.gn
+@@ -46,7 +46,6 @@ cargo_crate("lib") {
+     "bytemuck_derive",
+     "derive",
+     "min_const_generics",
+-    "nightly_portable_simd",
+   ]
+ 
+   # `gnrt_config.toml` for this crate specifies `allow_unstable_features`.

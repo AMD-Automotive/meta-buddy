@@ -1,0 +1,12 @@
+Copyright (C) The OpenEmbedded Contributors
+SPDX-License-Identifier: MIT
+
+Imported unmodified from meta-openembedded, branch walnascar, revision
+07330a98cf93806b7a4e0170a541b94962ff3960, path
+meta-oe/recipes-devtools/nodejs/nodejs_22.14.0.bb.
+
+Carried here because meta-openembedded at the revision this product builds
+against (rel-v2025.1) ships only nodejs 20.18.2, while Chromium 138 requires
+Node major version 22. MIT is meta-openembedded's metadata licence; the
+LICENSE field inside the recipe describes the nodejs payload it builds, not
+this file.

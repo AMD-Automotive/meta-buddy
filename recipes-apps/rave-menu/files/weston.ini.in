@@ -1,0 +1,16 @@
+# Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+# SPDX-License-Identifier: MIT
+# Contributors: KC
+# Maintainer: KC
+
+# Base template. apply_localization.py renders this plus a generated
+# [keyboard] block to /run/rave-menu/weston.ini, which is what Weston loads.
+# Do not add a [keyboard] section here; it would be stripped on render.
+
+[core]
+idle-time=0
+shell=kiosk-shell.so
+
+[autolaunch]
+path=/usr/bin/rave-cog-launch.sh
+watch=true

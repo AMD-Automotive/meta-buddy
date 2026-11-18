@@ -1,0 +1,935 @@
+# Spanish translations for rave-menu.
+# Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+# DRAFT - machine-assisted, NOT yet reviewed by a native speaker.
+# Review before release: terse UI labels are where formality, gender and
+# technical vocabulary most often go wrong.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: rave-menu 0.1\n"
+"POT-Creation-Date: 2026-10-02 15:11+0000\n"
+"PO-Revision-Date: 2026-10-02 15:11+0000\n"
+"Last-Translator: DRAFT - needs native review\n"
+"Language: es\n"
+"Language-Team: Spanish\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Generated-By: meta-buddy docs/make_catalogues.py\n"
+
+#: templates/_serial_console.html:12
+msgid "Serial Console"
+msgstr "Consola serie"
+
+#: templates/_serial_console.html:13
+msgid "disconnected"
+msgstr "desconectado"
+
+#: templates/_serial_console.html:17
+msgid "Keep alive"
+msgstr "Mantener la sesión"
+
+#: templates/_serial_console.html:33
+msgid "Clear"
+msgstr "Borrar"
+
+#: templates/_serial_console.html:34
+msgid "Save console log"
+msgstr "Guardar el registro de la consola"
+
+#: templates/_serial_console.html:35 templates/index.html:88
+msgid "Reboot Versal"
+msgstr "Reiniciar Versal"
+
+#: templates/_serial_console.html:36
+msgid "Exit"
+msgstr "Salir"
+
+#: templates/_terminal_modal.html:14
+msgid "Terminal"
+msgstr "Terminal"
+
+#: templates/_terminal_modal.html:20 templates/index.html:289
+msgid "idle"
+msgstr "inactivo"
+
+#: templates/_versal_lab.html:12 templates/index.html:77
+msgid "Versal&trade; AI Edge Series Gen 2 Lab"
+msgstr "Laboratorio Versal&trade; AI Edge Series Gen 2"
+
+#: templates/_versal_lab.html:19
+msgid "Vivado&trade; Hardware &amp; ChipScope&trade; Servers"
+msgstr "Servidores Vivado&trade; Hardware y ChipScope&trade;"
+
+#: templates/_versal_lab.html:27
+msgid "Status: stopped"
+msgstr "Estado: detenido"
+
+
+#: templates/_versal_lab.html:50
+msgid "Flash Program"
+msgstr "Programación de la flash"
+
+#: templates/_versal_lab.html:52
+msgid "Jtag Program"
+msgstr "Programación por JTAG"
+
+#: templates/_versal_lab.html:60
+msgid "OSPI Image"
+msgstr "Imagen OSPI"
+
+#: templates/_versal_lab.html:65 templates/_versal_lab.html:81 templates/_versal_lab.html:97 templates/_versal_lab.html:138
+msgid "URL, Dropbox share or local path"
+msgstr "URL, recurso de Dropbox o ruta local"
+
+#: templates/_versal_lab.html:76
+msgid "Rootfs WIC"
+msgstr "WIC de rootfs"
+
+
+#: templates/_versal_lab.html:112
+msgid "Detect layout"
+msgstr "Detectar la distribución"
+
+#: templates/_versal_lab.html:113
+msgid "Select all"
+msgstr "Seleccionar todo"
+
+#: templates/_versal_lab.html:124
+msgid "Program"
+msgstr "Programar"
+
+#: templates/_versal_lab.html:133
+msgid "boot.bin / pdi"
+msgstr "boot.bin / pdi"
+
+#: templates/_versal_lab.html:148
+msgid "Configure"
+msgstr "Configurar"
+
+#: templates/_versal_lab.html:169
+msgid "Programming tools"
+msgstr "Herramientas de programación"
+
+#: templates/_versal_lab.html:191
+msgid "x86 Console"
+msgstr "Consola x86"
+
+#: templates/_versal_lab.html:201
+msgid "Serial 1"
+msgstr "Serie 1"
+
+#: templates/_versal_lab.html:211
+msgid "Serial 2"
+msgstr "Serie 2"
+
+#: templates/_versal_lab.html:222 templates/power_off.html:22
+msgid "Reboot"
+msgstr "Reiniciar"
+
+#: templates/_versal_lab.html:233 templates/app_store.html:167 templates/system_update.html:659
+msgid "Previously uploaded files"
+msgstr "Archivos subidos anteriormente"
+
+#: templates/_versal_lab.html:242 templates/app_store.html:176 templates/system_update.html:668
+msgid "Delete All"
+msgstr "Eliminar todo"
+
+#: templates/app_store.html:28
+msgid "Reprogram Versal"
+msgstr "Reprogramar Versal"
+
+#: templates/app_store.html:35
+msgid "Manage app stores"
+msgstr "Gestionar app stores"
+
+#: templates/app_store.html:49
+msgid "Add store"
+msgstr "Añadir store"
+
+#: templates/app_store.html:55
+msgid "Loading apps&hellip;"
+msgstr "Cargando aplicaciones&hellip;"
+
+#: templates/app_store.html:64 templates/ubuntu_install.html:14 templates/ubuntu_install.html:101
+msgid "Install Ubuntu"
+msgstr "Instalar Ubuntu"
+
+#: templates/app_store.html:65
+msgid "Install Ubuntu&reg; Desktop into the free NVMe space, alongside the RAVE2 menu"
+msgstr "Instalar Ubuntu&reg; Desktop en el espacio NVMe libre, junto al menú RAVE2"
+
+#: templates/app_store.html:68
+msgid "NVMe Install"
+msgstr "Instalación en NVMe"
+
+#: templates/app_store.html:70 templates/ubuntu_install.html:19 templates/ubuntu_uninstall.html:14 templates/ubuntu_uninstall.html:41
+msgid "Uninstall Ubuntu"
+msgstr "Desinstalar Ubuntu"
+
+#: templates/app_store.html:77
+msgid "Manual install"
+msgstr "Instalación manual"
+
+#: templates/app_store.html:79
+msgid "Bundle source"
+msgstr "Origen del paquete"
+
+#: templates/app_store.html:85
+msgid "URL, Dropbox share or local path to .rave2app"
+msgstr "URL, recurso de Dropbox o ruta local a un .rave2app"
+
+#: templates/app_store.html:94
+msgid "Install bundle"
+msgstr "Instalar paquete"
+
+#: templates/app_store.html:101
+msgid "RAVE2 Introduction"
+msgstr "Introducción a RAVE2"
+
+#: templates/app_store.html:122 templates/system_update.html:283 templates/vivado_install.html:185
+msgid "Back to Main Menu"
+msgstr "Volver al menú principal"
+
+#: templates/app_store.html:132 templates/index.html:252 templates/system_update.html:647 templates/ubuntu_install.html:113 templates/ubuntu_uninstall.html:53
+msgid "Please confirm"
+msgstr "Confirme, por favor"
+
+#: templates/app_store.html:135 templates/app_store.html:158 templates/index.html:255 templates/install_nvme.html:22 templates/power_off.html:23 templates/system_update.html:650 templates/ubuntu_install.html:116 templates/ubuntu_uninstall.html:56 templates/vivado_install.html:146
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: templates/app_store.html:136 templates/index.html:256 templates/system_update.html:651 templates/ubuntu_install.html:117 templates/ubuntu_uninstall.html:57
+msgid "Continue"
+msgstr "Continuar"
+
+#: templates/app_store.html:144
+msgid "Jumbo Bundle Storage Allocation"
+msgstr "Asignación de almacenamiento para paquetes jumbo"
+
+#: templates/app_store.html:147
+msgid "Storage for this application"
+msgstr "Almacenamiento para esta aplicación"
+
+#: templates/app_store.html:159 templates/install_nvme.html:21 templates/system_update.html:199 templates/vivado_install.html:102
+msgid "Install"
+msgstr "Instalar"
+
+#: templates/app_store.html:184 templates/index.html:368 templates/system_update.html:676
+msgid "Browse Files"
+msgstr "Examinar archivos"
+
+#: templates/audio.html:20
+msgid "Audio"
+msgstr "Audio"
+
+#: templates/audio.html:28
+msgid "Outputs"
+msgstr "Salidas"
+
+#: templates/audio.html:34
+msgid "Inputs"
+msgstr "Entradas"
+
+#: templates/audio.html:36
+msgid "Loading…"
+msgstr "Cargando…"
+
+#: templates/audio_developer.html:21
+msgid "Audio Developer Tools"
+msgstr "Herramientas de desarrollo de audio"
+
+#: templates/audio_developer.html:23
+msgid "loading…"
+msgstr "cargando…"
+
+#: templates/audio_developer.html:24
+msgid "Refresh"
+msgstr "Actualizar"
+
+#: templates/audio_developer.html:30
+msgid "Codec Status"
+msgstr "Estado del códec"
+
+#: templates/audio_developer.html:57
+msgid "DAC Hardware Volume"
+msgstr "Volumen de hardware del DAC"
+
+#: templates/audio_developer.html:58
+msgid "Direct hardware volume control on the codec. Independent of system (PulseAudio) volume. Range: -71.25 dB to +24 dB. 0 dB is unity gain."
+msgstr "Control de volumen por hardware directamente en el códec. Independiente del volumen del sistema (PulseAudio). Rango: de -71,25 dB a +24 dB. 0 dB es ganancia unitaria."
+
+#: templates/audio_developer.html:70
+msgid "Mute"
+msgstr "Silenciar"
+
+#: templates/audio_developer.html:71
+msgid "+24 dB Boost"
+msgstr "Refuerzo de +24 dB"
+
+#: templates/audio_developer.html:78
+msgid "Output Mode"
+msgstr "Modo de salida"
+
+#: templates/audio_developer.html:79
+msgid "Headphone mode optimizes for low-impedance headphones. Line-out mode provides higher output for amplified systems."
+msgstr "El modo de auriculares está optimizado para auriculares de baja impedancia. El modo de salida de línea ofrece un nivel más alto para sistemas amplificados."
+
+#: templates/audio_developer.html:81
+msgid "🎧 Headphone"
+msgstr "🎧 Auriculares"
+
+#: templates/audio_developer.html:82
+msgid "🔊 Line Out"
+msgstr "🔊 Salida de línea"
+
+#: templates/audio_developer.html:88
+msgid "Sample Rate Converter"
+msgstr "Conversor de frecuencia de muestreo"
+
+#: templates/audio_developer.html:89
+msgid "ASRC (Asynchronous Sample Rate Converter) can resample audio between different clock domains. Bypass mode routes audio directly to the DAC with no resampling (lower latency, bit-perfect)."
+msgstr "El ASRC (Asynchronous Sample Rate Converter) puede remuestrear el audio entre distintos dominios de reloj. El modo bypass envía el audio directamente al DAC sin remuestreo (menor latencia, bit-perfect)."
+
+#: templates/audio_developer.html:91
+msgid "Direct (Bypass)"
+msgstr "Directo (bypass)"
+
+#: templates/audio_developer.html:92
+msgid "ASRC Enabled"
+msgstr "ASRC activado"
+
+#: templates/audio_developer.html:101
+msgid "4-Channel DMIC Array"
+msgstr "Matriz DMIC de 4 canales"
+
+#: templates/audio_developer.html:102
+msgid "Quad digital microphone array for capture. Live audio levels shown below."
+msgstr "Matriz de cuatro micrófonos digitales para captura. Niveles de audio en directo más abajo."
+
+#: templates/audio_developer.html:152
+msgid "Power States"
+msgstr "Estados de energía"
+
+#: templates/audio_developer.html:184
+msgid "Advanced: Raw Register Access"
+msgstr "Avanzado: acceso directo a registros"
+
+#: templates/audio_developer.html:185
+msgid "Direct read/write to codec registers. Use with caution."
+msgstr "Lectura/escritura directa en los registros del códec. Úselo con precaución."
+
+#: templates/audio_developer.html:188
+msgid "Address (hex)"
+msgstr "Dirección (hex)"
+
+#: templates/audio_developer.html:192
+msgid "Value (hex)"
+msgstr "Valor (hex)"
+
+#: templates/audio_developer.html:196
+msgid "Read"
+msgstr "Leer"
+
+#: templates/audio_developer.html:197
+msgid "Write"
+msgstr "Escribir"
+
+#: templates/audio_developer.html:206
+msgid "Codec Actions"
+msgstr "Acciones del códec"
+
+#: templates/audio_developer.html:208
+msgid "🔄 Reinitialize Codec"
+msgstr "🔄 Reinicializar el códec"
+
+#: templates/audio_developer.html:209
+msgid "Reapplies the full initialization sequence. Use if PLL loses lock or audio stops working."
+msgstr "Vuelve a aplicar la secuencia de inicialización completa. Úselo si la PLL pierde el enganche o si el audio deja de funcionar."
+
+#: templates/board_test.html:28
+msgid "Run all tests"
+msgstr "Ejecutar todas las pruebas"
+
+#: templates/board_test.html:29 templates/localisation.html:19 templates/ubuntu_install.html:103 templates/ubuntu_uninstall.html:43
+msgid "Back"
+msgstr "Atrás"
+
+#: templates/index.html:17
+msgid "Bulk storage unavailable. Uploads and installers are using limited menu storage."
+msgstr "Almacenamiento masivo no disponible. Las subidas y los instaladores están usando el almacenamiento limitado del menú."
+
+#: templates/index.html:29
+msgid "About RAVE2"
+msgstr "Acerca de RAVE2"
+
+#: templates/index.html:38
+msgid "App Store"
+msgstr "Tienda de aplicaciones"
+
+#: templates/index.html:56
+msgid "Program board test"
+msgstr "Programar prueba de placa"
+
+#: templates/index.html:65
+msgid "Run board test"
+msgstr "Ejecutar prueba de placa"
+
+#: templates/index.html:105
+msgid "Setup WiFi/Networking"
+msgstr "Configurar wifi/red"
+
+#: templates/index.html:115
+msgid "Setup Audio"
+msgstr "Configurar audio"
+
+#: templates/index.html:128 templates/localisation.html:9 templates/localisation.html:20
+msgid "Localisation"
+msgstr "Localización"
+
+#: templates/index.html:140 templates/install_nvme.html:14
+msgid "Install to NVMe"
+msgstr "Instalar en NVMe"
+
+#: templates/index.html:153 templates/system_update.html:157
+msgid "System Update"
+msgstr "Actualización del sistema"
+
+#: templates/index.html:169
+msgid "Boot settings"
+msgstr "Ajustes de arranque"
+
+#: templates/index.html:181 templates/power_off.html:15
+msgid "Power Off Board"
+msgstr "Apagar la placa"
+
+#: templates/index.html:191
+msgid "About"
+msgstr "Acerca de"
+
+#: templates/index.html:223
+msgid "Full hardware report"
+msgstr "Informe completo de hardware"
+
+#: templates/index.html:228
+msgid "Full video report"
+msgstr "Informe completo de vídeo"
+
+#: templates/index.html:237
+msgid "Close"
+msgstr "Cerrar"
+
+#: templates/index.html:268
+msgid "Default boot"
+msgstr "Arranque predeterminado"
+
+#: templates/index.html:273
+msgid "Menu countdown"
+msgstr "Cuenta atrás del menú"
+
+#: templates/index.html:277
+msgid "Applies on next boot."
+msgstr "Se aplica en el próximo arranque."
+
+#: templates/index.html:285
+msgid "Network Settings"
+msgstr "Configuración de red"
+
+#: templates/index.html:296
+msgid "Interface"
+msgstr "Interfaz"
+
+#: templates/index.html:326
+msgid "Apply"
+msgstr "Aplicar"
+
+#: templates/index.html:332
+msgid "Network"
+msgstr "Red"
+
+#: templates/index.html:334
+msgid "Scan WiFi"
+msgstr "Buscar wifi"
+
+#: templates/index.html:349
+msgid "username"
+msgstr "nombre de usuario"
+
+#: templates/index.html:353
+msgid "password"
+msgstr "contraseña"
+
+#: templates/index.html:357
+msgid "Connect WiFi"
+msgstr "Conectar wifi"
+
+#: templates/localisation.html:27
+msgid "Keep these keyboard settings?"
+msgstr "¿Mantener esta configuración de teclado?"
+
+#: templates/localisation.html:31
+msgid "Keep"
+msgstr "Mantener"
+
+#: templates/localisation.html:32
+msgid "Undo now"
+msgstr "Deshacer ahora"
+
+#: templates/localisation.html:39
+msgid "Keyboard"
+msgstr "Teclado"
+
+#: templates/localisation.html:41
+msgid "Sets the keyboard layout for the screen and keyboard attached to this unit."
+msgstr "Define la distribución del teclado para la pantalla y el teclado conectados a esta unidad."
+
+#: templates/localisation.html:43
+msgid "Applying restarts the display on the appliance for a few seconds. If you are connected over the network, your own keyboard and this browser are unaffected."
+msgstr "Al aplicar, la pantalla del equipo se reinicia durante unos segundos. Si está conectado por red, su propio teclado y este navegador no se ven afectados."
+
+#: templates/localisation.html:49
+msgid "Layout"
+msgstr "Distribución"
+
+#: templates/localisation.html:54
+msgid "Variant"
+msgstr "Variante"
+
+#: templates/localisation.html:60
+msgid "Show all layouts"
+msgstr "Mostrar todas las distribuciones"
+
+#: templates/localisation.html:63
+msgid "Search layouts…"
+msgstr "Buscar distribuciones…"
+
+#: templates/localisation.html:69
+msgid "Currently active"
+msgstr "Activa actualmente"
+
+#: templates/localisation.html:74
+msgid "Test the layout"
+msgstr "Probar la distribución"
+
+#: templates/localisation.html:77
+msgid "Type here after applying — try @ and # and the key left of Enter"
+msgstr "Escriba aquí después de aplicar: pruebe @ y # y la tecla a la izquierda de Intro"
+
+#: templates/localisation.html:80
+msgid "Apply keyboard layout"
+msgstr "Aplicar distribución del teclado"
+
+#: templates/localisation.html:84 templates/localisation.html:91
+msgid "Language"
+msgstr "Idioma"
+
+#: templates/localisation.html:86
+msgid "Sets the system language and regional formats. The display does not restart."
+msgstr "Define el idioma del sistema y los formatos regionales. La pantalla no se reinicia."
+
+#: templates/localisation.html:96
+msgid "Apply language"
+msgstr "Aplicar idioma"
+
+#: templates/power_off.html:21
+msgid "Power off"
+msgstr "Apagar"
+
+#: templates/power_off.html:36
+msgid "Reboot once"
+msgstr "Reiniciar una vez"
+
+#: templates/system_update.html:158
+msgid "OS Update (RAUC)"
+msgstr "Actualización del SO (RAUC)"
+
+#: templates/system_update.html:177
+msgid "Reboot Now"
+msgstr "Reiniciar ahora"
+
+#: templates/system_update.html:183
+msgid "Available Updates"
+msgstr "Actualizaciones disponibles"
+
+#: templates/system_update.html:218
+msgid "Install from USB"
+msgstr "Instalar desde USB"
+
+#: templates/system_update.html:220
+msgid "Scan USB"
+msgstr "Explorar USB"
+
+#: templates/system_update.html:229
+msgid "Install from URL"
+msgstr "Instalar desde una URL"
+
+#: templates/system_update.html:249
+msgid "BIOS Update"
+msgstr "Actualización del BIOS"
+
+#: templates/system_update.html:255
+msgid "BIOS image (.zip)"
+msgstr "Imagen del BIOS (.zip)"
+
+#: templates/system_update.html:261
+msgid "URL, Dropbox share or local path to a BIOS update .zip"
+msgstr "URL, recurso de Dropbox o ruta local a un .zip de actualización del BIOS"
+
+#: templates/system_update.html:270
+msgid "Update BIOS"
+msgstr "Actualizar el BIOS"
+
+#: templates/ubuntu_install.html:35
+msgid "This system appears to be running from the recovery USB. Ubuntu can only be installed when running from the NVMe system."
+msgstr "Parece que este sistema se está ejecutando desde el USB de recuperación. Ubuntu solo se puede instalar cuando se ejecuta desde el sistema NVMe."
+
+#: templates/ubuntu_install.html:102 templates/ubuntu_uninstall.html:42
+msgid "Reboot now"
+msgstr "Reiniciar ahora"
+
+#: templates/ubuntu_uninstall.html:28
+msgid "This system appears to be running from the recovery USB. Ubuntu can only be uninstalled when running from the NVMe system."
+msgstr "Parece que este sistema se está ejecutando desde el USB de recuperación. Ubuntu solo se puede desinstalar cuando se ejecuta desde el sistema NVMe."
+
+#: templates/ubuntu_uninstall.html:30
+msgid "Ubuntu is not currently installed on this device."
+msgstr "Actualmente Ubuntu no está instalado en este dispositivo."
+
+#: templates/vivado_install.html:18
+msgid "Install Vivado&trade; Lab Tools"
+msgstr "Instalar Vivado&trade; Lab Tools"
+
+#: templates/vivado_install.html:22
+msgid "Release"
+msgstr "Versión"
+
+#: templates/vivado_install.html:34
+msgid "Download the installer from AMD"
+msgstr "Descargar el instalador desde AMD"
+
+#: templates/vivado_install.html:36 templates/vivado_install.html:67
+msgid "Show"
+msgstr "Mostrar"
+
+#: templates/vivado_install.html:39
+msgid "The Vivado Hardware Server installer must be downloaded from AMD after accepting the license terms. Use the QR code on a phone, or the link below in any browser."
+msgstr "El instalador de Vivado Hardware Server debe descargarse desde AMD tras aceptar los términos de licencia. Use el código QR en un teléfono, o el enlace de abajo en cualquier navegador."
+
+#: templates/vivado_install.html:53
+msgid "Copy"
+msgstr "Copiar"
+
+#: templates/vivado_install.html:54
+msgid "Open here"
+msgstr "Abrir aquí"
+
+#: templates/vivado_install.html:56
+msgid "Copied!"
+msgstr "¡Copiado!"
+
+#: templates/vivado_install.html:65
+msgid "Select installer"
+msgstr "Seleccionar el instalador"
+
+#: templates/vivado_install.html:71
+msgid "Found on this device"
+msgstr "Encontrado en este dispositivo"
+
+#: templates/vivado_install.html:72
+msgid "Upload from browser"
+msgstr "Subir desde el navegador"
+
+#: templates/vivado_install.html:91
+msgid "Click to choose a .tar file..."
+msgstr "Haga clic para elegir un archivo .tar…"
+
+#: templates/vivado_install.html:97
+msgid "Selected:"
+msgstr "Seleccionado:"
+
+#: templates/vivado_install.html:103
+msgid "Rescan"
+msgstr "Volver a explorar"
+
+#: templates/vivado_install.html:104
+msgid "Install anyway (not recommended)"
+msgstr "Instalar de todos modos (no recomendado)"
+
+#: templates/vivado_install.html:110
+msgid "The downloaded file may have been corrupted, or this is a different release."
+msgstr "Es posible que el archivo descargado esté dañado, o que se trate de una versión diferente."
+
+#: templates/vivado_install.html:127
+msgid "Before You Continue"
+msgstr "Antes de continuar"
+
+#: templates/vivado_install.html:147
+msgid "Continue to AMD"
+msgstr "Continuar a AMD"
+
+#: templates/vivado_install.html:156
+msgid "License Agreements"
+msgstr "Acuerdos de licencia"
+
+#: templates/vivado_install.html:170
+msgid "Decline"
+msgstr "Rechazar"
+
+#: templates/vivado_install.html:171
+msgid "Accept and Install"
+msgstr "Aceptar e instalar"
+
+#: i18n_strings.py
+msgid "Default"
+msgstr "Predeterminada"
+
+#: i18n_strings.py
+msgid "(not installed)"
+msgstr "(no instalado)"
+
+#: i18n_strings.py
+msgid "No matching layouts"
+msgstr "No hay distribuciones coincidentes"
+
+#: i18n_strings.py
+msgid "Reverting automatically in {n}s."
+msgstr "Se revertirá automáticamente en {n} s."
+
+#: i18n_strings.py
+msgid "Reverting…"
+msgstr "Revirtiendo…"
+
+#: i18n_strings.py
+msgid "Apply the {layout} keyboard layout?"
+msgstr "¿Aplicar la distribución de teclado «{layout}»?"
+
+#: i18n_strings.py
+msgid "The display on the appliance will go blank for a few seconds. If the new layout is unusable it reverts automatically after {n} seconds."
+msgstr "La pantalla del equipo se quedará en negro unos segundos. Si la nueva distribución resulta inservible, se revertirá automáticamente después de {n} segundos."
+
+#: i18n_strings.py
+msgid "request failed"
+msgstr "la solicitud falló"
+
+#: i18n_strings.py
+msgid "Reboot the Versal device?"
+msgstr "¿Reiniciar el dispositivo Versal?"
+
+#: i18n_strings.py
+msgid "Reprogramming the Versal OSPI/UFS will erase current contents. Are you sure?"
+msgstr "Reprogramar la OSPI/UFS de Versal borrará el contenido actual. ¿Está seguro?"
+
+#: i18n_strings.py
+msgid "Program Versal and Flash Devices"
+msgstr "Programar Versal y dispositivos flash"
+
+#: i18n_strings.py
+msgid "Modify Layout"
+msgstr "Modificar distribución"
+
+#: i18n_strings.py
+msgid "Read layout from target"
+msgstr "Leer la distribución del destino"
+
+#: i18n_strings.py
+msgid "Restore Factory Default"
+msgstr "Restaurar valores de fábrica"
+
+#: i18n_strings.py
+msgid "UFS Layout"
+msgstr "Distribución UFS"
+
+#: i18n_strings.py
+msgid "The UFS device is divided into logical units. LUN 0 holds the Versal root filesystem and is what Flash Program writes. Boot LUNs are optional: the Versal boots from OSPI and does not use them."
+msgstr "El dispositivo UFS se divide en unidades lógicas. El LUN 0 contiene el sistema de archivos raíz del Versal y es el que escribe «Flash Program». Los LUN de arranque son opcionales: el Versal arranca desde OSPI y no los utiliza."
+
+#: i18n_strings.py
+msgid "Could not read the LUN layout."
+msgstr "No se ha podido leer la distribución de LUN."
+
+#: i18n_strings.py
+msgid "Erase and re-provision"
+msgstr "Borrar y reaprovisionar"
+
+#: i18n_strings.py
+msgid "LUN scan failed: "
+msgstr "Error al explorar los LUN: "
+
+#: i18n_strings.py
+msgid "PROVISIONING LOCKED: this device's layout can never be changed"
+msgstr "APROVISIONAMIENTO BLOQUEADO: la distribución de este dispositivo no se podrá cambiar nunca"
+
+#: i18n_strings.py
+msgid "Re-provisioning failed."
+msgstr "El reaprovisionamiento ha fallado."
+
+#: i18n_strings.py
+msgid "Re-provisioning failed: "
+msgstr "El reaprovisionamiento ha fallado: "
+
+#: i18n_strings.py
+msgid "Re-provisioning the UFS device…"
+msgstr "Reaprovisionando el dispositivo UFS…"
+
+#: i18n_strings.py
+msgid "Reading the LUN layout from the target…"
+msgstr "Leyendo la distribución de LUN del destino…"
+
+#: i18n_strings.py
+msgid "Target read. Nothing has been changed."
+msgstr "Destino leído. No se ha cambiado nada."
+
+#: i18n_strings.py
+msgid "This re-provisions the Versal's UFS device. All data on it, including the root filesystem, becomes unrecoverable. The board will not boot afterwards until you program an image."
+msgstr "Esto reaprovisiona el dispositivo UFS del Versal. Todos sus datos, incluido el sistema de archivos raíz, quedan irrecuperables. La placa no arrancará hasta que programe una imagen."
+
+#: i18n_strings.py
+msgid "This restores the factory LUN layout for this device. All data on the UFS device becomes unrecoverable. The board will not boot afterwards until you program an image."
+msgstr "Esto restaura la distribución de LUN de fábrica de este dispositivo. Todos los datos del dispositivo UFS quedan irrecuperables. La placa no arrancará hasta que programe una imagen."
+
+#: i18n_strings.py
+msgid "UFS re-provisioned. The Versal will not boot until an image is programmed from the Flash Program tab."
+msgstr "UFS reaprovisionado. El Versal no arrancará hasta que se programe una imagen desde la pestaña «Flash Program»."
+
+#: i18n_strings.py
+msgid "allocatable"
+msgstr "asignable"
+
+#: i18n_strings.py
+msgid "allocation unit"
+msgstr "unidad de asignación"
+
+#: i18n_strings.py
+msgid "boot LUN"
+msgstr "LUN de arranque"
+
+#: i18n_strings.py
+msgid "boot"
+msgstr "arranque"
+
+#: i18n_strings.py
+msgid "Mark this LUN as a UFS boot LUN. Optional: the Versal boots from OSPI and does not use them."
+msgstr "Marcar este LUN como LUN de arranque UFS. Opcional: el Versal arranca desde OSPI y no los utiliza."
+
+#: i18n_strings.py
+msgid "Overwrite UFS Layout"
+msgstr "Sobrescribir la distribución UFS"
+
+#: i18n_strings.py
+msgid "Reset"
+msgstr "Restablecer"
+
+#: i18n_strings.py
+msgid "BOOT"
+msgstr "ARRANQUE"
+
+#: i18n_strings.py
+msgid "remainder"
+msgstr "resto"
+
+#: i18n_strings.py
+msgid "remainder assigned"
+msgstr "resto asignado"
+
+#: i18n_strings.py
+msgid "unallocated"
+msgstr "sin asignar"
+
+#: i18n_strings.py
+msgid "nothing left for the remainder LUN"
+msgstr "no queda nada para el LUN de resto"
+
+#: i18n_strings.py
+msgid "over capacity by "
+msgstr "capacidad superada en "
+
+#: i18n_strings.py
+msgid "used"
+msgstr "en uso"
+
+#: i18n_strings.py
+msgid "Tick \"used\" to bring the next LUN into service. Sizes snap to whole allocation units; mark one LUN as \"remainder\" to give it whatever capacity is left. \"boot\" marks a UFS boot LUN: at most two exist, and they are optional because the Versal boots from OSPI."
+msgstr "Marque «en uso» para poner en servicio el siguiente LUN. Los tamaños se ajustan a unidades de asignación completas; marque un LUN como «resto» para darle la capacidad que quede. «arranque» marca un LUN de arranque UFS: hay como máximo dos y son opcionales, ya que el Versal arranca desde OSPI."
+
+#: i18n_strings.py
+msgid "New layout:"
+msgstr "Nueva distribución:"
+
+#: i18n_strings.py
+msgid "Current Layout"
+msgstr "Distribución actual"
+
+#: templates/_versal_lab.html
+msgid "Erase before programming (recommended when changing image)"
+msgstr "Borrar antes de programar (recomendado al cambiar de imagen)"
+
+#: templates/_versal_lab.html
+msgid "Erases only the region being programmed, then writes the image over it. Takes a few seconds on UFS."
+msgstr "Borra solo la región que se va a programar y después escribe la imagen encima. Tarda unos segundos en UFS."
+
+#: templates/_versal_lab.html
+msgid "Advanced"
+msgstr "Avanzado"
+
+#: templates/_versal_lab.html
+msgid "Program Individual Partitions"
+msgstr "Programar particiones individuales"
+
+#: templates/system_update.html
+msgid "Support Logs"
+msgstr "Registros de soporte"
+
+#: templates/system_update.html
+msgid "A record of what has been programmed, installed and changed on this board. Logs are kept on this machine only. They are never uploaded or shared unless you download them and send them yourself."
+msgstr "Un registro de lo que se ha programado, instalado y cambiado en esta placa. Los registros se guardan únicamente en esta máquina. Nunca se cargan ni se comparten, salvo que usted mismo los descargue y los envíe."
+
+#: templates/system_update.html
+msgid "Record support logs"
+msgstr "Registrar registros de soporte"
+
+#: templates/system_update.html
+msgid "Download support archive"
+msgstr "Descargar archivo de soporte"
+
+#: i18n_strings.py
+msgid "No entries yet."
+msgstr "Aún no hay entradas."
+
+#: i18n_strings.py
+msgid "{n} entries"
+msgstr "{n} entradas"
+
+#: i18n_strings.py
+msgid "last entry"
+msgstr "última entrada"
+
+#: i18n_strings.py
+msgid "Could not read the support log status."
+msgstr "No se pudo leer el estado de los registros de soporte."
+
+#: i18n_strings.py
+msgid "Could not change the setting."
+msgstr "No se pudo cambiar la configuración."
+
+#: i18n_strings.py
+msgid "Recording is off."
+msgstr "El registro está desactivado."
+
+#: i18n_strings.py
+msgid "Logging stopped: "
+msgstr "Registro detenido: "
+
+#: i18n_strings.py
+msgid "Persistent storage is unavailable, so these logs will not survive a system update."
+msgstr "El almacenamiento persistente no está disponible, por lo que estos registros no sobrevivirán a una actualización del sistema."
+
+#: templates/index.html
+msgid "System / Updates / Logs"
+msgstr "Sistema / Actualizaciones / Registros"
+
+#: templates/_versal_lab.html
+msgid "Warning: these options are experimental and may cause data loss. Ensure logging is enabled and use at your own risk."
+msgstr "Advertencia: estas opciones son experimentales y pueden provocar pérdida de datos. Asegúrese de que el registro esté activado y úselas bajo su propia responsabilidad."

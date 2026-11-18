@@ -1,0 +1,15 @@
+# Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+# SPDX-License-Identifier: MIT
+# Contributors: KC
+# Maintainer: KC
+
+# Set headphone as default output port with 80% volume.
+#
+# Wrapped in .nofail because module-udev-detect probes ALSA cards
+# asynchronously; if PulseAudio is started via systemd before the ACP70
+# card is fully probed, the sink does not yet exist and an unwrapped
+# set-sink-port would abort daemon startup.
+.nofail
+set-sink-port alsa_output.pci-0000_64_00.5-platform-acp70-nau8822.stereo-fallback analog-output-headphones
+set-sink-volume alsa_output.pci-0000_64_00.5-platform-acp70-nau8822.stereo-fallback 52057
+.fail

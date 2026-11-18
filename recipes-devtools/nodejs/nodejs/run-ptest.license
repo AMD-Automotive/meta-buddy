@@ -1,0 +1,8 @@
+Copyright (C) The OpenEmbedded Contributors
+SPDX-License-Identifier: MIT
+
+Imported unmodified from meta-openembedded, branch walnascar, revision
+07330a98cf93806b7a4e0170a541b94962ff3960, path
+meta-oe/recipes-devtools/nodejs/nodejs/run-ptest.
+Support file for nodejs_22.14.0.bb. Shipped only when the ptest image
+feature is enabled, which this product does not use.

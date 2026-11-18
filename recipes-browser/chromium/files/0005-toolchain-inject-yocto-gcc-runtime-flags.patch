@@ -1,0 +1,100 @@
+build/toolchain: inject GCC runtime lookup flags for Yocto cross linking
+
+GN regenerates toolchain.ninja at the start of every build, so a one-time
+sed of the generated file does not survive a reconfigure. This adds the fix
+to the persistent Python link wrapper instead, which GN does not regenerate.
+
+Clang-driven links in this cross toolchain need --gcc-install-dir (and the
+matching -B/-L pair) so the linker can find GCC's runtime objects
+(crtbeginS.o and friends) under the Yocto sysroot; without it, linking some
+targets fails to find the GCC runtime directory. _InjectYoctoGccRuntimeFlags
+locates crtbeginS.o under the sysroot named by an existing --sysroot=
+argument, derives the three flags from its directory, caches them per
+sysroot, and inserts them immediately after the --sysroot= argument. If
+--gcc-install-dir is already present, or no --sysroot= argument is found,
+the command is returned unchanged.
+
+Upstream-Status: Pending [Yocto cross-toolchain workaround; not applicable
+to Chromium's own upstream toolchain configuration]
+
+diff --git a/build/toolchain/wrapper_utils.py b/build/toolchain/wrapper_utils.py
+--- a/build/toolchain/wrapper_utils.py
++++ b/build/toolchain/wrapper_utils.py
+@@ -4,6 +4,7 @@
+ 
+ """Helper functions for gcc_toolchain.gni wrappers."""
+ 
++import glob
+ import gzip
+ import os
+ import re
+@@ -52,6 +53,45 @@ def CommandToRun(command):
+   return command
+ 
+ 
++
++_YOCTO_GCC_RUNTIME_FLAGS = {}
++
++
++def _InjectYoctoGccRuntimeFlags(command):
++  """YOCTO_GCC_RUNTIME_FIX: add GCC runtime lookup flags for linker wrappers."""
++  if any(arg.startswith('--gcc-install-dir=') for arg in command):
++    return command
++
++  sysroot = None
++  for arg in command:
++    if arg.startswith('--sysroot='):
++      sysroot = arg.split('=', 1)[1]
++      break
++  if not sysroot:
++    return command
++
++  cached = _YOCTO_GCC_RUNTIME_FLAGS.get(sysroot)
++  if cached is None:
++    candidates = sorted(glob.glob(os.path.join(sysroot, 'usr', 'lib', '*', '*', 'crtbeginS.o')))
++    cached = []
++    if candidates:
++      gccverdir = os.path.dirname(candidates[0])
++      cached = [
++          '--gcc-install-dir=' + gccverdir,
++          '-B' + gccverdir,
++          '-L' + gccverdir,
++      ]
++    _YOCTO_GCC_RUNTIME_FLAGS[sysroot] = cached
++
++  if not cached:
++    return command
++
++  for i, arg in enumerate(command):
++    if arg.startswith('--sysroot='):
++      return command[:i + 1] + cached + command[i + 1:]
++  return command
++
++
+ def RunLinkWithOptionalMapFile(command, env=None, map_file=None):
+   """Runs the given command, adding in -Wl,-Map when |map_file| is given.
+
+@@ -72,6 +112,8 @@ def RunLinkWithOptionalMapFile(command, env=None, map_file=None):
+   elif map_file:
+     command.append('-Wl,-Map,' + map_file)
+ 
++  command = _InjectYoctoGccRuntimeFlags(command)
++
+   # We want to link rlibs as --whole-archive if they are part of a unit test
+   # target. This is determined by switch `-LinkWrapper,add-whole-archive`.
+   command = whole_archive.wrap_with_whole_archive(command)
+
++
++
+ def RunLinkWithOptionalMapFile(command, env=None, map_file=None):
+   """Run the given command, adding in -Map if map_file is not None.
+ 
+@@ -72,6 +113,8 @@ def RunLinkWithOptionalMapFile(command, env=None, map_file=None):
+   Returns:
+     The exit code of running the linker.
+   """
++  command = _InjectYoctoGccRuntimeFlags(command)
++
+   # We want to link rlibs as --whole-archive if they are part of a unit test
+   # by inserting --whole-archive before them and --no-whole-archive after
+   # them.

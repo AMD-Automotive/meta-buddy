@@ -1,0 +1,23 @@
+# Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+# SPDX-License-Identifier: MIT
+# Contributors: KC
+# Maintainer: KC
+
+[Unit]
+Description=RAVE2 hardware info cache
+After=local-fs.target
+# Intentionally NOT ordered Before=rave-menu.service: the hardware scan
+# (dmidecode + SPI flash read) is slow, and gating the menu backend on it
+# delays the GUI at boot. The cache is only consumed by the About panel, which
+# tolerates its absence (the hardware section stays hidden until the cache
+# appears), so this runs in parallel and the menu starts immediately.
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+Nice=10
+IOSchedulingClass=idle
+ExecStart=/opt/rave-menu/scripts/report_hw_info.sh --cache
+
+[Install]
+WantedBy=multi-user.target

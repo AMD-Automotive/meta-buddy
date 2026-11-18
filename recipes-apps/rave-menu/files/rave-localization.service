@@ -1,0 +1,19 @@
+# Copyright © Advanced Micro Devices, Inc., or its affiliates. All rights reserved.
+# SPDX-License-Identifier: MIT
+# Contributors: KC
+# Maintainer: KC
+
+[Unit]
+Description=RAVE2 Localisation (keyboard/locale) Setup
+Documentation=file:///usr/share/doc/buddy/api.md
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 /opt/rave-menu/apply_localization.py --boot
+RemainAfterExit=yes
+# A failure here must not block the display: the weston drop-in installs the
+# static fallback config if this produced nothing usable.
+SuccessExitStatus=0 1
+
+[Install]
+WantedBy=multi-user.target
